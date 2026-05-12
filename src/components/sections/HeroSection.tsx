@@ -73,7 +73,7 @@ function HeroDashboardMockup() {
           <Sparkles size={12} className="text-white" />
         </div>
         <div>
-          <p className="text-[10px] text-[#94a3b8]">AI-generated</p>
+          <p className="text-[10px] text-[#94a3b8]">Your profession</p>
           <p className="text-xs font-bold text-[#0D1B2E]">New test!</p>
         </div>
       </div>
@@ -104,20 +104,20 @@ export function HeroSection() {
             {/* Eyebrow */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#eef2ff] border border-[#c7d2fe] w-fit">
               <Sparkles size={13} className="text-[#4f46e5]" />
-              <span className="text-xs font-semibold text-[#4f46e5]">AI-powered assessment training</span>
+              <span className="text-xs font-semibold text-[#4f46e5]">Practice tests tailored to your profession</span>
             </div>
 
             {/* Headline */}
             <h1 className="font-display font-extrabold text-[2.75rem] sm:text-[3.5rem] lg:text-[4rem] text-[#0D1B2E] leading-[1.05] tracking-tight">
-              Train for job{" "}
-              <span className="gradient-text">assessments.</span>
+              Ace your{" "}
+              <span className="gradient-text">assessment.</span>
               <br />
-              Every day.
+              Get the job.
             </h1>
 
             {/* Subtext */}
             <p className="text-lg text-[#475569] leading-relaxed max-w-lg">
-              Practice the tests companies use during hiring. Start with 5 free assessments, then unlock unlimited AI-generated practice for{" "}
+              Practice tests built around your profession and the companies you want to join. Start with 5 free assessments, then unlock unlimited practice for{" "}
               <span className="font-semibold text-[#0D1B2E]">€4/month</span>.
             </p>
 

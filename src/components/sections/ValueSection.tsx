@@ -1,4 +1,4 @@
-import { Sparkles, Zap, MessageSquare, Calendar, Shield } from "lucide-react";
+import { Briefcase, Zap, MessageSquare, Calendar, Shield } from "lucide-react";
 
 const VALUES = [
   {
@@ -16,16 +16,16 @@ const VALUES = [
     bg: "bg-[#f5f3ff]",
   },
   {
-    icon: Sparkles,
-    title: "AI-generated practice",
-    description: "New tests are generated weekly by AI, modelled on real company assessments.",
+    icon: Briefcase,
+    title: "Profession-specific",
+    description: "Tests are tailored to your sector and career — not generic one-size-fits-all content.",
     color: "text-[#2563eb]",
     bg: "bg-[#eff6ff]",
   },
   {
     icon: MessageSquare,
     title: "Personal feedback",
-    description: "Detailed question-by-question AI feedback shows exactly where to improve.",
+    description: "Detailed question-by-question explanations show exactly where to improve and why.",
     color: "text-[#10b981]",
     bg: "bg-[#f0fdf4]",
   },

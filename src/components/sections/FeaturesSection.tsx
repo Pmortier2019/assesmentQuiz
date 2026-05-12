@@ -1,4 +1,4 @@
-import { BarChart3, Brain, Layers, Repeat2, Smartphone, Sparkles } from "lucide-react";
+import { BarChart3, Brain, Briefcase, Layers, Repeat2, Smartphone } from "lucide-react";
 
 const FEATURES = [
   {
@@ -7,9 +7,9 @@ const FEATURES = [
     description: "Numerical, logical, verbal reasoning, situational judgement, and personality tests — all in one place.",
   },
   {
-    icon: Sparkles,
-    title: "AI-generated tests",
-    description: "New practice content is generated weekly by AI, modelled on assessments from top employers.",
+    icon: Briefcase,
+    title: "Profession-tailored tests",
+    description: "Tests are built around your sector and role — so every question is relevant to the job you want.",
   },
   {
     icon: BarChart3,
@@ -18,8 +18,8 @@ const FEATURES = [
   },
   {
     icon: Brain,
-    title: "Smart feedback",
-    description: "Every question gets an AI-powered explanation that tells you not just what's right, but why.",
+    title: "Instant explanations",
+    description: "Every question includes a clear explanation — not just what's right, but why, so it sticks.",
   },
   {
     icon: Repeat2,
