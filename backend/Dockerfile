@@ -14,6 +14,6 @@ EXPOSE 8080
 
 # Keep memory low for Fly.io free tier (256 MB)
 ENTRYPOINT ["java", \
-  "-Xmx160m", "-Xss512k", "-XX:MaxMetaspaceSize=90m", \
+  "-Xmx350m", "-Xss512k", "-XX:MaxMetaspaceSize=128m", \
   "-Dspring.profiles.active=railway", \
   "-jar", "app.jar"]
