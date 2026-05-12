@@ -26,17 +26,10 @@ public class MockAiClient implements AiClient {
                   "estimatedTimeMinutes": 12,
                   "questions": [
                     {
-                      "questionText": "Look at the bar chart below and calculate the percentage increase in revenue from 2021 to 2023.",
-                      "explanation": "Subtract the 2021 value from the 2023 value, divide by the 2021 value, then multiply by 100. (1400-1000)/1000*100 = 40%.",
+                      "questionText": "A company's annual revenue was €1,000,000 in 2021 and €1,400,000 in 2023. What is the percentage increase?",
+                      "explanation": "(1,400,000 - 1,000,000) / 1,000,000 × 100 = 40%.",
                       "orderIndex": 1,
-                      "mediaItems": [
-                        {
-                          "mediaType": "IMAGE",
-                          "url": "https://example.com/assets/charts/revenue-2021-2023.png",
-                          "altText": "Bar chart showing annual revenue from 2021 to 2023",
-                          "caption": "Company annual revenue 2021–2023 (in €1000s)"
-                        }
-                      ],
+                      "mediaItems": [],
                       "answerOptions": [
                         { "answerText": "20%", "isCorrect": false, "orderIndex": 1 },
                         { "answerText": "30%", "isCorrect": false, "orderIndex": 2 },
