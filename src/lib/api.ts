@@ -1,0 +1,413 @@
+import type {
+  Test,
+  User,
+  TestResult,
+  QuestionResult,
+  OnboardingData,
+  AssessmentType,
+  Difficulty,
+  Language,
+  PaginatedResponse,
+  Question,
+  MediaItem,
+  AnswerOption,
+} from "./types";
+
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
+const CURRENT_USER_ID = 1; // hardcoded until auth is implemented
+
+// ─── Type mappers ─────────────────────────────────────────────────────────────
+
+function mapTestType(backend: string): AssessmentType {
+  const map: Record<string, AssessmentType> = {
+    NUMERICAL_REASONING: "numerical_reasoning",
+    LOGICAL_REASONING: "logical_reasoning",
+    VERBAL_REASONING: "verbal_reasoning",
+    SITUATIONAL_JUDGEMENT: "situational_judgement",
+    PERSONALITY_WORK_STYLE: "personality",
+  };
+  return map[backend] ?? "numerical_reasoning";
+}
+
+function mapDifficulty(backend: string): Difficulty {
+  const map: Record<string, Difficulty> = {
+    EASY: "beginner",
+    MEDIUM: "intermediate",
+    HARD: "advanced",
+  };
+  return map[backend] ?? "beginner";
+}
+
+function mapTestTypeToBackend(type: AssessmentType): string {
+  const map: Record<AssessmentType, string> = {
+    numerical_reasoning: "NUMERICAL_REASONING",
+    logical_reasoning: "LOGICAL_REASONING",
+    verbal_reasoning: "VERBAL_REASONING",
+    situational_judgement: "SITUATIONAL_JUDGEMENT",
+    personality: "PERSONALITY_WORK_STYLE",
+  };
+  return map[type];
+}
+
+function mapDifficultyToBackend(diff: Difficulty): string {
+  const map: Record<Difficulty, string> = {
+    beginner: "EASY",
+    intermediate: "MEDIUM",
+    advanced: "HARD",
+  };
+  return map[diff];
+}
+
+// ─── Backend response shapes ──────────────────────────────────────────────────
+
+interface BackendTestListItem {
+  id: number;
+  title: string;
+  description: string;
+  type: string;
+  difficulty: string;
+  language: string;
+  isFree: boolean;
+  isGeneratedByAI: boolean;
+  estimatedTimeMinutes: number;
+  questionCount: number;
+  createdAt: string;
+}
+
+interface BackendAnswerOption {
+  id: number;
+  answerText: string;
+  orderIndex: number;
+}
+
+interface BackendMediaItem {
+  id: number;
+  mediaType: string;
+  url?: string;
+  altText?: string;
+  caption?: string;
+}
+
+interface BackendQuestion {
+  id: number;
+  questionText: string;
+  explanation: string;
+  orderIndex: number;
+  mediaItems: BackendMediaItem[];
+  answerOptions: BackendAnswerOption[];
+}
+
+interface BackendTestDetail extends BackendTestListItem {
+  questions: BackendQuestion[];
+}
+
+interface BackendUserResponse {
+  id: number;
+  email: string;
+  name: string;
+  preferredLanguage: string;
+  freeTestsUsed: number;
+  isPro: boolean;
+  createdAt: string;
+}
+
+interface BackendUserResult {
+  resultId: number;
+  testId: number;
+  testTitle: string;
+  score: number;
+  totalQuestions: number;
+  correctAnswers: number;
+  timeTakenSeconds: number;
+  feedback: string;
+  completedAt: string;
+}
+
+interface BackendSubmitResponse {
+  resultId: number;
+  testId: number;
+  userId: number;
+  score: number;
+  totalQuestions: number;
+  correctAnswers: number;
+  timeTakenSeconds: number;
+  feedback: string;
+  completedAt: string;
+  questionResults: {
+    questionId: number;
+    questionText: string;
+    explanation: string;
+    selectedAnswerOptionId: number | null;
+    isCorrect: boolean;
+    answerOptions: { id: number; answerText: string; isCorrect: boolean; orderIndex: number }[];
+  }[];
+}
+
+// ─── Entity mappers ───────────────────────────────────────────────────────────
+
+function mapTestListItem(b: BackendTestListItem): Test {
+  return {
+    id: String(b.id),
+    title: b.title,
+    description: b.description,
+    type: mapTestType(b.type),
+    difficulty: mapDifficulty(b.difficulty),
+    language: b.language.toLowerCase() as Language,
+    isFree: b.isFree,
+    isGeneratedByAI: b.isGeneratedByAI,
+    estimatedTime: b.estimatedTimeMinutes,
+    questions: [],
+    questionCount: b.questionCount,
+    createdAt: b.createdAt,
+    tags: [],
+  };
+}
+
+function mapQuestion(q: BackendQuestion): Question {
+  const media: MediaItem[] = q.mediaItems.map((m) => ({
+    id: String(m.id),
+    type: m.mediaType as MediaItem["type"],
+    url: m.url,
+    altText: m.altText,
+    caption: m.caption,
+  }));
+
+  const answers: AnswerOption[] = q.answerOptions.map((a) => ({
+    id: String(a.id),
+    text: a.answerText,
+    isCorrect: false, // withheld by backend during test
+  }));
+
+  return {
+    id: String(q.id),
+    questionText: q.questionText,
+    media: media.length > 0 ? media : undefined,
+    answers,
+    explanation: q.explanation,
+    points: 1,
+  };
+}
+
+function mapTestDetail(b: BackendTestDetail): Test {
+  return {
+    ...mapTestListItem(b),
+    questions: b.questions
+      .slice()
+      .sort((a, b) => a.orderIndex - b.orderIndex)
+      .map(mapQuestion),
+  };
+}
+
+function mapUserResult(r: BackendUserResult): TestResult {
+  return {
+    id: String(r.resultId),
+    testId: String(r.testId),
+    userId: "1",
+    score: r.score,
+    timeTaken: r.timeTakenSeconds,
+    completedAt: r.completedAt ?? new Date().toISOString(),
+    answers: [],
+    strengths: [],
+    weakPoints: [],
+    aiFeedback: r.feedback,
+  };
+}
+
+function mapSubmitResponse(r: BackendSubmitResponse): TestResult {
+  const questionResults: QuestionResult[] = (r.questionResults ?? []).map((q) => ({
+    questionId: String(q.questionId),
+    questionText: q.questionText,
+    explanation: q.explanation,
+    selectedAnswerOptionId: q.selectedAnswerOptionId != null ? String(q.selectedAnswerOptionId) : null,
+    isCorrect: q.isCorrect,
+    answerOptions: q.answerOptions
+      .slice()
+      .sort((a, b) => a.orderIndex - b.orderIndex)
+      .map((a) => ({ id: String(a.id), text: a.answerText, isCorrect: a.isCorrect })),
+  }));
+
+  return {
+    id: String(r.resultId),
+    testId: String(r.testId),
+    userId: String(r.userId),
+    score: r.score,
+    timeTaken: r.timeTakenSeconds,
+    completedAt: r.completedAt ?? new Date().toISOString(),
+    answers: questionResults.map((q) => ({
+      questionId: q.questionId,
+      selectedAnswerId: q.selectedAnswerOptionId ?? "",
+      isCorrect: q.isCorrect,
+    })),
+    strengths: [],
+    weakPoints: [],
+    aiFeedback: r.feedback,
+    questionResults,
+  };
+}
+
+function mapUser(u: BackendUserResponse): User {
+  return {
+    id: String(u.id),
+    email: u.email,
+    name: u.name,
+    subscription: u.isPro ? "pro" : "free",
+    freeTestsUsed: u.freeTestsUsed,
+    streak: 0, // not tracked by backend yet
+    joinedAt: u.createdAt,
+  };
+}
+
+// ─── HTTP helper ──────────────────────────────────────────────────────────────
+
+async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
+  const res = await fetch(`${BASE_URL}${path}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`API ${res.status}: ${text || res.statusText}`);
+  }
+  return res.json() as Promise<T>;
+}
+
+// ─── Tests ───────────────────────────────────────────────────────────────────
+
+export interface TestFilters {
+  type?: AssessmentType;
+  difficulty?: Difficulty;
+  tier?: "free" | "pro" | "all";
+  search?: string;
+}
+
+export async function getTests(
+  filters: TestFilters = {},
+  page = 1,
+  pageSize = 12
+): Promise<PaginatedResponse<Test>> {
+  const params = new URLSearchParams();
+  if (filters.type) params.set("type", mapTestTypeToBackend(filters.type));
+  if (filters.difficulty) params.set("difficulty", mapDifficultyToBackend(filters.difficulty));
+  if (filters.tier === "free") params.set("access", "free");
+  else if (filters.tier === "pro") params.set("access", "pro");
+
+  const query = params.toString() ? `?${params.toString()}` : "";
+  const items = await apiFetch<BackendTestListItem[]>(`/api/tests${query}`);
+
+  let results = items.map(mapTestListItem);
+
+  if (filters.search) {
+    const q = filters.search.toLowerCase();
+    results = results.filter(
+      (t) =>
+        t.title.toLowerCase().includes(q) ||
+        t.description.toLowerCase().includes(q)
+    );
+  }
+
+  const total = results.length;
+  const start = (page - 1) * pageSize;
+
+  return {
+    data: results.slice(start, start + pageSize),
+    page,
+    pageSize,
+    total,
+    hasMore: start + pageSize < total,
+  };
+}
+
+export async function getTestById(id: string): Promise<Test | null> {
+  try {
+    const detail = await apiFetch<BackendTestDetail>(
+      `/api/tests/${id}?userId=${CURRENT_USER_ID}`
+    );
+    return mapTestDetail(detail);
+  } catch {
+    return null;
+  }
+}
+
+// ─── User ─────────────────────────────────────────────────────────────────────
+
+export async function getCurrentUser(): Promise<User> {
+  const u = await apiFetch<BackendUserResponse>(`/api/users/${CURRENT_USER_ID}`);
+  return mapUser(u);
+}
+
+export async function saveOnboarding(_data: OnboardingData): Promise<void> {
+  // TODO: POST /api/users/{id}/onboarding once backend supports it
+}
+
+// ─── Results ─────────────────────────────────────────────────────────────────
+
+export async function submitTest(
+  testId: string,
+  answers: { questionId: string; selectedAnswerId: string }[],
+  timeTakenSeconds: number
+): Promise<TestResult> {
+  const body = {
+    userId: CURRENT_USER_ID,
+    timeTakenSeconds,
+    answers: answers.map((a) => ({
+      questionId: Number(a.questionId),
+      selectedAnswerOptionId: Number(a.selectedAnswerId),
+    })),
+  };
+  const response = await apiFetch<BackendSubmitResponse>(
+    `/api/tests/${testId}/submit`,
+    { method: "POST", body: JSON.stringify(body) }
+  );
+  return mapSubmitResponse(response);
+}
+
+export async function getUserResults(): Promise<TestResult[]> {
+  const results = await apiFetch<BackendUserResult[]>(
+    `/api/users/${CURRENT_USER_ID}/results`
+  );
+  return results.map(mapUserResult);
+}
+
+export async function getResultById(id: string): Promise<TestResult | null> {
+  const all = await getUserResults();
+  return all.find((r) => r.id === id) ?? null;
+}
+
+// ─── Subscription ─────────────────────────────────────────────────────────────
+
+export async function startCheckout(): Promise<{ checkoutUrl: string }> {
+  await apiFetch(
+    `/api/users/${CURRENT_USER_ID}/subscription/mock-upgrade`,
+    { method: "POST" }
+  );
+  // TODO: replace mock-upgrade with real Stripe checkout URL
+  return { checkoutUrl: "/pricing?checkout=mock" };
+}
+
+export async function cancelSubscription(): Promise<void> {
+  // TODO: DELETE /api/users/{id}/subscription once backend supports it
+}
+
+// ─── Auth ─────────────────────────────────────────────────────────────────────
+
+export async function login(_email: string, _password: string): Promise<User> {
+  // TODO: POST /api/auth/login → returns JWT / session
+  return getCurrentUser();
+}
+
+export async function register(
+  _name: string,
+  _email: string,
+  _password: string
+): Promise<User> {
+  // TODO: POST /api/auth/register
+  return getCurrentUser();
+}
+
+export async function logout(): Promise<void> {
+  // TODO: POST /api/auth/logout
+}

@@ -1,0 +1,112 @@
+"use client";
+
+import Link from "next/link";
+import { useState } from "react";
+import { Menu, X, Zap } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+interface NavbarProps {
+  transparent?: boolean;
+}
+
+export function Navbar({ transparent = false }: NavbarProps) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  return (
+    <header
+      className={cn(
+        "sticky top-0 z-50 w-full transition-all duration-300",
+        transparent
+          ? "bg-transparent"
+          : "bg-white/90 backdrop-blur-md border-b border-[#e2e8f0]"
+      )}
+    >
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
+              <Zap size={16} className="text-white fill-white" />
+            </div>
+            <span className="font-display font-bold text-[#0D1B2E] text-lg tracking-tight">
+              Assess<span className="gradient-text">Pro</span>
+            </span>
+          </Link>
+
+          {/* Desktop nav */}
+          <div className="hidden md:flex items-center gap-8">
+            <Link
+              href="/tests"
+              className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E] transition-colors"
+            >
+              Tests
+            </Link>
+            <Link
+              href="/pricing"
+              className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E] transition-colors"
+            >
+              Pricing
+            </Link>
+            <Link
+              href="/login"
+              className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E] transition-colors"
+            >
+              Login
+            </Link>
+            <Link
+              href="/onboarding"
+              className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity"
+            >
+              Start Practicing
+            </Link>
+          </div>
+
+          {/* Mobile toggle */}
+          <button
+            className="md:hidden p-2 rounded-lg text-[#475569] hover:bg-[#f1f5f9] transition-colors"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <div className="md:hidden border-t border-[#e2e8f0] bg-white animate-fade-in">
+          <div className="px-4 py-4 flex flex-col gap-4">
+            <Link
+              href="/tests"
+              className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E]"
+              onClick={() => setMobileOpen(false)}
+            >
+              Tests
+            </Link>
+            <Link
+              href="/pricing"
+              className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E]"
+              onClick={() => setMobileOpen(false)}
+            >
+              Pricing
+            </Link>
+            <Link
+              href="/login"
+              className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E]"
+              onClick={() => setMobileOpen(false)}
+            >
+              Login
+            </Link>
+            <Link
+              href="/onboarding"
+              className="px-4 py-2.5 rounded-lg bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold text-center"
+              onClick={() => setMobileOpen(false)}
+            >
+              Start Practicing
+            </Link>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+}

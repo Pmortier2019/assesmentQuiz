@@ -1,0 +1,137 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap");
+@import "tailwindcss";
+
+/* ── Design tokens ── */
+:root {
+  --navy:       #0D1B2E;
+  --navy-800:   #1a2f4a;
+  --navy-700:   #1e3a5f;
+
+  --indigo:     #4f46e5;
+  --indigo-600: #4338ca;
+  --violet:     #7c3aed;
+  --blue:       #2563eb;
+
+  --emerald:    #10b981;
+  --amber:      #f59e0b;
+  --rose:       #f43f5e;
+
+  --bg:         #ffffff;
+  --bg-subtle:  #f8fafc;
+  --border:     #e2e8f0;
+  --text:       #0D1B2E;
+  --text-muted: #64748b;
+
+  --gradient-hero: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #2563eb 100%);
+  --gradient-pro:  linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+
+  --shadow-sm: 0 1px 3px 0 rgba(13,27,46,0.06), 0 1px 2px -1px rgba(13,27,46,0.04);
+  --shadow-md: 0 4px 6px -1px rgba(13,27,46,0.07), 0 2px 4px -2px rgba(13,27,46,0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(13,27,46,0.08), 0 4px 6px -4px rgba(13,27,46,0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(13,27,46,0.10), 0 8px 10px -6px rgba(13,27,46,0.06);
+
+  --radius:    0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Bricolage Grotesque", sans-serif;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.font-display { font-family: "Bricolage Grotesque", sans-serif; }
+
+.gradient-text {
+  background: var(--gradient-hero);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+@keyframes streak-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(245,158,11,0.4); }
+  50%       { box-shadow: 0 0 20px rgba(245,158,11,0.7); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+
+.animate-fade-up      { animation: fadeUp 0.5s ease both; }
+.animate-fade-in      { animation: fadeIn 0.4s ease both; }
+.animate-slide-right  { animation: slideInRight 0.5s ease both; }
+.animate-streak       { animation: streak-glow 2s ease-in-out infinite; }
+.animate-float        { animation: float 3s ease-in-out infinite; }
+
+.delay-100 { animation-delay: 0.10s; }
+.delay-200 { animation-delay: 0.20s; }
+.delay-300 { animation-delay: 0.30s; }
+.delay-400 { animation-delay: 0.40s; }
+.delay-500 { animation-delay: 0.50s; }
+.delay-600 { animation-delay: 0.60s; }
+
+.skeleton {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius);
+}
+
+::-webkit-scrollbar       { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+:focus-visible {
+  outline: 2px solid var(--indigo);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: rgba(79,70,229,0.15);
+  color: var(--navy);
+}

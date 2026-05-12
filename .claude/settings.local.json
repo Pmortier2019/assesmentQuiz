@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/dashboard)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/tests)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/pricing)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/login)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/onboarding)",
+      "Bash(curl -s http://localhost:3000 -o /dev/null -w \"%{http_code}\")",
+      "PowerShell(Get-ChildItem -Recurse \"C:\\\\Users\\\\Piete\\\\assesmentQuiz\\\\backend\\\\src\" | Where-Object { -not $_.PSIsContainer } | Select-Object -ExpandProperty FullName | Sort-Object)",
+      "PowerShell(mvn *)",
+      "PowerShell($env:JAVA_HOME; Get-ChildItem \"C:\\\\Program Files\\\\PostgreSQL\\\\15\\\\bin\" -ErrorAction SilentlyContinue | Select-Object -First 5)",
+      "PowerShell(sc.exe query postgresql-x64-15)",
+      "PowerShell(Start-Service *)",
+      "PowerShell($pgBin = \"C:\\\\Program Files\\\\PostgreSQL\\\\15\\\\bin\"; & \"$pgBin\\\\psql.exe\" -U postgres -c \"SELECT 1\" 2>&1)",
+      "PowerShell(cmd /c \"dir \"\"C:\\\\Program Files\\\\PostgreSQL\\\\15\\\\bin\"\" 2>&1\")",
+      "PowerShell(Invoke-WebRequest -Uri \"http://localhost:8080/api/tests\" -UseBasicParsing | Select-Object -ExpandProperty Content | ConvertFrom-Json | ConvertTo-Json -Depth 2)",
+      "PowerShell(try { Invoke-WebRequest -Uri \"http://localhost:8080/api/tests\" -UseBasicParsing } catch { $_.Exception.Response.GetResponseStream\\(\\) | ForEach-Object { $reader = New-Object System.IO.StreamReader\\($_\\); $reader.ReadToEnd\\(\\) } })",
+      "PowerShell(Stop-Process *)",
+      "PowerShell(\\(Invoke-WebRequest -Uri \"http://localhost:8080/api/tests\" -UseBasicParsing\\).Content | ConvertFrom-Json | ForEach-Object { \"$\\($_.id\\) | $\\($_.type\\) | $\\($_.difficulty\\) | Free=$\\($_.isFree\\) | AI=$\\($_.isGeneratedByAI\\) | $\\($_.title\\)\" })",
+      "PowerShell(try { \\(Invoke-WebRequest -Uri \"http://localhost:8080/api/tests/1\" -UseBasicParsing\\).Content | ConvertFrom-Json | Select-Object id, title, @{N='questionCount';E={$_.questions.Count}} } catch { $_.Exception.Response.GetResponseStream\\(\\) | ForEach-Object { \\(New-Object System.IO.StreamReader\\($_\\)\\).ReadToEnd\\(\\) } })",
+      "PowerShell(Write-Host \"=== GET /api/tests?access=free ===\"; \\(Invoke-WebRequest -Uri \"http://localhost:8080/api/tests?access=free\" -UseBasicParsing\\).Content | ConvertFrom-Json | ForEach-Object { \"[$\\($_.id\\)] isFree=$\\($_.isFree\\) isAI=$\\($_.isGeneratedByAI\\) $\\($_.title\\)\" })",
+      "PowerShell(Write-Host \"=== GET /api/users/1 ===\"; \\(Invoke-WebRequest -Uri \"http://localhost:8080/api/users/1\" -UseBasicParsing\\).Content | ConvertFrom-Json | ConvertTo-Json)",
+      "PowerShell(Write-Host \"=== GET /api/users/1/subscription ===\"; \\(Invoke-WebRequest -Uri \"http://localhost:8080/api/users/1/subscription\" -UseBasicParsing\\).Content | ConvertFrom-Json | ConvertTo-Json; Write-Host \"=== POST /api/admin/tests/generate ===\"; $body = '{\"type\":\"LOGICAL_REASONING\",\"difficulty\":\"EASY\",\"language\":\"EN\",\"numberOfQuestions\":3}'; \\(Invoke-WebRequest -Uri \"http://localhost:8080/api/admin/tests/generate\" -Method POST -Body $body -ContentType \"application/json\" -UseBasicParsing\\).Content | ConvertFrom-Json | ConvertTo-Json)"
+    ]
+  }
+}
