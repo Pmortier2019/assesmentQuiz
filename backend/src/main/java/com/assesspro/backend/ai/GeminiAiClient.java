@@ -38,8 +38,7 @@ public class GeminiAiClient implements AiClient {
             String escapedPrompt = objectMapper.writeValueAsString(prompt);
             String requestBody = """
                     {
-                      "contents": [{"parts": [{"text": %s}]}],
-                      "generationConfig": {"responseMimeType": "application/json"}
+                      "contents": [{"parts": [{"text": %s}]}]
                     }
                     """.formatted(escapedPrompt);
 
