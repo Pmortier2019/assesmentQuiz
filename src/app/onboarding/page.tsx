@@ -204,12 +204,16 @@ export default function OnboardingPage() {
   const handleFinish = async () => {
     if (!level) return;
     setSaving(true);
-    await saveOnboarding({
-      targetRole: role ?? undefined,
-      targetIndustry: industry ?? undefined,
-      targetCompany: company.trim() || undefined,
-      level,
-    });
+    try {
+      await saveOnboarding({
+        targetRole: role ?? undefined,
+        targetIndustry: industry ?? undefined,
+        targetCompany: company.trim() || undefined,
+        level,
+      });
+    } catch {
+      // Career targets are optional — navigate to dashboard regardless
+    }
     router.push("/dashboard");
   };
 
