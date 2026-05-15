@@ -4,6 +4,7 @@ import com.assesspro.backend.dto.GenerateTestRequest;
 import com.assesspro.backend.dto.ImportTestRequest;
 import com.assesspro.backend.dto.TestResponse;
 import com.assesspro.backend.entity.AssessmentTest;
+import com.assesspro.backend.entity.enums.TestType;
 import com.assesspro.backend.service.AiTestGenerationService;
 import com.assesspro.backend.service.ImportTestService;
 import com.assesspro.backend.service.TestService;
@@ -71,6 +72,27 @@ public class AdminController {
             var user = userService.getUserEntity(userId);
             var test = aiTestGenerationService.generateForUser(user);
             return ResponseEntity.status(HttpStatus.CREATED).body(testService.toTestResponse(test));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                    .body("Test generation failed: " + e.getMessage());
+        }
+    }
+
+    /**
+     * POST /api/admin/generate-type/{userId}/{type}
+     *
+     * Generates one AI test of the given TestType for the user's career context.
+     * Called once per type by the frontend batch-generation flow.
+     */
+    @PostMapping("/generate-type/{userId}/{type}")
+    public ResponseEntity<?> generateType(@PathVariable Long userId, @PathVariable String type) {
+        try {
+            TestType testType = TestType.valueOf(type.toUpperCase());
+            var user = userService.getUserEntity(userId);
+            var test = aiTestGenerationService.generateForUserOfType(user, testType);
+            return ResponseEntity.status(HttpStatus.CREATED).body(testService.toTestResponse(test));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Unknown test type: " + type);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
                     .body("Test generation failed: " + e.getMessage());

@@ -7,7 +7,13 @@ export type AssessmentType =
   | "logical_reasoning"
   | "verbal_reasoning"
   | "situational_judgement"
-  | "personality";
+  | "personality"
+  | "data_interpretation"
+  | "abstract_reasoning"
+  | "critical_thinking"
+  | "coding_challenge"
+  | "leadership_assessment"
+  | "writing_assessment";
 
 export type Difficulty = "beginner" | "intermediate" | "advanced";
 

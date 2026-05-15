@@ -55,7 +55,13 @@ const TYPE_OPTIONS: { value: AssessmentType | "all"; label: string }[] = [
   { value: "logical_reasoning",     label: "Logical" },
   { value: "verbal_reasoning",      label: "Verbal" },
   { value: "situational_judgement", label: "Situational" },
+  { value: "data_interpretation",   label: "Data" },
+  { value: "abstract_reasoning",    label: "Abstract" },
+  { value: "critical_thinking",     label: "Critical Thinking" },
   { value: "personality",           label: "Personality" },
+  { value: "leadership_assessment", label: "Leadership" },
+  { value: "coding_challenge",      label: "Coding" },
+  { value: "writing_assessment",    label: "Writing" },
 ];
 
 const DIFFICULTY_OPTIONS: { value: Difficulty | "all"; label: string }[] = [

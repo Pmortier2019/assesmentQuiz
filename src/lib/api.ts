@@ -23,11 +23,17 @@ const CURRENT_USER_ID = 1; // hardcoded until auth is implemented
 
 function mapTestType(backend: string): AssessmentType {
   const map: Record<string, AssessmentType> = {
-    NUMERICAL_REASONING: "numerical_reasoning",
-    LOGICAL_REASONING: "logical_reasoning",
-    VERBAL_REASONING: "verbal_reasoning",
+    NUMERICAL_REASONING:   "numerical_reasoning",
+    LOGICAL_REASONING:     "logical_reasoning",
+    VERBAL_REASONING:      "verbal_reasoning",
     SITUATIONAL_JUDGEMENT: "situational_judgement",
     PERSONALITY_WORK_STYLE: "personality",
+    DATA_INTERPRETATION:   "data_interpretation",
+    ABSTRACT_REASONING:    "abstract_reasoning",
+    CRITICAL_THINKING:     "critical_thinking",
+    CODING_CHALLENGE:      "coding_challenge",
+    LEADERSHIP_ASSESSMENT: "leadership_assessment",
+    WRITING_ASSESSMENT:    "writing_assessment",
   };
   return map[backend] ?? "numerical_reasoning";
 }
@@ -43,11 +49,17 @@ function mapDifficulty(backend: string): Difficulty {
 
 function mapTestTypeToBackend(type: AssessmentType): string {
   const map: Record<AssessmentType, string> = {
-    numerical_reasoning: "NUMERICAL_REASONING",
-    logical_reasoning: "LOGICAL_REASONING",
-    verbal_reasoning: "VERBAL_REASONING",
+    numerical_reasoning:   "NUMERICAL_REASONING",
+    logical_reasoning:     "LOGICAL_REASONING",
+    verbal_reasoning:      "VERBAL_REASONING",
     situational_judgement: "SITUATIONAL_JUDGEMENT",
-    personality: "PERSONALITY_WORK_STYLE",
+    personality:           "PERSONALITY_WORK_STYLE",
+    data_interpretation:   "DATA_INTERPRETATION",
+    abstract_reasoning:    "ABSTRACT_REASONING",
+    critical_thinking:     "CRITICAL_THINKING",
+    coding_challenge:      "CODING_CHALLENGE",
+    leadership_assessment: "LEADERSHIP_ASSESSMENT",
+    writing_assessment:    "WRITING_ASSESSMENT",
   };
   return map[type];
 }
@@ -451,6 +463,28 @@ export async function cancelSubscription(): Promise<void> {
 export async function generateTestForMe(): Promise<Test> {
   const result = await apiFetch<BackendTestListItem>(
     `/api/admin/generate-for-user/${CURRENT_USER_ID}`,
+    { method: "POST" }
+  );
+  return mapTestListItem(result);
+}
+
+export const ALL_GENERATE_TYPES: { type: string; label: string }[] = [
+  { type: "NUMERICAL_REASONING",   label: "Numerical Reasoning" },
+  { type: "LOGICAL_REASONING",     label: "Logical Reasoning" },
+  { type: "VERBAL_REASONING",      label: "Verbal Reasoning" },
+  { type: "SITUATIONAL_JUDGEMENT", label: "Situational Judgement" },
+  { type: "DATA_INTERPRETATION",   label: "Data Interpretation" },
+  { type: "ABSTRACT_REASONING",    label: "Abstract Reasoning" },
+  { type: "CRITICAL_THINKING",     label: "Critical Thinking" },
+  { type: "PERSONALITY_WORK_STYLE",label: "Personality & Work Style" },
+  { type: "LEADERSHIP_ASSESSMENT", label: "Leadership Assessment" },
+  { type: "CODING_CHALLENGE",      label: "Coding Challenge" },
+  { type: "WRITING_ASSESSMENT",    label: "Writing Assessment" },
+];
+
+export async function generateTestOfType(backendType: string): Promise<Test> {
+  const result = await apiFetch<BackendTestListItem>(
+    `/api/admin/generate-type/${CURRENT_USER_ID}/${backendType}`,
     { method: "POST" }
   );
   return mapTestListItem(result);

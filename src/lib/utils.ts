@@ -20,19 +20,31 @@ export function formatDuration(minutes: number): string {
 }
 
 export const ASSESSMENT_TYPE_LABELS: Record<AssessmentType, string> = {
-  numerical_reasoning: "Numerical Reasoning",
-  logical_reasoning: "Logical Reasoning",
-  verbal_reasoning: "Verbal Reasoning",
+  numerical_reasoning:   "Numerical Reasoning",
+  logical_reasoning:     "Logical Reasoning",
+  verbal_reasoning:      "Verbal Reasoning",
   situational_judgement: "Situational Judgement",
-  personality: "Personality & Work Style",
+  personality:           "Personality & Work Style",
+  data_interpretation:   "Data Interpretation",
+  abstract_reasoning:    "Abstract Reasoning",
+  critical_thinking:     "Critical Thinking",
+  coding_challenge:      "Coding Challenge",
+  leadership_assessment: "Leadership Assessment",
+  writing_assessment:    "Writing Assessment",
 };
 
 export const ASSESSMENT_TYPE_ICONS: Record<AssessmentType, string> = {
-  numerical_reasoning: "📊",
-  logical_reasoning: "🧩",
-  verbal_reasoning: "📝",
+  numerical_reasoning:   "📊",
+  logical_reasoning:     "🧩",
+  verbal_reasoning:      "📝",
   situational_judgement: "🤝",
-  personality: "🧠",
+  personality:           "🧠",
+  data_interpretation:   "📈",
+  abstract_reasoning:    "🔷",
+  critical_thinking:     "💡",
+  coding_challenge:      "💻",
+  leadership_assessment: "🏆",
+  writing_assessment:    "✍️",
 };
 
 export const DIFFICULTY_LABELS: Record<Difficulty, string> = {

@@ -1,21 +1,20 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { Sparkles, PackageOpen, Star, Wand2 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { TestCard } from "@/components/cards/TestCard";
 import { FilterBar } from "@/components/test/FilterBar";
 import type { SortOption } from "@/components/test/FilterBar";
-import { getTests, generateTestForMe } from "@/lib/api";
+import { getTests, generateTestOfType, ALL_GENERATE_TYPES } from "@/lib/api";
 import type { Test, AssessmentType, Difficulty, RoleCategory, IndustryCategory } from "@/lib/types";
 
 export default function TestsPage() {
-  const router = useRouter();
   const [tests, setTests] = useState<Test[]>([]);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
+  const [generateProgress, setGenerateProgress] = useState<{ current: number; total: number; label: string } | null>(null);
   const [generateError, setGenerateError] = useState("");
   const [search, setSearch] = useState("");
   const [selectedType, setSelectedType] = useState<AssessmentType | "all">("all");
@@ -83,12 +82,29 @@ export default function TestsPage() {
   const handleGenerate = async () => {
     setGenerating(true);
     setGenerateError("");
-    try {
-      const test = await generateTestForMe();
-      router.push(`/tests/${test.id}`);
-    } catch {
+    setGenerateProgress(null);
+
+    let failed = 0;
+    for (let i = 0; i < ALL_GENERATE_TYPES.length; i++) {
+      const { type, label } = ALL_GENERATE_TYPES[i];
+      setGenerateProgress({ current: i + 1, total: ALL_GENERATE_TYPES.length, label });
+      try {
+        await generateTestOfType(type);
+      } catch {
+        failed++;
+      }
+    }
+
+    setGenerating(false);
+    setGenerateProgress(null);
+
+    if (failed === ALL_GENERATE_TYPES.length) {
       setGenerateError("Generation failed — try again in a moment.");
-      setGenerating(false);
+    } else {
+      if (failed > 0) setGenerateError(`${failed} type(s) failed — the rest were generated.`);
+      // Reload test list
+      const result = await getTests({});
+      setTests(result.data);
     }
   };
 
@@ -111,15 +127,28 @@ export default function TestsPage() {
                 {recommendedTests.length > 0 && ` · ${recommendedTests.length} recommended for you`}
               </p>
             </div>
-            <div className="flex flex-col items-end gap-1">
+            <div className="flex flex-col items-end gap-1.5">
               <button
                 onClick={handleGenerate}
                 disabled={generating}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity shadow-sm"
               >
                 <Wand2 size={15} />
-                {generating ? "Generating…" : "Generate a test for me"}
+                {generating ? "Generating…" : "Generate full test library"}
               </button>
+              {generating && generateProgress && (
+                <div className="flex flex-col items-end gap-1 min-w-[220px]">
+                  <p className="text-xs text-[#64748b]">
+                    {generateProgress.current}/{generateProgress.total} — {generateProgress.label}
+                  </p>
+                  <div className="w-full h-1.5 bg-[#e2e8f0] rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] rounded-full transition-all duration-300"
+                      style={{ width: `${(generateProgress.current / generateProgress.total) * 100}%` }}
+                    />
+                  </div>
+                </div>
+              )}
               {generateError && (
                 <p className="text-xs text-[#e11d48]">{generateError}</p>
               )}

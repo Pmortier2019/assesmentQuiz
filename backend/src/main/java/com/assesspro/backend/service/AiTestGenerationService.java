@@ -50,6 +50,7 @@ public class AiTestGenerationService {
         validateTestJson(testJson);
 
         AssessmentTest test = mapToEntity(testJson);
+        test.setType(type); // always use the requested type, ignore whatever Gemini returned
         test.setGeneratedByAI(true);
         test.setFree(true);
 
@@ -66,6 +67,13 @@ public class AiTestGenerationService {
         return generateAndSave(type, difficulty, poolSize, user.getTargetRole(), user.getTargetIndustry());
     }
 
+    @Transactional
+    public AssessmentTest generateForUserOfType(com.assesspro.backend.entity.User user, TestType type) {
+        Difficulty difficulty = Difficulty.MEDIUM;
+        int poolSize = 12;
+        return generateAndSave(type, difficulty, poolSize, user.getTargetRole(), user.getTargetIndustry());
+    }
+
     private TestType inferTestType(String targetRole) {
         if (targetRole == null) return TestType.NUMERICAL_REASONING;
         String role = targetRole.toLowerCase();
@@ -76,16 +84,34 @@ public class AiTestGenerationService {
         return TestType.NUMERICAL_REASONING;
     }
 
+    private String typeDescription(TestType type) {
+        return switch (type) {
+            case NUMERICAL_REASONING    -> "numerical reasoning (percentages, ratios, data tables, financial calculations)";
+            case LOGICAL_REASONING      -> "logical reasoning (deductive and inductive logic, syllogisms, sequences)";
+            case VERBAL_REASONING       -> "verbal reasoning (reading comprehension, argument analysis, inference)";
+            case SITUATIONAL_JUDGEMENT  -> "situational judgement (workplace scenarios, prioritisation, stakeholder management)";
+            case PERSONALITY_WORK_STYLE -> "personality and work style (behavioural preferences, motivators, team dynamics)";
+            case DATA_INTERPRETATION    -> "data interpretation (charts, graphs, tables, business metrics analysis)";
+            case ABSTRACT_REASONING     -> "abstract reasoning (patterns, shapes, matrix problems, non-verbal logic)";
+            case CRITICAL_THINKING      -> "critical thinking (assumptions, conclusions, argument evaluation, logical fallacies)";
+            case CODING_CHALLENGE       -> "coding and algorithmic thinking (pseudocode logic, complexity, debugging scenarios)";
+            case LEADERSHIP_ASSESSMENT  -> "leadership assessment (decision making, people management, strategic thinking scenarios)";
+            case WRITING_ASSESSMENT     -> "written communication assessment (email drafting, report structure, clarity and tone)";
+        };
+    }
+
     private String buildPrompt(TestType type, Difficulty difficulty, int count,
                                 String targetRole, String targetIndustry) {
         String role     = targetRole     != null ? targetRole     : "business professional";
         String industry = targetIndustry != null ? targetIndustry : "Finance and Consulting";
         int displayCount = Math.max(5, count - 4);
+        String typeFocus = typeDescription(type);
 
         return """
                 You are an assessment generation engine for a professional job interview preparation platform.
 
-                Generate a realistic %s assessment for candidates applying for %s roles in the %s industry.
+                Generate a realistic %s assessment focused on %s.
+                Target candidates applying for %s roles in the %s industry.
                 The test must closely resemble assessments used by Deloitte, KPMG, Goldman Sachs, Accenture, and similar employers.
 
                 Requirements:
@@ -126,7 +152,7 @@ public class AiTestGenerationService {
                 4. Vary difficulty across questions even within the same level.
                 5. Return ONLY the JSON object — nothing else.
                 """.formatted(
-                type.name(), role, industry,
+                type.name(), typeFocus, role, industry,
                 difficulty.name(), count, displayCount,
                 type.name(), difficulty.name(), displayCount
         );
