@@ -37,6 +37,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public User getUserEntity(Long userId) {
+        return findUser(userId);
+    }
+
+    @Transactional(readOnly = true)
     public List<UserResultResponse> getUserResults(Long userId) {
         findUser(userId);
         return resultRepository.findByUserIdOrderByCreatedAtDesc(userId)

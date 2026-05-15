@@ -446,6 +446,16 @@ export async function cancelSubscription(): Promise<void> {
   // TODO: DELETE /api/users/{id}/subscription once backend supports it
 }
 
+// ─── AI generation ───────────────────────────────────────────────────────────
+
+export async function generateTestForMe(): Promise<Test> {
+  const result = await apiFetch<BackendTestListItem>(
+    `/api/users/${CURRENT_USER_ID}/generate-test`,
+    { method: "POST" }
+  );
+  return mapTestListItem(result);
+}
+
 // ─── Admin ───────────────────────────────────────────────────────────────────
 
 export async function importTest(json: unknown): Promise<Test> {

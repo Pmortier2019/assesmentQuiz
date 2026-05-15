@@ -20,6 +20,7 @@ public class AiTestJson {
         private String difficulty;
         private String language;
         private int estimatedTimeMinutes;
+        private int displayQuestionCount;
         private List<QuestionJson> questions;
     }
 

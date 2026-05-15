@@ -35,32 +35,100 @@ public class AiTestGenerationService {
      */
     @Transactional
     public AssessmentTest generateAndSave(TestType type, Difficulty difficulty, Language language, int numberOfQuestions) {
-        String prompt = buildPrompt(type, difficulty, language, numberOfQuestions);
-        log.debug("Sending prompt to AI client: {}", prompt);
+        return generateAndSave(type, difficulty, numberOfQuestions, null, null);
+    }
+
+    @Transactional
+    public AssessmentTest generateAndSave(TestType type, Difficulty difficulty, int numberOfQuestions,
+                                          String targetRole, String targetIndustry) {
+        String prompt = buildPrompt(type, difficulty, numberOfQuestions, targetRole, targetIndustry);
+        log.info("Generating AI test: type={} difficulty={} role={} industry={}", type, difficulty, targetRole, targetIndustry);
 
         String rawJson = aiClient.generateTest(prompt);
-        log.debug("Received raw JSON from AI client");
 
         AiTestJson.TestJson testJson = parseJson(rawJson);
         validateTestJson(testJson);
 
         AssessmentTest test = mapToEntity(testJson);
         test.setGeneratedByAI(true);
-        test.setFree(false);
+        test.setFree(true);
 
         AssessmentTest saved = testRepository.save(test);
         log.info("AI-generated test saved with id={}", saved.getId());
         return saved;
     }
 
-    private String buildPrompt(TestType type, Difficulty difficulty, Language language, int count) {
-        return String.format(
-                "Generate a %s assessment test with %d questions. Difficulty: %s. Language: %s. " +
-                "Return valid JSON only, no extra text. Structure: { title, description, type, difficulty, language, " +
-                "estimatedTimeMinutes, questions: [ { questionText, explanation, orderIndex, mediaItems: [], " +
-                "answerOptions: [ { answerText, isCorrect, orderIndex } ] } ] }. " +
-                "Each question must have exactly one correct answer.",
-                type.name(), count, difficulty.name(), language.name()
+    @Transactional
+    public AssessmentTest generateForUser(com.assesspro.backend.entity.User user) {
+        TestType type = inferTestType(user.getTargetRole());
+        Difficulty difficulty = Difficulty.MEDIUM;
+        int poolSize = 12;
+        return generateAndSave(type, difficulty, poolSize, user.getTargetRole(), user.getTargetIndustry());
+    }
+
+    private TestType inferTestType(String targetRole) {
+        if (targetRole == null) return TestType.NUMERICAL_REASONING;
+        String role = targetRole.toLowerCase();
+        if (role.contains("software") || role.contains("data") || role.contains("engineer")) return TestType.LOGICAL_REASONING;
+        if (role.contains("hr") || role.contains("people") || role.contains("talent"))       return TestType.PERSONALITY_WORK_STYLE;
+        if (role.contains("communication") || role.contains("verbal") || role.contains("pr") || role.contains("marketing")) return TestType.VERBAL_REASONING;
+        if (role.contains("management") || role.contains("leadership") || role.contains("operations")) return TestType.SITUATIONAL_JUDGEMENT;
+        return TestType.NUMERICAL_REASONING;
+    }
+
+    private String buildPrompt(TestType type, Difficulty difficulty, int count,
+                                String targetRole, String targetIndustry) {
+        String role     = targetRole     != null ? targetRole     : "business professional";
+        String industry = targetIndustry != null ? targetIndustry : "Finance and Consulting";
+        int displayCount = Math.max(5, count - 4);
+
+        return """
+                You are an assessment generation engine for a professional job interview preparation platform.
+
+                Generate a realistic %s assessment for candidates applying for %s roles in the %s industry.
+                The test must closely resemble assessments used by Deloitte, KPMG, Goldman Sachs, Accenture, and similar employers.
+
+                Requirements:
+                - Difficulty: %s
+                - Language: English
+                - Pool size: %d questions (store all of these)
+                - displayQuestionCount: %d (shown per attempt — must be less than pool size)
+
+                Return ONLY valid JSON, no markdown fences, no extra text. Use this exact structure:
+                {
+                  "title": "short title max 8 words",
+                  "description": "1-2 sentences describing what this test measures",
+                  "type": "%s",
+                  "difficulty": "%s",
+                  "language": "EN",
+                  "estimatedTimeMinutes": <integer>,
+                  "displayQuestionCount": %d,
+                  "questions": [
+                    {
+                      "questionText": "realistic business scenario question",
+                      "explanation": "step-by-step reasoning — show calculations or logical chain",
+                      "orderIndex": 1,
+                      "mediaItems": [],
+                      "answerOptions": [
+                        { "answerText": "...", "isCorrect": true,  "orderIndex": 1 },
+                        { "answerText": "...", "isCorrect": false, "orderIndex": 2 },
+                        { "answerText": "...", "isCorrect": false, "orderIndex": 3 },
+                        { "answerText": "...", "isCorrect": false, "orderIndex": 4 }
+                      ]
+                    }
+                  ]
+                }
+
+                Rules:
+                1. Exactly 4 answer options per question, exactly 1 with isCorrect: true.
+                2. Wrong answers must be plausible — use near-miss values or common mistakes.
+                3. Use realistic business data: revenue figures, percentages, ratios, org decisions.
+                4. Vary difficulty across questions even within the same level.
+                5. Return ONLY the JSON object — nothing else.
+                """.formatted(
+                type.name(), role, industry,
+                difficulty.name(), count, displayCount,
+                type.name(), difficulty.name(), displayCount
         );
     }
 
@@ -124,6 +192,7 @@ public class AiTestGenerationService {
                 .difficulty(Difficulty.valueOf(json.getDifficulty().toUpperCase()))
                 .language(Language.valueOf(json.getLanguage().toUpperCase()))
                 .estimatedTimeMinutes(json.getEstimatedTimeMinutes())
+                .displayQuestionCount(json.getDisplayQuestionCount())
                 .questions(new ArrayList<>())
                 .build();
 

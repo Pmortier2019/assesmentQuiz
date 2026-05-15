@@ -1,18 +1,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Sparkles, PackageOpen, Star } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Sparkles, PackageOpen, Star, Wand2 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { TestCard } from "@/components/cards/TestCard";
 import { FilterBar } from "@/components/test/FilterBar";
 import type { SortOption } from "@/components/test/FilterBar";
-import { getTests } from "@/lib/api";
+import { getTests, generateTestForMe } from "@/lib/api";
 import type { Test, AssessmentType, Difficulty, RoleCategory, IndustryCategory } from "@/lib/types";
 
 export default function TestsPage() {
+  const router = useRouter();
   const [tests, setTests] = useState<Test[]>([]);
   const [loading, setLoading] = useState(true);
+  const [generating, setGenerating] = useState(false);
+  const [generateError, setGenerateError] = useState("");
   const [search, setSearch] = useState("");
   const [selectedType, setSelectedType] = useState<AssessmentType | "all">("all");
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | "all">("all");
@@ -76,6 +80,18 @@ export default function TestsPage() {
 
   const hasCareerFilters = selectedRole !== "all" || selectedIndustry !== "all" || sortBy === "best_match";
 
+  const handleGenerate = async () => {
+    setGenerating(true);
+    setGenerateError("");
+    try {
+      const test = await generateTestForMe();
+      router.push(`/tests/${test.id}`);
+    } catch {
+      setGenerateError("Generation failed — try again in a moment.");
+      setGenerating(false);
+    }
+  };
+
   return (
     <div className="flex min-h-screen bg-[#f8fafc]">
       <Sidebar />
@@ -87,12 +103,27 @@ export default function TestsPage() {
 
         <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 flex flex-col gap-8">
           {/* Header */}
-          <div className="animate-fade-up">
-            <h1 className="font-display font-bold text-2xl text-[#0D1B2E] mb-1">Test Library</h1>
-            <p className="text-[#64748b] text-sm">
-              {filtered.length} tests available · {aiTests.length} AI-generated
-              {recommendedTests.length > 0 && ` · ${recommendedTests.length} recommended for you`}
-            </p>
+          <div className="animate-fade-up flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <h1 className="font-display font-bold text-2xl text-[#0D1B2E] mb-1">Test Library</h1>
+              <p className="text-[#64748b] text-sm">
+                {filtered.length} tests available · {aiTests.length} AI-generated
+                {recommendedTests.length > 0 && ` · ${recommendedTests.length} recommended for you`}
+              </p>
+            </div>
+            <div className="flex flex-col items-end gap-1">
+              <button
+                onClick={handleGenerate}
+                disabled={generating}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity shadow-sm"
+              >
+                <Wand2 size={15} />
+                {generating ? "Generating…" : "Generate a test for me"}
+              </button>
+              {generateError && (
+                <p className="text-xs text-[#e11d48]">{generateError}</p>
+              )}
+            </div>
           </div>
 
           {/* Filters */}

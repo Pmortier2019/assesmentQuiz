@@ -1,15 +1,10 @@
 package com.assesspro.backend.ai;
 
-import org.springframework.stereotype.Component;
-
 /**
  * Mock AI client that returns hard-coded JSON.
- *
- * TODO: Remove this class and register a real AiClient bean when connecting to a live AI provider.
- * For OpenAI: inject RestTemplate / WebClient, POST to https://api.openai.com/v1/chat/completions
- * For Anthropic Claude: POST to https://api.anthropic.com/v1/messages
+ * Not registered as a Spring bean — GeminiAiClient is used instead.
+ * Keep this class for local testing without an API key.
  */
-@Component
 public class MockAiClient implements AiClient {
 
     @Override
