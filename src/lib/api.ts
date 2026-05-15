@@ -74,6 +74,7 @@ interface BackendTestListItem {
   isGeneratedByAI: boolean;
   estimatedTimeMinutes: number;
   questionCount: number;
+  displayQuestionCount: number;
   createdAt: string;
   category?: string;
   subcategory?: string;
@@ -172,6 +173,7 @@ function mapTestListItem(b: BackendTestListItem): Test {
     estimatedTime: b.estimatedTimeMinutes,
     questions: [],
     questionCount: b.questionCount,
+    displayQuestionCount: b.displayQuestionCount,
     createdAt: b.createdAt,
     tags: [],
     category: b.category as AssessmentCategory | undefined,

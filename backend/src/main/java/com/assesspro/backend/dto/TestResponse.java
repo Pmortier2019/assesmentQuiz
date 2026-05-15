@@ -25,6 +25,7 @@ public class TestResponse {
     private boolean isGeneratedByAI;
     private int estimatedTimeMinutes;
     private int questionCount;
+    private int displayQuestionCount;
     private LocalDateTime createdAt;
     private AssessmentCategory category;
     private String subcategory;

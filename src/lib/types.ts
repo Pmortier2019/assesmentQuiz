@@ -67,7 +67,8 @@ export interface Test {
   isGeneratedByAI: boolean;
   estimatedTime: number;  // minutes
   questions: Question[];
-  questionCount?: number; // available from list endpoint when questions array is empty
+  questionCount?: number;       // total pool size
+  displayQuestionCount?: number; // how many are shown per attempt (0 = all)
   createdAt: string;
   tags: string[];
   category?: AssessmentCategory;

@@ -43,6 +43,7 @@ public class ImportTestService {
                 .isFree(req.isFree())
                 .isGeneratedByAI(false)
                 .estimatedTimeMinutes(req.getEstimatedTimeMinutes())
+                .displayQuestionCount(req.getDisplayQuestionCount())
                 .build();
 
         if (req.getQuestions() != null) {

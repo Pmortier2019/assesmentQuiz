@@ -22,6 +22,9 @@ public class ImportTestRequest {
     private boolean isFree = true;
 
     private int estimatedTimeMinutes;
+
+    /** How many questions to show per attempt (0 = show all). */
+    private int displayQuestionCount;
     private List<ImportQuestionDto> questions;
 
     @Data

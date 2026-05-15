@@ -52,6 +52,13 @@ public class AssessmentTest {
 
     private int estimatedTimeMinutes;
 
+    /**
+     * How many questions to show per attempt. If 0 or null, all questions are shown.
+     * Enables question-pool behaviour: store e.g. 20 questions, show 8 random ones each time.
+     */
+    @Builder.Default
+    private int displayQuestionCount = 0;
+
     // Categorisation — drives recommendations and filtering
     @Enumerated(EnumType.STRING)
     private AssessmentCategory category;

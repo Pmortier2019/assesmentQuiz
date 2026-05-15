@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -58,7 +59,8 @@ public class TestService {
             checkProAccess(userId, test);
         }
 
-        List<Question> questions = questionRepository.findByAssessmentTestIdOrderByOrderIndex(testId);
+        List<Question> allQuestions = questionRepository.findByAssessmentTestIdOrderByOrderIndex(testId);
+        List<Question> questions = selectQuestions(allQuestions, test.getDisplayQuestionCount());
         return toTestDetailResponse(test, questions);
     }
 
@@ -168,6 +170,13 @@ public class TestService {
         }
     }
 
+    private List<Question> selectQuestions(List<Question> pool, int displayCount) {
+        if (displayCount <= 0 || displayCount >= pool.size()) return pool;
+        List<Question> shuffled = new ArrayList<>(pool);
+        Collections.shuffle(shuffled);
+        return shuffled.subList(0, displayCount);
+    }
+
     private String buildFeedback(int score) {
         if (score >= 80) return "Excellent! You have a strong grasp of this topic.";
         if (score >= 60) return "Good effort! Review the questions you missed to improve further.";
@@ -238,6 +247,7 @@ public class TestService {
                 .isGeneratedByAI(test.isGeneratedByAI())
                 .estimatedTimeMinutes(test.getEstimatedTimeMinutes())
                 .questionCount(test.getQuestions().size())
+                .displayQuestionCount(test.getDisplayQuestionCount())
                 .createdAt(test.getCreatedAt())
                 .category(test.getCategory())
                 .subcategory(test.getSubcategory())
