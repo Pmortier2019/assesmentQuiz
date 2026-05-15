@@ -118,6 +118,7 @@ export interface TestResult {
   strengths: string[];
   weakPoints: string[];
   aiFeedback?: string;
+  tips?: string[];
   questionResults?: QuestionResult[]; // populated only from submit response
 }
 

@@ -17,6 +17,7 @@ public class SubmitTestResponse {
     private int correctAnswers;
     private int timeTakenSeconds;
     private String feedback;
+    private List<String> tips;
     private LocalDateTime completedAt;
     private List<QuestionResultDetail> questionResults;
 

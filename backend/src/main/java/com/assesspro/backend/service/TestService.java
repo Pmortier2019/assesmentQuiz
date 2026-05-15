@@ -147,6 +147,7 @@ public class TestService {
                 .correctAnswers(correct)
                 .timeTakenSeconds(result.getTimeTakenSeconds())
                 .feedback(result.getFeedback())
+                .tips(buildTips(score, test.getType()))
                 .completedAt(result.getCreatedAt())
                 .questionResults(details)
                 .build();
@@ -172,6 +173,53 @@ public class TestService {
         if (score >= 60) return "Good effort! Review the questions you missed to improve further.";
         if (score >= 40) return "Keep practicing. Focus on the explanations for incorrect answers.";
         return "This topic needs more work. Review the material and try again.";
+    }
+
+    private List<String> buildTips(int score, TestType type) {
+        List<String> tips = new ArrayList<>();
+
+        // Score-based tip
+        if (score < 40) {
+            tips.add("Go back to basics: re-read each explanation before retrying this test.");
+        } else if (score < 60) {
+            tips.add("Focus on the questions you got wrong and work through the explanations step by step.");
+        } else if (score < 80) {
+            tips.add("You're close — try to identify whether your mistakes are due to rushing or gaps in knowledge.");
+        } else {
+            tips.add("Great score! Challenge yourself with a harder difficulty to keep improving.");
+        }
+
+        // Test-type specific tips
+        switch (type) {
+            case NUMERICAL_REASONING -> {
+                tips.add("Always estimate the answer first — it helps you catch calculation errors early.");
+                tips.add("Write down intermediate steps; mental arithmetic under time pressure leads to small mistakes.");
+                tips.add("Practise percentage change daily: (new − old) ÷ old × 100.");
+            }
+            case LOGICAL_REASONING -> {
+                tips.add("Eliminate impossible answers first rather than looking for the right one directly.");
+                tips.add("Draw out patterns or sequences on paper — visualising them makes the rule easier to spot.");
+                tips.add("For syllogism questions, use a quick Venn diagram to test whether the conclusion must be true.");
+            }
+            case VERBAL_REASONING -> {
+                tips.add("Answer only from what the passage says — your own knowledge can lead you astray.");
+                tips.add("Watch for absolute words like 'always', 'never', 'all' — they are almost always false.");
+                tips.add("Skim the questions before reading the passage so you know what to look for.");
+            }
+            case SITUATIONAL_JUDGEMENT -> {
+                tips.add("Think about what response best balances the needs of both the team and the organisation.");
+                tips.add("Avoid options that ignore the problem, create conflict, or bypass proper procedures.");
+                tips.add("Consider the long-term outcome of each option, not just the immediate fix.");
+            }
+            case PERSONALITY_WORK_STYLE -> {
+                tips.add("Answer based on how you actually behave at work, not how you think you should behave.");
+                tips.add("Consistency matters — if you answer very differently on similar questions it can lower your reliability score.");
+                tips.add("There are no universally correct answers; focus on accurately representing your work style.");
+            }
+            default -> tips.add("Review your incorrect answers and read each explanation carefully before your next attempt.");
+        }
+
+        return tips;
     }
 
     public TestResponse toTestResponse(AssessmentTest test) {

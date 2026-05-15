@@ -145,6 +145,7 @@ interface BackendSubmitResponse {
   correctAnswers: number;
   timeTakenSeconds: number;
   feedback: string;
+  tips: string[];
   completedAt: string;
   questionResults: {
     questionId: number;
@@ -261,6 +262,7 @@ function mapSubmitResponse(r: BackendSubmitResponse): TestResult {
     strengths: [],
     weakPoints: [],
     aiFeedback: r.feedback,
+    tips: r.tips ?? [],
     questionResults,
   };
 }

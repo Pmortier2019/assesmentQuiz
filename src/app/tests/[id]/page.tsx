@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import {
   ChevronLeft, ChevronRight, Clock, CheckCircle2, Flag,
-  Trophy, TrendingUp, AlertCircle, ChevronDown, ArrowRight,
+  Trophy, TrendingUp, AlertCircle, ChevronDown, ArrowRight, Lightbulb,
 } from "lucide-react";
 import { getTestById, submitTest } from "@/lib/api";
 import { TestQuestionCard } from "@/components/test/TestQuestionCard";
@@ -128,6 +128,28 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
           <div className="card p-4 border-l-4 border-[#4f46e5] animate-fade-up delay-200">
             <p className="text-sm font-semibold text-[#0D1B2E] mb-1">Feedback</p>
             <p className="text-sm text-[#475569]">{result.aiFeedback}</p>
+          </div>
+        )}
+
+        {/* Tips to improve */}
+        {result.tips && result.tips.length > 0 && (
+          <div className="card p-5 animate-fade-up delay-250">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center">
+                <Lightbulb size={16} className="text-amber-500" />
+              </div>
+              <h2 className="font-display font-semibold text-base text-[#0D1B2E]">Tips to improve</h2>
+            </div>
+            <ul className="flex flex-col gap-3">
+              {result.tips.map((tip, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <span className="mt-0.5 w-5 h-5 rounded-full bg-amber-100 text-amber-700 text-xs font-bold flex items-center justify-center flex-shrink-0">
+                    {i + 1}
+                  </span>
+                  <p className="text-sm text-[#475569] leading-relaxed">{tip}</p>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
 
