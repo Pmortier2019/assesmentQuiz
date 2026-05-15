@@ -444,6 +444,16 @@ export async function cancelSubscription(): Promise<void> {
   // TODO: DELETE /api/users/{id}/subscription once backend supports it
 }
 
+// ─── Admin ───────────────────────────────────────────────────────────────────
+
+export async function importTest(json: unknown): Promise<Test> {
+  const result = await apiFetch<BackendTestListItem>(
+    "/api/admin/tests/import",
+    { method: "POST", body: JSON.stringify(json) }
+  );
+  return mapTestListItem(result);
+}
+
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
 export async function login(_email: string, _password: string): Promise<User> {

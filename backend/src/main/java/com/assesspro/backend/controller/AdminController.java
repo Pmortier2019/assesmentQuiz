@@ -1,9 +1,11 @@
 package com.assesspro.backend.controller;
 
 import com.assesspro.backend.dto.GenerateTestRequest;
+import com.assesspro.backend.dto.ImportTestRequest;
 import com.assesspro.backend.dto.TestResponse;
 import com.assesspro.backend.entity.AssessmentTest;
 import com.assesspro.backend.service.AiTestGenerationService;
+import com.assesspro.backend.service.ImportTestService;
 import com.assesspro.backend.service.TestService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ public class AdminController {
 
     private final AiTestGenerationService aiTestGenerationService;
     private final TestService testService;
+    private final ImportTestService importTestService;
 
     /**
      * POST /api/admin/tests/generate
@@ -36,5 +39,21 @@ public class AdminController {
                 request.getNumberOfQuestions()
         );
         return ResponseEntity.status(HttpStatus.CREATED).body(testService.toTestResponse(test));
+    }
+
+    /**
+     * POST /api/admin/tests/import
+     *
+     * Accepts the JSON structure produced by the AI assessment generation prompt
+     * and saves it directly to the database — no DataInitializer changes required.
+     */
+    @PostMapping("/tests/import")
+    public ResponseEntity<?> importTest(@RequestBody ImportTestRequest request) {
+        try {
+            AssessmentTest test = importTestService.importTest(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body(testService.toTestResponse(test));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
