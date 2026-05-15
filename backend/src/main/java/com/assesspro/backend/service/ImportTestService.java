@@ -8,7 +8,7 @@ import com.assesspro.backend.entity.enums.AssessmentCategory;
 import com.assesspro.backend.entity.enums.Difficulty;
 import com.assesspro.backend.entity.enums.Language;
 import com.assesspro.backend.entity.enums.TestType;
-import com.assesspro.backend.repository.TestRepository;
+import com.assesspro.backend.repository.AssessmentTestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ImportTestService {
 
-    private final TestRepository testRepository;
+    private final AssessmentTestRepository testRepository;
 
     @Transactional
     public AssessmentTest importTest(ImportTestRequest req) {
