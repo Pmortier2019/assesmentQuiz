@@ -17,7 +17,7 @@ import java.time.Duration;
 public class GeminiAiClient implements AiClient {
 
     private static final String ENDPOINT =
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent";
 
     @Value("${GEMINI_API_KEY:}")
     private String apiKey;
