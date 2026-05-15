@@ -32,7 +32,7 @@ public class RuleBasedRecommendationEngine implements RecommendationEngine {
         return allTests.stream()
                 .map(test -> Map.entry(test, score(test, role, industry, company)))
                 .filter(e -> e.getValue() > 0)
-                .sorted(Comparator.<Map.Entry<AssessmentTest, Integer>>comparingByValue().reversed()
+                .sorted(Map.Entry.<AssessmentTest, Integer>comparingByValue().reversed()
                         .thenComparing(e -> e.getKey().isFree() ? 0 : 1)
                         .thenComparing(e -> e.getKey().getTitle()))
                 .map(Map.Entry::getKey)
