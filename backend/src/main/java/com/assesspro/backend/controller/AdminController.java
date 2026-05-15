@@ -7,6 +7,7 @@ import com.assesspro.backend.entity.AssessmentTest;
 import com.assesspro.backend.service.AiTestGenerationService;
 import com.assesspro.backend.service.ImportTestService;
 import com.assesspro.backend.service.TestService;
+import com.assesspro.backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ public class AdminController {
     private final AiTestGenerationService aiTestGenerationService;
     private final TestService testService;
     private final ImportTestService importTestService;
+    private final UserService userService;
 
     /**
      * POST /api/admin/tests/generate
@@ -54,6 +56,24 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.CREATED).body(testService.toTestResponse(test));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    /**
+     * POST /api/admin/generate-for-user/{userId}
+     *
+     * Generates a personalised AI test based on the user's career profile
+     * and saves it. Called by the "Generate a test for me" button.
+     */
+    @PostMapping("/generate-for-user/{userId}")
+    public ResponseEntity<?> generateForUser(@PathVariable Long userId) {
+        try {
+            var user = userService.getUserEntity(userId);
+            var test = aiTestGenerationService.generateForUser(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(testService.toTestResponse(test));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                    .body("Test generation failed: " + e.getMessage());
         }
     }
 }

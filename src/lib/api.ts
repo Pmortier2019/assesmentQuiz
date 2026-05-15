@@ -450,7 +450,7 @@ export async function cancelSubscription(): Promise<void> {
 
 export async function generateTestForMe(): Promise<Test> {
   const result = await apiFetch<BackendTestListItem>(
-    `/api/generate/test/${CURRENT_USER_ID}`,
+    `/api/admin/generate-for-user/${CURRENT_USER_ID}`,
     { method: "POST" }
   );
   return mapTestListItem(result);
