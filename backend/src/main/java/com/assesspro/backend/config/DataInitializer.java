@@ -4,7 +4,6 @@ import com.assesspro.backend.entity.*;
 import com.assesspro.backend.entity.enums.*;
 import java.util.Arrays;
 import com.assesspro.backend.repository.*;
-import com.assesspro.backend.service.AiTestGenerationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -19,7 +18,6 @@ public class DataInitializer implements CommandLineRunner {
     private final UserRepository userRepository;
     private final AssessmentTestRepository testRepository;
     private final SubscriptionRepository subscriptionRepository;
-    private final AiTestGenerationService aiTestGenerationService;
 
     @Override
     public void run(String... args) {
@@ -31,7 +29,6 @@ public class DataInitializer implements CommandLineRunner {
         seedUsers();
         seedFreeTests();
         seedProTests();
-        seedAiGeneratedTests();
         log.info("Database seeding complete.");
     }
 
@@ -757,18 +754,6 @@ public class DataInitializer implements CommandLineRunner {
                 ao("Push stress aside completely and maintain your normal pace", false, 4));
 
         testRepository.save(t);
-    }
-
-    // ── AI-generated test ─────────────────────────────────────────────────────
-
-    private void seedAiGeneratedTests() {
-        try {
-            aiTestGenerationService.generateAndSave(
-                    TestType.NUMERICAL_REASONING, Difficulty.MEDIUM, Language.EN, 5);
-            log.info("Seeded 1 AI-generated test");
-        } catch (Exception e) {
-            log.warn("AI test seeding skipped (non-fatal): {}", e.getMessage());
-        }
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
