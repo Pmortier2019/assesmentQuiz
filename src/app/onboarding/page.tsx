@@ -226,7 +226,7 @@ export default function OnboardingPage() {
               <Zap size={13} className="text-white fill-white" />
             </div>
             <span className="font-display font-bold text-[#0D1B2E]">
-              Assess<span className="gradient-text">Pro</span>
+              Mortier <span className="gradient-text">Asses</span>
             </span>
           </Link>
           <Stepper current={step} />

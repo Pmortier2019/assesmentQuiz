@@ -38,13 +38,13 @@ public class DataInitializer implements CommandLineRunner {
     // ── Users ─────────────────────────────────────────────────────────────────
 
     private void seedUsers() {
-        User demo = User.builder().email("demo@assesspro.io").name("Demo User")
+        User demo = User.builder().email("demo@mortierasses.io").name("Demo User")
                 .preferredLanguage(Language.EN).freeTestsUsed(0).build();
         userRepository.save(demo);
         subscriptionRepository.save(Subscription.builder().user(demo)
                 .status(SubscriptionStatus.FREE).plan("FREE").build());
 
-        User pro = User.builder().email("pro@assesspro.io").name("Pro User")
+        User pro = User.builder().email("pro@mortierasses.io").name("Pro User")
                 .preferredLanguage(Language.EN).freeTestsUsed(5).build();
         userRepository.save(pro);
         subscriptionRepository.save(Subscription.builder().user(pro)

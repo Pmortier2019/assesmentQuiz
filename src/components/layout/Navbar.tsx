@@ -29,7 +29,7 @@ export function Navbar({ transparent = false }: NavbarProps) {
               <Zap size={16} className="text-white fill-white" />
             </div>
             <span className="font-display font-bold text-[#0D1B2E] text-lg tracking-tight">
-              Assess<span className="gradient-text">Pro</span>
+              Mortier <span className="gradient-text">Asses</span>
             </span>
           </Link>
 

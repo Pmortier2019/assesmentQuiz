@@ -20,7 +20,7 @@ export function SocialProofSection() {
           <h2 className="font-display font-bold text-3xl sm:text-4xl text-[#0D1B2E] mb-3">
             Trusted by job seekers everywhere
           </h2>
-          <p className="text-[#64748b]">What our users say after practicing with AssessPro</p>
+          <p className="text-[#64748b]">What our users say after practicing with Mortier Asses</p>
         </div>
 
         {/* Testimonials */}

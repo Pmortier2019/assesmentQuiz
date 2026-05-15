@@ -3,15 +3,15 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "AssessPro — Train for job assessments. Every day.",
-    template: "%s | AssessPro",
+    default: "Mortier Asses — Train for job assessments. Every day.",
+    template: "%s | Mortier Asses",
   },
   description:
     "Practice the tests companies use during hiring. Start with 5 free assessments, then unlock unlimited AI-generated practice for €4/month.",
   keywords: ["assessment", "job application", "practice tests", "numerical reasoning", "logical reasoning"],
-  authors: [{ name: "AssessPro" }],
+  authors: [{ name: "Mortier Asses" }],
   openGraph: {
-    title: "AssessPro — Train for job assessments",
+    title: "Mortier Asses — Train for job assessments",
     description: "Practice numerical, logical, verbal reasoning and more. Duolingo for professionals.",
     type: "website",
   },

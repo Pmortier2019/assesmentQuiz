@@ -11,7 +11,7 @@ function HeroDashboardMockup() {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-xs text-[#94a3b8] font-medium">Welcome back</p>
-            <p className="font-display font-bold text-[#0D1B2E]">Alex de Vries</p>
+            <p className="font-display font-bold text-[#0D1B2E]">Pierre</p>
           </div>
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200">
             <Flame size={14} className="text-amber-500 fill-amber-400" />

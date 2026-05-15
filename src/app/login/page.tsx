@@ -46,7 +46,7 @@ export default function LoginPage() {
               <Zap size={13} className="text-white fill-white" />
             </div>
             <span className="font-display font-bold text-[#0D1B2E]">
-              Assess<span className="gradient-text">Pro</span>
+              Mortier <span className="gradient-text">Asses</span>
             </span>
           </Link>
         </div>
@@ -92,7 +92,7 @@ export default function LoginPage() {
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Alex de Vries"
+                    placeholder="Pierre Mortier"
                     required
                     className="w-full px-4 py-3 rounded-xl border border-[#e2e8f0] text-sm text-[#0D1B2E] placeholder-[#94a3b8] focus:outline-none focus:border-[#4f46e5] focus:ring-2 focus:ring-[#4f46e5]/10 transition-all"
                   />
