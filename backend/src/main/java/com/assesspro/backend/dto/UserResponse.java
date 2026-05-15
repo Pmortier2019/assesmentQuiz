@@ -17,4 +17,7 @@ public class UserResponse {
     @JsonProperty("isPro")
     private boolean isPro;
     private LocalDateTime createdAt;
+    private String targetRole;
+    private String targetIndustry;
+    private String targetCompany;
 }

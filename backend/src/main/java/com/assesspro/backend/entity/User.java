@@ -33,6 +33,11 @@ public class User {
     @Builder.Default
     private int freeTestsUsed = 0;
 
+    // Career targeting — drives personalised recommendations
+    private String targetRole;
+    private String targetIndustry;
+    private String targetCompany;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Subscription subscription;
 

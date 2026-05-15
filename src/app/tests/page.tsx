@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Sparkles, PackageOpen } from "lucide-react";
+import { Sparkles, PackageOpen, Star } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { TestCard } from "@/components/cards/TestCard";
 import { FilterBar } from "@/components/test/FilterBar";
+import type { SortOption } from "@/components/test/FilterBar";
 import { getTests } from "@/lib/api";
-import type { Test, AssessmentType, Difficulty } from "@/lib/types";
+import type { Test, AssessmentType, Difficulty, RoleCategory, IndustryCategory } from "@/lib/types";
 
 export default function TestsPage() {
   const [tests, setTests] = useState<Test[]>([]);
@@ -16,6 +17,9 @@ export default function TestsPage() {
   const [selectedType, setSelectedType] = useState<AssessmentType | "all">("all");
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | "all">("all");
   const [selectedTier, setSelectedTier] = useState<"free" | "pro" | "all">("all");
+  const [selectedRole, setSelectedRole] = useState<RoleCategory | "all">("all");
+  const [selectedIndustry, setSelectedIndustry] = useState<IndustryCategory | "all">("all");
+  const [sortBy, setSortBy] = useState<SortOption>("default");
 
   useEffect(() => {
     const load = async () => {
@@ -32,9 +36,45 @@ export default function TestsPage() {
     load();
   }, [search, selectedType, selectedDifficulty, selectedTier]);
 
-  const freeTests  = tests.filter((t) => t.isFree);
-  const proTests   = tests.filter((t) => !t.isFree);
-  const aiTests    = tests.filter((t) => t.isGeneratedByAI);
+  // Client-side role/industry/sort filtering
+  const filtered = tests
+    .filter((t) => {
+      if (selectedRole !== "all") {
+        const matches = t.targetRoles?.some((r) =>
+          r.toLowerCase().includes(selectedRole.toLowerCase()) ||
+          selectedRole.toLowerCase().includes(r.toLowerCase())
+        );
+        if (!matches) return false;
+      }
+      if (selectedIndustry !== "all") {
+        const matches = t.targetIndustries?.some((ind) =>
+          ind.toLowerCase().includes(selectedIndustry.toLowerCase())
+        );
+        if (!matches) return false;
+      }
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortBy === "best_match") {
+        const aRec = a.isRecommended ? 1 : 0;
+        const bRec = b.isRecommended ? 1 : 0;
+        if (aRec !== bRec) return bRec - aRec;
+        // Secondary: role match score
+        const aRole = selectedRole !== "all"
+          ? (a.targetRoles?.filter((r) => r.toLowerCase().includes(selectedRole.toLowerCase())).length ?? 0) : 0;
+        const bRole = selectedRole !== "all"
+          ? (b.targetRoles?.filter((r) => r.toLowerCase().includes(selectedRole.toLowerCase())).length ?? 0) : 0;
+        return bRole - aRole;
+      }
+      return 0;
+    });
+
+  const freeTests = filtered.filter((t) => t.isFree);
+  const proTests  = filtered.filter((t) => !t.isFree);
+  const aiTests   = filtered.filter((t) => t.isGeneratedByAI);
+  const recommendedTests = filtered.filter((t) => t.isRecommended);
+
+  const hasCareerFilters = selectedRole !== "all" || selectedIndustry !== "all" || sortBy === "best_match";
 
   return (
     <div className="flex min-h-screen bg-[#f8fafc]">
@@ -50,7 +90,8 @@ export default function TestsPage() {
           <div className="animate-fade-up">
             <h1 className="font-display font-bold text-2xl text-[#0D1B2E] mb-1">Test Library</h1>
             <p className="text-[#64748b] text-sm">
-              {tests.length} tests available · {aiTests.length} AI-generated
+              {filtered.length} tests available · {aiTests.length} AI-generated
+              {recommendedTests.length > 0 && ` · ${recommendedTests.length} recommended for you`}
             </p>
           </div>
 
@@ -65,6 +106,13 @@ export default function TestsPage() {
               onDifficultyChange={setSelectedDifficulty}
               selectedTier={selectedTier}
               onTierChange={setSelectedTier}
+              selectedRole={selectedRole}
+              onRoleChange={setSelectedRole}
+              selectedIndustry={selectedIndustry}
+              onIndustryChange={setSelectedIndustry}
+              sortBy={sortBy}
+              onSortChange={setSortBy}
+              showRoleFilter
             />
           </div>
 
@@ -74,8 +122,7 @@ export default function TestsPage() {
                 <div key={i} className="skeleton h-60 rounded-2xl" />
               ))}
             </div>
-          ) : tests.length === 0 ? (
-            /* Empty state */
+          ) : filtered.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-24 gap-4 text-center animate-fade-in">
               <div className="w-16 h-16 rounded-2xl bg-[#f1f5f9] flex items-center justify-center">
                 <PackageOpen size={28} className="text-[#94a3b8]" />
@@ -92,6 +139,9 @@ export default function TestsPage() {
                   setSelectedType("all");
                   setSelectedDifficulty("all");
                   setSelectedTier("all");
+                  setSelectedRole("all");
+                  setSelectedIndustry("all");
+                  setSortBy("default");
                 }}
                 className="text-sm text-[#4f46e5] font-semibold hover:underline"
               >
@@ -100,9 +150,37 @@ export default function TestsPage() {
             </div>
           ) : (
             <div className="flex flex-col gap-8">
+
+              {/* Best matches — shown when best_match sort is active */}
+              {sortBy === "best_match" && recommendedTests.length > 0 && (
+                <section className="animate-fade-up">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Star size={16} className="text-[#f59e0b]" />
+                    <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">Best Matches</h2>
+                    <span className="text-xs font-semibold text-[#4f46e5] bg-[#eef2ff] px-2 py-0.5 rounded-full border border-[#c7d2fe]">
+                      {recommendedTests.length} for you
+                    </span>
+                  </div>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {recommendedTests.map((test) => (
+                      <TestCard key={test.id} test={test} isLocked={!test.isFree} showRecommendedBadge />
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {/* Career filter active — show role/industry info banner */}
+              {hasCareerFilters && selectedRole !== "all" && (
+                <div className="rounded-xl border border-[#c7d2fe] bg-[#eef2ff] px-4 py-3 flex items-center gap-3 text-sm text-[#4f46e5] font-medium">
+                  <Star size={14} />
+                  Showing tests aligned with <strong>{selectedRole}</strong>
+                  {selectedIndustry !== "all" && <> in <strong>{selectedIndustry}</strong></>}
+                </div>
+              )}
+
               {/* Free tests */}
               {freeTests.length > 0 && (
-                <section className="animate-fade-up delay-200">
+                <section className={sortBy === "best_match" && recommendedTests.length > 0 ? "" : "animate-fade-up delay-200"}>
                   <div className="flex items-center gap-2 mb-4">
                     <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">Free Tests</h2>
                     <span className="text-xs font-semibold text-[#10b981] bg-[#f0fdf4] px-2 py-0.5 rounded-full border border-[#bbf7d0]">
@@ -111,7 +189,12 @@ export default function TestsPage() {
                   </div>
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
                     {freeTests.map((test) => (
-                      <TestCard key={test.id} test={test} isLocked={false} />
+                      <TestCard
+                        key={test.id}
+                        test={test}
+                        isLocked={false}
+                        showRecommendedBadge={test.isRecommended}
+                      />
                     ))}
                   </div>
                 </section>
@@ -133,7 +216,12 @@ export default function TestsPage() {
                   </div>
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
                     {proTests.map((test) => (
-                      <TestCard key={test.id} test={test} isLocked />
+                      <TestCard
+                        key={test.id}
+                        test={test}
+                        isLocked
+                        showRecommendedBadge={test.isRecommended}
+                      />
                     ))}
                   </div>
                 </section>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Clock, Lock, Sparkles, ChevronRight } from "lucide-react";
+import { Clock, Lock, Sparkles, ChevronRight, Star } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { cn, ASSESSMENT_TYPE_LABELS, ASSESSMENT_TYPE_ICONS, DIFFICULTY_COLORS, DIFFICULTY_LABELS, formatDuration } from "@/lib/utils";
 import type { Test } from "@/lib/types";
@@ -11,10 +11,12 @@ interface TestCardProps {
   isLocked?: boolean;
   onStart?: (id: string) => void;
   className?: string;
+  showRecommendedBadge?: boolean;
 }
 
-export function TestCard({ test, isLocked = false, onStart, className }: TestCardProps) {
+export function TestCard({ test, isLocked = false, onStart, className, showRecommendedBadge }: TestCardProps) {
   const locked = isLocked || (!test.isFree);
+  const isRecommended = showRecommendedBadge ?? test.isRecommended;
 
   return (
     <div
@@ -24,9 +26,18 @@ export function TestCard({ test, isLocked = false, onStart, className }: TestCar
         className
       )}
     >
+      {/* Recommended badge */}
+      {isRecommended && (
+        <div className="absolute top-3 left-3">
+          <span className="flex items-center gap-1 text-[10px] font-bold text-[#4f46e5] bg-[#eef2ff] border border-[#c7d2fe] px-2 py-0.5 rounded-full uppercase tracking-wider">
+            <Star size={9} /> Best match
+          </span>
+        </div>
+      )}
+
       {/* AI badge */}
       {test.isGeneratedByAI && (
-        <div className="absolute top-3 right-3">
+        <div className={cn("absolute top-3", isRecommended ? "right-3" : "right-3")}>
           <Badge variant="ai" size="sm">
             <Sparkles size={10} />
             AI

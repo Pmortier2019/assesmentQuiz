@@ -70,6 +70,13 @@ export interface Test {
   questionCount?: number; // available from list endpoint when questions array is empty
   createdAt: string;
   tags: string[];
+  category?: AssessmentCategory;
+  subcategory?: string;
+  targetRoles?: string[];
+  targetIndustries?: string[];
+  recommendedForCompanies?: string[];
+  skillsMeasured?: string[];
+  isRecommended?: boolean;
 }
 
 // ─── User / Auth ─────────────────────────────────────────────────────────────
@@ -84,6 +91,9 @@ export interface User {
   joinedAt: string;
   preferredTestType?: AssessmentType;
   level?: "beginner" | "intermediate" | "advanced";
+  targetRole?: string;
+  targetIndustry?: string;
+  targetCompany?: string;
 }
 
 // ─── Results ─────────────────────────────────────────────────────────────────
@@ -111,11 +121,71 @@ export interface TestResult {
   questionResults?: QuestionResult[]; // populated only from submit response
 }
 
+// ─── Career targeting ─────────────────────────────────────────────────────────
+
+export type RoleCategory =
+  | "Software Engineering"
+  | "Data & Analytics"
+  | "Marketing"
+  | "Communication & PR"
+  | "Finance"
+  | "Consulting"
+  | "HR"
+  | "Sales"
+  | "Operations"
+  | "Design & Creative"
+  | "Product Management"
+  | "Customer Support"
+  | "Legal"
+  | "Management & Leadership";
+
+export type IndustryCategory =
+  | "Technology"
+  | "Finance"
+  | "Consulting"
+  | "Government"
+  | "Healthcare"
+  | "Retail"
+  | "Media"
+  | "Energy"
+  | "Telecommunications"
+  | "Education"
+  | "Logistics"
+  | "Manufacturing";
+
+export type AssessmentCategory =
+  | "COGNITIVE"
+  | "PERSONALITY"
+  | "COMMUNICATION"
+  | "MARKETING"
+  | "IT_ENGINEERING"
+  | "FINANCE_CONSULTING"
+  | "HR_LEADERSHIP"
+  | "CREATIVE";
+
+export interface CareerTargets {
+  targetRole?: string;
+  targetIndustry?: string;
+  targetCompany?: string;
+}
+
+export interface PreparationPath {
+  recommendedOrder: string[];
+  focusAreas: string[];
+  estimatedPreparationDays: number;
+  targetRole?: string;
+  targetIndustry?: string;
+  targetCompany?: string;
+}
+
 // ─── Onboarding ──────────────────────────────────────────────────────────────
 
 export interface OnboardingData {
-  preferredTestType: AssessmentType;
+  targetRole?: string;
+  targetIndustry?: string;
+  targetCompany?: string;
   level: "beginner" | "intermediate" | "advanced";
+  preferredTestType?: AssessmentType;
 }
 
 // ─── API response wrappers ───────────────────────────────────────────────────

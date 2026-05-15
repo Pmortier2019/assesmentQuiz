@@ -5,12 +5,15 @@ import type {
   QuestionResult,
   OnboardingData,
   AssessmentType,
+  AssessmentCategory,
   Difficulty,
   Language,
   PaginatedResponse,
   Question,
   MediaItem,
   AnswerOption,
+  CareerTargets,
+  PreparationPath,
 } from "./types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
@@ -72,6 +75,13 @@ interface BackendTestListItem {
   estimatedTimeMinutes: number;
   questionCount: number;
   createdAt: string;
+  category?: string;
+  subcategory?: string;
+  targetRoles?: string[];
+  targetIndustries?: string[];
+  recommendedForCompanies?: string[];
+  skillsMeasured?: string[];
+  isRecommended?: boolean;
 }
 
 interface BackendAnswerOption {
@@ -109,6 +119,9 @@ interface BackendUserResponse {
   freeTestsUsed: number;
   isPro: boolean;
   createdAt: string;
+  targetRole?: string;
+  targetIndustry?: string;
+  targetCompany?: string;
 }
 
 interface BackendUserResult {
@@ -160,6 +173,13 @@ function mapTestListItem(b: BackendTestListItem): Test {
     questionCount: b.questionCount,
     createdAt: b.createdAt,
     tags: [],
+    category: b.category as AssessmentCategory | undefined,
+    subcategory: b.subcategory,
+    targetRoles: b.targetRoles ?? [],
+    targetIndustries: b.targetIndustries ?? [],
+    recommendedForCompanies: b.recommendedForCompanies ?? [],
+    skillsMeasured: b.skillsMeasured ?? [],
+    isRecommended: b.isRecommended ?? false,
   };
 }
 
@@ -254,6 +274,9 @@ function mapUser(u: BackendUserResponse): User {
     freeTestsUsed: u.freeTestsUsed,
     streak: 0, // not tracked by backend yet
     joinedAt: u.createdAt,
+    targetRole: u.targetRole,
+    targetIndustry: u.targetIndustry,
+    targetCompany: u.targetCompany,
   };
 }
 
@@ -339,8 +362,35 @@ export async function getCurrentUser(): Promise<User> {
   return mapUser(u);
 }
 
-export async function saveOnboarding(_data: OnboardingData): Promise<void> {
-  // TODO: POST /api/users/{id}/onboarding once backend supports it
+export async function saveOnboarding(data: OnboardingData): Promise<void> {
+  if (data.targetRole || data.targetIndustry || data.targetCompany) {
+    await updateCareerTargets({
+      targetRole: data.targetRole,
+      targetIndustry: data.targetIndustry,
+      targetCompany: data.targetCompany,
+    });
+  }
+}
+
+export async function updateCareerTargets(targets: CareerTargets): Promise<User> {
+  const u = await apiFetch<BackendUserResponse>(
+    `/api/users/${CURRENT_USER_ID}/career-targets`,
+    { method: "PATCH", body: JSON.stringify(targets) }
+  );
+  return mapUser(u);
+}
+
+export async function getPreparationPath(): Promise<PreparationPath> {
+  return apiFetch<PreparationPath>(
+    `/api/users/${CURRENT_USER_ID}/preparation-path`
+  );
+}
+
+export async function getRecommendedTests(): Promise<Test[]> {
+  const items = await apiFetch<BackendTestListItem[]>(
+    `/api/tests/recommended/${CURRENT_USER_ID}`
+  );
+  return items.map(mapTestListItem);
 }
 
 // ─── Results ─────────────────────────────────────────────────────────────────

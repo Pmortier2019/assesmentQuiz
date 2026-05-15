@@ -2,6 +2,7 @@ package com.assesspro.backend.config;
 
 import com.assesspro.backend.entity.*;
 import com.assesspro.backend.entity.enums.*;
+import java.util.Arrays;
 import com.assesspro.backend.repository.*;
 import com.assesspro.backend.service.AiTestGenerationService;
 import lombok.RequiredArgsConstructor;
@@ -67,6 +68,12 @@ public class DataInitializer implements CommandLineRunner {
         AssessmentTest t = buildTest("Number Essentials",
                 "Master the fundamentals: sequences, percentages, fractions and basic algebra.",
                 TestType.NUMERICAL_REASONING, Difficulty.EASY, true, false, 10);
+        t.setCategory(AssessmentCategory.COGNITIVE);
+        t.setSubcategory("Numerical");
+        t.setTargetRoles(Arrays.asList("Finance", "Consulting", "Data & Analytics", "Operations", "Software Engineering"));
+        t.setTargetIndustries(Arrays.asList("Finance", "Consulting", "Technology", "Logistics"));
+        t.setRecommendedForCompanies(Arrays.asList("Deloitte", "KPMG", "EY", "McKinsey", "BCG"));
+        t.setSkillsMeasured(Arrays.asList("sequences", "percentages", "fractions", "basic algebra"));
 
         addQ(t, "What comes next in the sequence: 2, 4, 8, 16, ?",
                 "Each number doubles the previous one. 16 × 2 = 32.", 1,
@@ -107,6 +114,12 @@ public class DataInitializer implements CommandLineRunner {
         AssessmentTest t = buildTest("Logic Foundations",
                 "Sharpen your reasoning: sequences, analogies and simple deductions.",
                 TestType.LOGICAL_REASONING, Difficulty.EASY, true, false, 10);
+        t.setCategory(AssessmentCategory.COGNITIVE);
+        t.setSubcategory("Logical");
+        t.setTargetRoles(Arrays.asList("Software Engineering", "Consulting", "Data & Analytics", "Product Management", "Legal"));
+        t.setTargetIndustries(Arrays.asList("Technology", "Consulting", "Finance", "Government"));
+        t.setRecommendedForCompanies(Arrays.asList("Google", "Amazon", "McKinsey", "BCG", "Bain"));
+        t.setSkillsMeasured(Arrays.asList("deductive reasoning", "analogies", "pattern recognition", "syllogisms"));
 
         addQ(t, "Which does NOT belong: Circle, Square, Triangle, Cube?",
                 "Circle, Square and Triangle are 2D shapes. Cube is a 3D shape.", 1,
@@ -139,6 +152,12 @@ public class DataInitializer implements CommandLineRunner {
         AssessmentTest t = buildTest("Reading & Vocabulary Starter",
                 "Build your verbal skills: comprehension, synonyms and sentence logic.",
                 TestType.VERBAL_REASONING, Difficulty.EASY, true, false, 10);
+        t.setCategory(AssessmentCategory.COMMUNICATION);
+        t.setSubcategory("Verbal");
+        t.setTargetRoles(Arrays.asList("Communication & PR", "Marketing", "Legal", "HR", "Customer Support", "Management & Leadership"));
+        t.setTargetIndustries(Arrays.asList("Media", "Government", "Education", "Healthcare", "Retail"));
+        t.setRecommendedForCompanies(Arrays.asList("Unilever", "P&G", "BBC", "Edelman"));
+        t.setSkillsMeasured(Arrays.asList("comprehension", "vocabulary", "sentence logic", "inference"));
 
         addQ(t, "\"The sky appears blue because of the scattering of sunlight.\" Which statement is TRUE?",
                 "Rayleigh scattering causes shorter (blue) wavelengths to scatter more, making the sky look blue.", 1,
@@ -177,6 +196,12 @@ public class DataInitializer implements CommandLineRunner {
         AssessmentTest t = buildTest("Workplace Scenarios: Foundations",
                 "Practice responding effectively to everyday professional situations.",
                 TestType.SITUATIONAL_JUDGEMENT, Difficulty.EASY, true, false, 10);
+        t.setCategory(AssessmentCategory.HR_LEADERSHIP);
+        t.setSubcategory("Situational Judgement");
+        t.setTargetRoles(Arrays.asList("HR", "Sales", "Customer Support", "Management & Leadership", "Consulting", "Operations"));
+        t.setTargetIndustries(Arrays.asList("Healthcare", "Retail", "Consulting", "Finance", "Government"));
+        t.setRecommendedForCompanies(Arrays.asList("Deloitte", "Accenture", "KPMG", "NHS", "Unilever"));
+        t.setSkillsMeasured(Arrays.asList("professional judgement", "interpersonal skills", "conflict resolution", "initiative"));
 
         addQ(t, "You notice a colleague made an error in a client report that has not yet been sent. What do you do?",
                 "Informing the colleague privately lets them correct the error without embarrassment and maintains the relationship.", 1,
@@ -220,6 +245,12 @@ public class DataInitializer implements CommandLineRunner {
         AssessmentTest t = buildTest("Work Style Self-Assessment",
                 "Gain insight into your professional preferences, strengths and working patterns.",
                 TestType.PERSONALITY_WORK_STYLE, Difficulty.EASY, true, false, 10);
+        t.setCategory(AssessmentCategory.PERSONALITY);
+        t.setSubcategory("Work Style");
+        t.setTargetRoles(Arrays.asList("HR", "Management & Leadership", "Sales", "Customer Support", "Consulting"));
+        t.setTargetIndustries(Arrays.asList("Healthcare", "Retail", "Consulting", "Finance", "Education"));
+        t.setRecommendedForCompanies(Arrays.asList("Deloitte", "Accenture", "McKinsey", "Unilever", "P&G"));
+        t.setSkillsMeasured(Arrays.asList("self-awareness", "work preferences", "collaboration style", "professional values"));
 
         addQ(t, "When starting a new project, you prefer to:",
                 "Researching first and then building a flexible plan balances preparation with adaptability — a strong professional approach.", 1,
@@ -285,6 +316,12 @@ public class DataInitializer implements CommandLineRunner {
         AssessmentTest t = buildTest("Applied Numerics",
                 "Tackle percentage changes, ratios, averages and multi-step word problems.",
                 TestType.NUMERICAL_REASONING, Difficulty.MEDIUM, false, false, 15);
+        t.setCategory(AssessmentCategory.FINANCE_CONSULTING);
+        t.setSubcategory("Numerical");
+        t.setTargetRoles(Arrays.asList("Finance", "Consulting", "Data & Analytics", "Operations"));
+        t.setTargetIndustries(Arrays.asList("Finance", "Consulting", "Technology", "Retail"));
+        t.setRecommendedForCompanies(Arrays.asList("Deloitte", "KPMG", "EY", "PwC", "Morgan Stanley"));
+        t.setSkillsMeasured(Arrays.asList("percentage changes", "ratios", "averages", "word problems"));
 
         addQ(t, "A product's price rises from €80 to €100. What is the percentage increase?",
                 "(100 − 80) / 80 × 100 = 25%.", 1,
@@ -325,6 +362,12 @@ public class DataInitializer implements CommandLineRunner {
         AssessmentTest t = buildTest("Advanced Data Interpretation",
                 "Interpret complex financial and statistical data under timed conditions.",
                 TestType.NUMERICAL_REASONING, Difficulty.HARD, false, false, 18);
+        t.setCategory(AssessmentCategory.FINANCE_CONSULTING);
+        t.setSubcategory("Data Interpretation");
+        t.setTargetRoles(Arrays.asList("Finance", "Data & Analytics", "Consulting", "Operations"));
+        t.setTargetIndustries(Arrays.asList("Finance", "Consulting", "Technology", "Energy"));
+        t.setRecommendedForCompanies(Arrays.asList("Goldman Sachs", "McKinsey", "BCG", "JP Morgan", "KPMG"));
+        t.setSkillsMeasured(Arrays.asList("financial data", "compound interest", "break-even analysis", "percentage changes"));
 
         addQ(t, "A company's revenue grew from €2.4M in Q1 to €3.0M in Q4. What is the percentage increase?",
                 "(3.0 − 2.4) / 2.4 × 100 = 25%.", 1,
@@ -365,6 +408,12 @@ public class DataInitializer implements CommandLineRunner {
         AssessmentTest t = buildTest("Intermediate Reasoning",
                 "Tackle syllogisms, number series and multi-step logical deductions.",
                 TestType.LOGICAL_REASONING, Difficulty.MEDIUM, false, false, 15);
+        t.setCategory(AssessmentCategory.COGNITIVE);
+        t.setSubcategory("Logical");
+        t.setTargetRoles(Arrays.asList("Software Engineering", "Consulting", "Data & Analytics", "Product Management"));
+        t.setTargetIndustries(Arrays.asList("Technology", "Consulting", "Finance", "Government"));
+        t.setRecommendedForCompanies(Arrays.asList("Google", "Microsoft", "McKinsey", "Bain", "Amazon"));
+        t.setSkillsMeasured(Arrays.asList("syllogisms", "number series", "set theory", "deductive logic"));
 
         addQ(t, "All A are B. Some B are C. What can you conclude about A and C?",
                 "We know some B are C, but we do not know which B are C. The A's might not be among those B's that are C.", 1,
@@ -400,6 +449,12 @@ public class DataInitializer implements CommandLineRunner {
         AssessmentTest t = buildTest("Critical Logic & Deduction",
                 "Identify assumptions, evaluate arguments and solve complex multi-step problems.",
                 TestType.LOGICAL_REASONING, Difficulty.HARD, false, false, 18);
+        t.setCategory(AssessmentCategory.COGNITIVE);
+        t.setSubcategory("Critical Reasoning");
+        t.setTargetRoles(Arrays.asList("Software Engineering", "Legal", "Consulting", "Data & Analytics", "Product Management"));
+        t.setTargetIndustries(Arrays.asList("Technology", "Consulting", "Government", "Finance"));
+        t.setRecommendedForCompanies(Arrays.asList("McKinsey", "BCG", "Bain", "Google", "Amazon"));
+        t.setSkillsMeasured(Arrays.asList("argument evaluation", "assumption identification", "fallacy detection", "critical thinking"));
 
         addQ(t, "Some managers are engineers. All engineers passed the certification exam. What can you conclude?",
                 "Since some managers are engineers, and all engineers passed the exam, those particular managers also passed the exam.", 1,
@@ -447,6 +502,12 @@ public class DataInitializer implements CommandLineRunner {
         AssessmentTest t = buildTest("Text Analysis & Inference",
                 "Read passages, evaluate statements and identify what can and cannot be concluded.",
                 TestType.VERBAL_REASONING, Difficulty.MEDIUM, false, false, 15);
+        t.setCategory(AssessmentCategory.COMMUNICATION);
+        t.setSubcategory("Verbal");
+        t.setTargetRoles(Arrays.asList("Communication & PR", "Marketing", "Legal", "Consulting", "HR", "Management & Leadership"));
+        t.setTargetIndustries(Arrays.asList("Media", "Government", "Education", "Consulting", "Healthcare"));
+        t.setRecommendedForCompanies(Arrays.asList("BBC", "Edelman", "PwC", "Deloitte", "NHS"));
+        t.setSkillsMeasured(Arrays.asList("text inference", "argument evaluation", "passage analysis", "statement accuracy"));
 
         addQ(t, "Passage: 'Remote working has increased productivity in many companies. However, some employees report feeling isolated.' Which statement is SUPPORTED?",
                 "The passage states both productivity gains AND isolation concerns, supporting the balanced conclusion.", 1,
@@ -494,6 +555,12 @@ public class DataInitializer implements CommandLineRunner {
         AssessmentTest t = buildTest("Critical Thinking & Argument Analysis",
                 "Evaluate complex arguments, identify fallacies and assess evidence quality.",
                 TestType.VERBAL_REASONING, Difficulty.HARD, false, false, 20);
+        t.setCategory(AssessmentCategory.COMMUNICATION);
+        t.setSubcategory("Critical Thinking");
+        t.setTargetRoles(Arrays.asList("Communication & PR", "Legal", "Consulting", "Marketing", "Management & Leadership"));
+        t.setTargetIndustries(Arrays.asList("Media", "Government", "Legal", "Consulting", "Education"));
+        t.setRecommendedForCompanies(Arrays.asList("McKinsey", "Linklaters", "Allen & Overy", "BBC", "The Economist"));
+        t.setSkillsMeasured(Arrays.asList("fallacy identification", "argument structure", "evidence evaluation", "logical flaws"));
 
         addQ(t, "Passage: 'Sales rose 15% after the new campaign. Therefore the campaign caused the increase.' Which flaw is present?",
                 "Post hoc ergo propter hoc: assuming that because B followed A, A caused B. Other factors could have driven sales.", 1,
@@ -542,6 +609,12 @@ public class DataInitializer implements CommandLineRunner {
         AssessmentTest t = buildTest("Professional Dilemmas",
                 "Navigate more complex workplace situations involving ethics, leadership and stakeholders.",
                 TestType.SITUATIONAL_JUDGEMENT, Difficulty.MEDIUM, false, false, 15);
+        t.setCategory(AssessmentCategory.HR_LEADERSHIP);
+        t.setSubcategory("Professional Ethics");
+        t.setTargetRoles(Arrays.asList("Consulting", "HR", "Management & Leadership", "Finance", "Sales"));
+        t.setTargetIndustries(Arrays.asList("Consulting", "Finance", "Healthcare", "Government", "Technology"));
+        t.setRecommendedForCompanies(Arrays.asList("Deloitte", "PwC", "Accenture", "KPMG", "McKinsey"));
+        t.setSkillsMeasured(Arrays.asList("ethical judgement", "stakeholder management", "professional integrity", "conflict navigation"));
 
         addQ(t, "You discover a process inefficiency that saves €50k/year, but fixing it would disrupt your colleague's workflow significantly. What do you do?",
                 "Documenting the finding and discussing it collaboratively respects your colleague and allows the organisation to benefit from the insight.", 1,
@@ -585,6 +658,12 @@ public class DataInitializer implements CommandLineRunner {
         AssessmentTest t = buildTest("Leadership Under Pressure",
                 "Handle complex ethical dilemmas, stakeholder conflicts and high-stakes decisions.",
                 TestType.SITUATIONAL_JUDGEMENT, Difficulty.HARD, false, false, 18);
+        t.setCategory(AssessmentCategory.HR_LEADERSHIP);
+        t.setSubcategory("Leadership");
+        t.setTargetRoles(Arrays.asList("Management & Leadership", "Consulting", "HR", "Operations", "Finance"));
+        t.setTargetIndustries(Arrays.asList("Consulting", "Finance", "Government", "Healthcare", "Technology"));
+        t.setRecommendedForCompanies(Arrays.asList("McKinsey", "BCG", "Bain", "Deloitte", "Goldman Sachs"));
+        t.setSkillsMeasured(Arrays.asList("leadership decision-making", "crisis management", "ethical leadership", "change management"));
 
         addQ(t, "You discover a colleague has been falsifying expense reports for small amounts over several months. What is the most appropriate action?",
                 "Reporting through proper channels is ethically required. Confronting alone risks escalation; ignoring it makes you complicit.", 1,
@@ -628,6 +707,12 @@ public class DataInitializer implements CommandLineRunner {
         AssessmentTest t = buildTest("Advanced Work Style Profile",
                 "Explore your approach to ambiguity, leadership, conflict and professional growth.",
                 TestType.PERSONALITY_WORK_STYLE, Difficulty.MEDIUM, false, false, 12);
+        t.setCategory(AssessmentCategory.PERSONALITY);
+        t.setSubcategory("Leadership Style");
+        t.setTargetRoles(Arrays.asList("Management & Leadership", "HR", "Consulting", "Sales", "Product Management"));
+        t.setTargetIndustries(Arrays.asList("Consulting", "Healthcare", "Finance", "Technology", "Government"));
+        t.setRecommendedForCompanies(Arrays.asList("Deloitte", "Accenture", "McKinsey", "Unilever", "P&G"));
+        t.setSkillsMeasured(Arrays.asList("leadership style", "resilience", "self-management", "professional growth mindset"));
 
         addQ(t, "When given a task with unclear instructions, you typically:",
                 "Asking targeted clarifying questions early prevents wasted effort and shows proactivity — a highly professional approach.", 1,

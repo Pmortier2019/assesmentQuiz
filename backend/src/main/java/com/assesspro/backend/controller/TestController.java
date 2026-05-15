@@ -5,6 +5,7 @@ import com.assesspro.backend.dto.SubmitTestResponse;
 import com.assesspro.backend.dto.TestDetailResponse;
 import com.assesspro.backend.dto.TestResponse;
 import com.assesspro.backend.service.TestService;
+import com.assesspro.backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.List;
 public class TestController {
 
     private final TestService testService;
+    private final UserService userService;
 
     /**
      * GET /api/tests
@@ -53,5 +55,14 @@ public class TestController {
             @Valid @RequestBody SubmitTestRequest request
     ) {
         return ResponseEntity.ok(testService.submitTest(id, request));
+    }
+
+    /**
+     * GET /api/tests/recommended/{userId}
+     * Returns tests scored by relevance to the user's career targets.
+     */
+    @GetMapping("/recommended/{userId}")
+    public ResponseEntity<List<TestResponse>> getRecommended(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.getRecommendedTests(userId));
     }
 }

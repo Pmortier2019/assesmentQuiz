@@ -1,8 +1,7 @@
 package com.assesspro.backend.service;
 
-import com.assesspro.backend.dto.TestResponse;
-import com.assesspro.backend.dto.UserResponse;
-import com.assesspro.backend.dto.UserResultResponse;
+import com.assesspro.backend.dto.*;
+import com.assesspro.backend.entity.AssessmentTest;
 import com.assesspro.backend.entity.Subscription;
 import com.assesspro.backend.entity.TestResult;
 import com.assesspro.backend.entity.User;
@@ -12,11 +11,13 @@ import com.assesspro.backend.exception.ResourceNotFoundException;
 import com.assesspro.backend.repository.AssessmentTestRepository;
 import com.assesspro.backend.repository.TestResultRepository;
 import com.assesspro.backend.repository.UserRepository;
+import com.assesspro.backend.service.recommendation.RecommendationEngine;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +28,7 @@ public class UserService {
     private final TestResultRepository resultRepository;
     private final AssessmentTestRepository testRepository;
     private final TestService testService;
+    private final RecommendationEngine recommendationEngine;
 
     @Transactional(readOnly = true)
     public UserResponse getUser(Long userId) {
@@ -44,44 +46,76 @@ public class UserService {
     }
 
     /**
-     * Returns recommended tests based on the user's past performance.
-     * Currently returns tests of the type the user has attempted most,
-     * filtered to free tests when the user has not upgraded.
+     * Returns recommended tests driven by the user's career targets.
+     * Falls back to most-attempted type if no targets are set.
      *
-     * TODO: Replace with a proper ML-based recommendation when available.
+     * TODO: Replace RecommendationEngine with AiRecommendationEngine for
+     * weak-skill detection, company-specific patterns, and adaptive difficulty.
      */
     @Transactional(readOnly = true)
     public List<TestResponse> getRecommendations(Long userId) {
         User user = findUser(userId);
-        List<TestResult> results = resultRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        List<AssessmentTest> allTests = testRepository.findAll();
 
-        boolean isPro = user.getSubscription() != null
-                && user.getSubscription().getStatus() == SubscriptionStatus.ACTIVE;
+        // Career-based recommendations via the rule engine
+        List<AssessmentTest> recommended = recommendationEngine.recommendTests(user, allTests);
 
-        if (results.isEmpty()) {
-            // No history → return easy free tests
-            return testRepository.findWithFilters(null, null, true, null)
-                    .stream()
-                    .limit(5)
-                    .map(testService::toTestResponse)
+        if (!recommended.isEmpty()) {
+            Set<Long> recommendedIds = recommended.stream()
+                    .map(AssessmentTest::getId)
+                    .collect(Collectors.toSet());
+            return allTests.stream()
+                    .sorted((a, b) -> {
+                        boolean aRec = recommendedIds.contains(a.getId());
+                        boolean bRec = recommendedIds.contains(b.getId());
+                        return Boolean.compare(!aRec, !bRec);
+                    })
+                    .limit(6)
+                    .map(t -> testService.toTestResponseWithRecommendedFlag(t, recommendedIds.contains(t.getId())))
                     .collect(Collectors.toList());
         }
 
-        // Find the most-attempted test type
+        // Fallback: most-attempted type
+        List<TestResult> results = resultRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        if (results.isEmpty()) {
+            return testRepository.findWithFilters(null, null, true, null)
+                    .stream().limit(5).map(testService::toTestResponse).collect(Collectors.toList());
+        }
         TestType favoriteType = results.stream()
-                .collect(Collectors.groupingBy(
-                        r -> r.getAssessmentTest().getType(),
-                        Collectors.counting()))
+                .collect(Collectors.groupingBy(r -> r.getAssessmentTest().getType(), Collectors.counting()))
                 .entrySet().stream()
                 .max(java.util.Map.Entry.comparingByValue())
-                .map(java.util.Map.Entry::getKey)
-                .orElse(null);
-
+                .map(java.util.Map.Entry::getKey).orElse(null);
+        boolean isPro = user.getSubscription() != null
+                && user.getSubscription().getStatus() == SubscriptionStatus.ACTIVE;
         Boolean freeFilter = isPro ? null : true;
         return testRepository.findWithFilters(favoriteType, null, freeFilter, null)
-                .stream()
-                .limit(5)
-                .map(testService::toTestResponse)
+                .stream().limit(5).map(testService::toTestResponse).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public UserResponse updateCareerTargets(Long userId, CareerTargetsRequest request) {
+        User user = findUser(userId);
+        user.setTargetRole(request.getTargetRole());
+        user.setTargetIndustry(request.getTargetIndustry());
+        user.setTargetCompany(request.getTargetCompany());
+        userRepository.save(user);
+        return toUserResponse(user);
+    }
+
+    @Transactional(readOnly = true)
+    public PreparationPathResponse getPreparationPath(Long userId) {
+        User user = findUser(userId);
+        return recommendationEngine.generatePreparationPath(user);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TestResponse> getRecommendedTests(Long userId) {
+        User user = findUser(userId);
+        List<AssessmentTest> allTests = testRepository.findAll();
+        List<AssessmentTest> recommended = recommendationEngine.recommendTests(user, allTests);
+        return recommended.stream()
+                .map(t -> testService.toTestResponseWithRecommendedFlag(t, true))
                 .collect(Collectors.toList());
     }
 
@@ -101,6 +135,9 @@ public class UserService {
                 .freeTestsUsed(user.getFreeTestsUsed())
                 .isPro(isPro)
                 .createdAt(user.getCreatedAt())
+                .targetRole(user.getTargetRole())
+                .targetIndustry(user.getTargetIndustry())
+                .targetCompany(user.getTargetCompany())
                 .build();
     }
 

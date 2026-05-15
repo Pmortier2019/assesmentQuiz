@@ -1,8 +1,35 @@
 "use client";
 
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search, SlidersHorizontal, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { AssessmentType, Difficulty } from "@/lib/types";
+import type { AssessmentType, Difficulty, RoleCategory, IndustryCategory } from "@/lib/types";
+
+const ROLE_OPTIONS: { value: RoleCategory | "all"; label: string }[] = [
+  { value: "all",                      label: "All roles" },
+  { value: "Software Engineering",     label: "Software Eng." },
+  { value: "Data & Analytics",         label: "Data & Analytics" },
+  { value: "Consulting",               label: "Consulting" },
+  { value: "Finance",                  label: "Finance" },
+  { value: "Marketing",                label: "Marketing" },
+  { value: "Communication & PR",       label: "Comm & PR" },
+  { value: "Management & Leadership",  label: "Leadership" },
+  { value: "HR",                       label: "HR" },
+  { value: "Sales",                    label: "Sales" },
+  { value: "Legal",                    label: "Legal" },
+];
+
+const INDUSTRY_OPTIONS: { value: IndustryCategory | "all"; label: string }[] = [
+  { value: "all",               label: "All industries" },
+  { value: "Technology",        label: "Technology" },
+  { value: "Finance",           label: "Finance" },
+  { value: "Consulting",        label: "Consulting" },
+  { value: "Healthcare",        label: "Healthcare" },
+  { value: "Government",        label: "Government" },
+  { value: "Media",             label: "Media" },
+  { value: "Education",         label: "Education" },
+];
+
+export type SortOption = "default" | "recommended" | "best_match";
 
 interface FilterBarProps {
   search: string;
@@ -13,15 +40,22 @@ interface FilterBarProps {
   onDifficultyChange: (v: Difficulty | "all") => void;
   selectedTier: "free" | "pro" | "all";
   onTierChange: (v: "free" | "pro" | "all") => void;
+  selectedRole?: RoleCategory | "all";
+  onRoleChange?: (v: RoleCategory | "all") => void;
+  selectedIndustry?: IndustryCategory | "all";
+  onIndustryChange?: (v: IndustryCategory | "all") => void;
+  sortBy?: SortOption;
+  onSortChange?: (v: SortOption) => void;
+  showRoleFilter?: boolean;
 }
 
 const TYPE_OPTIONS: { value: AssessmentType | "all"; label: string }[] = [
-  { value: "all",                  label: "All types" },
-  { value: "numerical_reasoning",  label: "Numerical" },
-  { value: "logical_reasoning",    label: "Logical" },
-  { value: "verbal_reasoning",     label: "Verbal" },
+  { value: "all",                   label: "All types" },
+  { value: "numerical_reasoning",   label: "Numerical" },
+  { value: "logical_reasoning",     label: "Logical" },
+  { value: "verbal_reasoning",      label: "Verbal" },
   { value: "situational_judgement", label: "Situational" },
-  { value: "personality",          label: "Personality" },
+  { value: "personality",           label: "Personality" },
 ];
 
 const DIFFICULTY_OPTIONS: { value: Difficulty | "all"; label: string }[] = [
@@ -38,15 +72,17 @@ const TIER_OPTIONS: { value: "free" | "pro" | "all"; label: string }[] = [
 ];
 
 export function FilterBar({
-  search,
-  onSearchChange,
-  selectedType,
-  onTypeChange,
-  selectedDifficulty,
-  onDifficultyChange,
-  selectedTier,
-  onTierChange,
+  search, onSearchChange,
+  selectedType, onTypeChange,
+  selectedDifficulty, onDifficultyChange,
+  selectedTier, onTierChange,
+  selectedRole = "all", onRoleChange,
+  selectedIndustry = "all", onIndustryChange,
+  sortBy = "default", onSortChange,
+  showRoleFilter = true,
 }: FilterBarProps) {
+  const hasActiveCareerFilters = selectedRole !== "all" || selectedIndustry !== "all" || sortBy === "best_match";
+
   return (
     <div className="flex flex-col gap-4">
       {/* Search */}
@@ -61,43 +97,99 @@ export function FilterBar({
         />
       </div>
 
-      {/* Filters */}
+      {/* Sort + type + difficulty + tier */}
       <div className="flex flex-wrap gap-2 items-center">
         <div className="flex items-center gap-1.5 text-xs text-[#94a3b8] font-medium">
           <SlidersHorizontal size={13} />
           Filter:
         </div>
 
-        <FilterChips
-          options={TYPE_OPTIONS}
-          selected={selectedType}
-          onChange={onTypeChange as (v: string) => void}
-        />
+        {onSortChange && (
+          <>
+            <button
+              onClick={() => onSortChange("best_match")}
+              className={cn(
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all",
+                sortBy === "best_match"
+                  ? "bg-[#4f46e5] text-white"
+                  : "bg-[#eef2ff] text-[#4f46e5] hover:bg-[#e0e7ff]"
+              )}
+            >
+              <Star size={11} /> Best match
+            </button>
+            <div className="w-px h-4 bg-[#e2e8f0]" />
+          </>
+        )}
 
+        <FilterChips options={TYPE_OPTIONS} selected={selectedType} onChange={onTypeChange as (v: string) => void} />
         <div className="w-px h-4 bg-[#e2e8f0]" />
-
-        <FilterChips
-          options={DIFFICULTY_OPTIONS}
-          selected={selectedDifficulty}
-          onChange={onDifficultyChange as (v: string) => void}
-        />
-
+        <FilterChips options={DIFFICULTY_OPTIONS} selected={selectedDifficulty} onChange={onDifficultyChange as (v: string) => void} />
         <div className="w-px h-4 bg-[#e2e8f0]" />
-
-        <FilterChips
-          options={TIER_OPTIONS}
-          selected={selectedTier}
-          onChange={onTierChange as (v: string) => void}
-        />
+        <FilterChips options={TIER_OPTIONS} selected={selectedTier} onChange={onTierChange as (v: string) => void} />
       </div>
+
+      {/* Role + industry filters */}
+      {showRoleFilter && (onRoleChange || onIndustryChange) && (
+        <div className="flex flex-wrap gap-2 items-center">
+          <div className="flex items-center gap-1.5 text-xs text-[#94a3b8] font-medium">
+            <Star size={13} />
+            Career:
+          </div>
+
+          {onRoleChange && (
+            <select
+              value={selectedRole}
+              onChange={(e) => onRoleChange(e.target.value as RoleCategory | "all")}
+              className={cn(
+                "px-3 py-1.5 rounded-lg text-xs font-medium border transition-all outline-none cursor-pointer",
+                selectedRole !== "all"
+                  ? "border-[#4f46e5] bg-[#eef2ff] text-[#4f46e5]"
+                  : "border-[#e2e8f0] bg-[#f1f5f9] text-[#64748b] hover:bg-[#e2e8f0]"
+              )}
+            >
+              {ROLE_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>{o.label}</option>
+              ))}
+            </select>
+          )}
+
+          {onIndustryChange && (
+            <select
+              value={selectedIndustry}
+              onChange={(e) => onIndustryChange(e.target.value as IndustryCategory | "all")}
+              className={cn(
+                "px-3 py-1.5 rounded-lg text-xs font-medium border transition-all outline-none cursor-pointer",
+                selectedIndustry !== "all"
+                  ? "border-[#0891b2] bg-[#ecfeff] text-[#0891b2]"
+                  : "border-[#e2e8f0] bg-[#f1f5f9] text-[#64748b] hover:bg-[#e2e8f0]"
+              )}
+            >
+              {INDUSTRY_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>{o.label}</option>
+              ))}
+            </select>
+          )}
+
+          {hasActiveCareerFilters && (
+            <button
+              onClick={() => {
+                onRoleChange?.("all");
+                onIndustryChange?.("all");
+                onSortChange?.("default");
+              }}
+              className="px-3 py-1.5 rounded-lg text-xs font-medium text-[#ef4444] bg-[#fef2f2] hover:bg-[#fee2e2] transition-colors"
+            >
+              Clear career filters
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }
 
 function FilterChips({
-  options,
-  selected,
-  onChange,
+  options, selected, onChange,
 }: {
   options: { value: string; label: string }[];
   selected: string;

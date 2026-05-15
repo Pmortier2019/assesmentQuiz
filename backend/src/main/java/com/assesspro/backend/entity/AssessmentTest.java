@@ -1,5 +1,6 @@
 package com.assesspro.backend.entity;
 
+import com.assesspro.backend.entity.enums.AssessmentCategory;
 import com.assesspro.backend.entity.enums.Difficulty;
 import com.assesspro.backend.entity.enums.Language;
 import com.assesspro.backend.entity.enums.TestType;
@@ -50,6 +51,36 @@ public class AssessmentTest {
     private boolean isGeneratedByAI = false;
 
     private int estimatedTimeMinutes;
+
+    // Categorisation — drives recommendations and filtering
+    @Enumerated(EnumType.STRING)
+    private AssessmentCategory category;
+
+    private String subcategory;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "test_target_roles", joinColumns = @JoinColumn(name = "test_id"))
+    @Column(name = "role")
+    @Builder.Default
+    private List<String> targetRoles = new ArrayList<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "test_target_industries", joinColumns = @JoinColumn(name = "test_id"))
+    @Column(name = "industry")
+    @Builder.Default
+    private List<String> targetIndustries = new ArrayList<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "test_recommended_companies", joinColumns = @JoinColumn(name = "test_id"))
+    @Column(name = "company")
+    @Builder.Default
+    private List<String> recommendedForCompanies = new ArrayList<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "test_skills_measured", joinColumns = @JoinColumn(name = "test_id"))
+    @Column(name = "skill")
+    @Builder.Default
+    private List<String> skillsMeasured = new ArrayList<>();
 
     @OneToMany(mappedBy = "assessmentTest", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @OrderBy("orderIndex ASC")

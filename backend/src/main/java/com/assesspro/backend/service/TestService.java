@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -176,6 +175,10 @@ public class TestService {
     }
 
     public TestResponse toTestResponse(AssessmentTest test) {
+        return toTestResponseWithRecommendedFlag(test, false);
+    }
+
+    public TestResponse toTestResponseWithRecommendedFlag(AssessmentTest test, boolean isRecommended) {
         return TestResponse.builder()
                 .id(test.getId())
                 .title(test.getTitle())
@@ -188,6 +191,13 @@ public class TestService {
                 .estimatedTimeMinutes(test.getEstimatedTimeMinutes())
                 .questionCount(test.getQuestions().size())
                 .createdAt(test.getCreatedAt())
+                .category(test.getCategory())
+                .subcategory(test.getSubcategory())
+                .targetRoles(test.getTargetRoles())
+                .targetIndustries(test.getTargetIndustries())
+                .recommendedForCompanies(test.getRecommendedForCompanies())
+                .skillsMeasured(test.getSkillsMeasured())
+                .isRecommended(isRecommended)
                 .build();
     }
 
