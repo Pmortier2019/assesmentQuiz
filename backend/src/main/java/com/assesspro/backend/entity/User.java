@@ -1,6 +1,7 @@
 package com.assesspro.backend.entity;
 
 import com.assesspro.backend.entity.enums.Language;
+import com.assesspro.backend.entity.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -25,6 +26,11 @@ public class User {
     private String name;
 
     private String passwordHash;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private Role role = Role.USER;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

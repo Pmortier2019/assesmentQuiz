@@ -26,14 +26,23 @@ export function isLoggedIn(): boolean {
   return !!getToken();
 }
 
-/** Decode userId from JWT payload (no signature verification — backend does that). */
-export function getUserIdFromToken(): number | null {
+function decodeJwtPayload(): Record<string, unknown> | null {
   const token = getToken();
   if (!token) return null;
   try {
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    return Number(payload.sub);
+    return JSON.parse(atob(token.split(".")[1]));
   } catch {
     return null;
   }
+}
+
+/** Decode userId from JWT payload (no signature verification — backend does that). */
+export function getUserIdFromToken(): number | null {
+  const payload = decodeJwtPayload();
+  return payload ? Number(payload.sub) : null;
+}
+
+export function isAdmin(): boolean {
+  const payload = decodeJwtPayload();
+  return payload?.role === "ADMIN";
 }

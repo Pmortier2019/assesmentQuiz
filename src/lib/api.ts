@@ -581,6 +581,15 @@ export async function register(name: string, email: string, password: string): P
   return mapUser(res.user);
 }
 
+export async function adminBootstrap(email: string, password: string): Promise<User> {
+  const res = await apiFetch<AuthResponse>("/api/auth/admin-bootstrap", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+  });
+  saveAuth(res.token, res.user);
+  return mapUser(res.user);
+}
+
 export async function logout(): Promise<void> {
   clearAuth();
 }

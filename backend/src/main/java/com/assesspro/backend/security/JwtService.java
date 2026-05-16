@@ -1,5 +1,6 @@
 package com.assesspro.backend.security;
 
+import com.assesspro.backend.entity.enums.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -24,10 +25,11 @@ public class JwtService {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(Long userId, String email) {
+    public String generateToken(Long userId, String email, Role role) {
         return Jwts.builder()
                 .subject(String.valueOf(userId))
                 .claim("email", email)
+                .claim("role", role.name())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + EXPIRY_MS))
                 .signWith(key())
@@ -35,12 +37,24 @@ public class JwtService {
     }
 
     public Long extractUserId(String token) {
-        Claims claims = Jwts.parser()
+        return Long.parseLong(parseClaims(token).getSubject());
+    }
+
+    public Role extractRole(String token) {
+        String roleName = parseClaims(token).get("role", String.class);
+        try {
+            return roleName != null ? Role.valueOf(roleName) : Role.USER;
+        } catch (IllegalArgumentException e) {
+            return Role.USER;
+        }
+    }
+
+    private Claims parseClaims(String token) {
+        return Jwts.parser()
                 .verifyWith(key())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-        return Long.parseLong(claims.getSubject());
     }
 
     public boolean isValid(String token) {

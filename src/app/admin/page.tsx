@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   Zap, Users, BookOpen, BarChart3, Sparkles, Trash2, Lock, Unlock,
@@ -12,6 +13,7 @@ import {
   ALL_GENERATE_TYPES, ALL_DIFFICULTIES,
   AdminStats, AdminUser,
 } from "@/lib/api";
+import { isAdmin, isLoggedIn } from "@/lib/auth";
 import { ASSESSMENT_TYPE_ICONS } from "@/lib/utils";
 import type { Test } from "@/lib/types";
 
@@ -22,6 +24,7 @@ const DIFF_COLORS: Record<string, string> = {
 };
 
 export default function AdminPage() {
+  const router = useRouter();
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [tests, setTests] = useState<Test[]>([]);
@@ -32,6 +35,12 @@ export default function AdminPage() {
   const [togglingFree, setTogglingFree] = useState<string | null>(null);
   const [genError, setGenError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!isLoggedIn() || !isAdmin()) {
+      router.replace("/dashboard");
+    }
+  }, [router]);
 
   const refresh = useCallback(async () => {
     const [s, u, t, gs] = await Promise.all([

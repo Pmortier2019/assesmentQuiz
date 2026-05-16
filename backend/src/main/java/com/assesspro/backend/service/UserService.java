@@ -5,6 +5,7 @@ import com.assesspro.backend.entity.AssessmentTest;
 import com.assesspro.backend.entity.Subscription;
 import com.assesspro.backend.entity.TestResult;
 import com.assesspro.backend.entity.User;
+import com.assesspro.backend.entity.enums.Role;
 import com.assesspro.backend.entity.enums.SubscriptionStatus;
 import com.assesspro.backend.entity.enums.TestType;
 import com.assesspro.backend.exception.ResourceNotFoundException;
@@ -139,6 +140,7 @@ public class UserService {
                 .preferredLanguage(user.getPreferredLanguage())
                 .freeTestsUsed(user.getFreeTestsUsed())
                 .isPro(isPro)
+                .isAdmin(user.getRole() == Role.ADMIN)
                 .createdAt(user.getCreatedAt())
                 .targetRole(user.getTargetRole())
                 .targetIndustry(user.getTargetIndustry())

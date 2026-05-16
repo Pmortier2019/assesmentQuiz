@@ -16,6 +16,8 @@ public class UserResponse {
     private int freeTestsUsed;
     @JsonProperty("isPro")
     private boolean isPro;
+    @JsonProperty("isAdmin")
+    private boolean isAdmin;
     private LocalDateTime createdAt;
     private String targetRole;
     private String targetIndustry;
