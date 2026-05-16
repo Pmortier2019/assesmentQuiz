@@ -261,7 +261,10 @@ public class TestService {
 
     private TestDetailResponse toTestDetailResponse(AssessmentTest test, List<Question> questions) {
         List<QuestionResponse> questionResponses = questions.stream()
-                .map(q -> QuestionResponse.builder()
+                .map(q -> {
+                    List<AnswerOption> shuffledOptions = new ArrayList<>(q.getAnswerOptions());
+                    Collections.shuffle(shuffledOptions);
+                    return QuestionResponse.builder()
                         .id(q.getId())
                         .questionText(q.getQuestionText())
                         .explanation(q.getExplanation())
@@ -275,14 +278,15 @@ public class TestService {
                                         .caption(m.getCaption())
                                         .build())
                                 .collect(Collectors.toList()))
-                        .answerOptions(q.getAnswerOptions().stream()
+                        .answerOptions(shuffledOptions.stream()
                                 .map(a -> AnswerOptionResponse.builder()
                                         .id(a.getId())
                                         .answerText(a.getAnswerText())
                                         .orderIndex(a.getOrderIndex())
                                         .build())
                                 .collect(Collectors.toList()))
-                        .build())
+                        .build();
+                })
                 .collect(Collectors.toList());
 
         return TestDetailResponse.builder()
