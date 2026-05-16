@@ -209,6 +209,7 @@ interface BackendUserResponse {
   name: string;
   preferredLanguage: string;
   freeTestsUsed: number;
+  streak: number;
   isPro: boolean;
   createdAt: string;
   targetRole?: string;
@@ -367,7 +368,7 @@ function mapUser(u: BackendUserResponse): User {
     name: u.name,
     subscription: u.isPro ? "pro" : "free",
     freeTestsUsed: u.freeTestsUsed,
-    streak: 0, // not tracked by backend yet
+    streak: u.streak ?? 0,
     joinedAt: u.createdAt,
     targetRole: u.targetRole,
     targetIndustry: u.targetIndustry,
@@ -475,6 +476,24 @@ export async function updateCareerTargets(targets: CareerTargets): Promise<User>
     { method: "PATCH", body: JSON.stringify(targets) }
   );
   return mapUser(u);
+}
+
+export interface SkillEntry {
+  type: string;
+  avgScore: number;
+  count: number;
+  lastScore: number;
+  trend: "up" | "down" | "stable";
+}
+
+export interface SkillsSummary {
+  totalTests: number;
+  avgScore: number;
+  skills: SkillEntry[];
+}
+
+export async function getSkillsSummary(): Promise<SkillsSummary> {
+  return apiFetch<SkillsSummary>(`/api/users/${currentUserId()}/skills-summary`);
 }
 
 export async function getPreparationPath(): Promise<PreparationPath> {

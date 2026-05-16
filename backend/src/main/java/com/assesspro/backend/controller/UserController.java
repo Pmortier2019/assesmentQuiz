@@ -52,4 +52,10 @@ public class UserController {
     public ResponseEntity<List<TestResponse>> getRecommendedTests(@PathVariable Long userId) {
         return ResponseEntity.ok(userService.getRecommendedTests(userId));
     }
+
+    /** GET /api/users/{userId}/skills-summary */
+    @GetMapping("/{userId}/skills-summary")
+    public ResponseEntity<SkillsSummaryResponse> getSkillsSummary(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.getSkillsSummary(userId));
+    }
 }

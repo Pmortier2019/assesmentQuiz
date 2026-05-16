@@ -15,6 +15,7 @@ const translations = {
     nav_start:          "Start Practicing",
     nav_dashboard:      "Dashboard",
     nav_results:        "Results",
+    nav_progress:       "Progress",
     nav_upgrade:        "Upgrade",
 
     // Dashboard
@@ -107,6 +108,7 @@ const translations = {
     nav_start:          "Begin met oefenen",
     nav_dashboard:      "Dashboard",
     nav_results:        "Resultaten",
+    nav_progress:       "Voortgang",
     nav_upgrade:        "Upgraden",
 
     // Dashboard

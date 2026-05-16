@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard, BookOpen, Trophy, TrendingUp, CreditCard, Zap, ChevronRight,
+  LayoutDashboard, BookOpen, Trophy, TrendingUp, CreditCard, Zap, ChevronRight, BarChart2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StreakBadge } from "@/components/ui/StreakBadge";
@@ -23,6 +23,7 @@ export function Sidebar({ streak = 7, userName = "Pierre Mortier" }: SidebarProp
     { href: "/dashboard", icon: LayoutDashboard, label: t("nav_dashboard") },
     { href: "/tests",     icon: BookOpen,        label: t("nav_tests") },
     { href: "/results",   icon: Trophy,          label: t("nav_results") },
+    { href: "/progress",  icon: BarChart2,       label: t("nav_progress") },
     { href: "/pricing",   icon: CreditCard,      label: t("nav_upgrade") },
   ];
 

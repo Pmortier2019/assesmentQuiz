@@ -9,4 +9,11 @@ import java.util.List;
 public interface TestResultRepository extends JpaRepository<TestResult, Long> {
     List<TestResult> findByUserIdOrderByCreatedAtDesc(Long userId);
     int countByUserId(Long userId);
+
+    @org.springframework.data.jpa.repository.Query(
+        "SELECT r.createdAt FROM TestResult r WHERE r.user.id = :userId ORDER BY r.createdAt DESC"
+    )
+    List<java.time.LocalDateTime> findCreatedAtByUserIdOrderByDesc(
+        @org.springframework.data.repository.query.Param("userId") Long userId
+    );
 }

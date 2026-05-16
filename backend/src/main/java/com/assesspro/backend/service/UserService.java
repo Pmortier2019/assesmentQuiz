@@ -17,7 +17,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -125,6 +128,50 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public SkillsSummaryResponse getSkillsSummary(Long userId) {
+        findUser(userId);
+        List<TestResult> results = resultRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        if (results.isEmpty()) {
+            return SkillsSummaryResponse.builder().totalTests(0).avgScore(0).skills(List.of()).build();
+        }
+
+        int totalAvg = (int) results.stream().mapToInt(TestResult::getScore).average().orElse(0);
+
+        Map<TestType, List<TestResult>> byType = results.stream()
+                .collect(Collectors.groupingBy(r -> r.getAssessmentTest().getType()));
+
+        List<SkillsSummaryResponse.SkillEntry> skills = byType.entrySet().stream()
+                .map(e -> {
+                    List<TestResult> tr = e.getValue(); // already sorted desc
+                    int avg  = (int) tr.stream().mapToInt(TestResult::getScore).average().orElse(0);
+                    int last = tr.get(0).getScore();
+                    int count = tr.size();
+                    String trend = "stable";
+                    if (count >= 2) {
+                        int prevAvg = (int) tr.subList(1, Math.min(4, count)).stream()
+                                .mapToInt(TestResult::getScore).average().orElse(avg);
+                        if (last > prevAvg + 5) trend = "up";
+                        else if (last < prevAvg - 5) trend = "down";
+                    }
+                    return SkillsSummaryResponse.SkillEntry.builder()
+                            .type(e.getKey().name())
+                            .avgScore(avg)
+                            .count(count)
+                            .lastScore(last)
+                            .trend(trend)
+                            .build();
+                })
+                .sorted(Comparator.comparingInt(SkillsSummaryResponse.SkillEntry::getCount).reversed())
+                .collect(Collectors.toList());
+
+        return SkillsSummaryResponse.builder()
+                .totalTests(results.size())
+                .avgScore(totalAvg)
+                .skills(skills)
+                .build();
+    }
+
     private User findUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
@@ -139,6 +186,7 @@ public class UserService {
                 .name(user.getName())
                 .preferredLanguage(user.getPreferredLanguage())
                 .freeTestsUsed(user.getFreeTestsUsed())
+                .streak(calculateStreak(user.getId()))
                 .isPro(isPro)
                 .isAdmin(user.getRole() == Role.ADMIN)
                 .createdAt(user.getCreatedAt())
@@ -146,6 +194,34 @@ public class UserService {
                 .targetIndustry(user.getTargetIndustry())
                 .targetCompany(user.getTargetCompany())
                 .build();
+    }
+
+    private int calculateStreak(Long userId) {
+        List<LocalDate> dates = resultRepository.findCreatedAtByUserIdOrderByDesc(userId).stream()
+                .map(dt -> dt.toLocalDate())
+                .distinct()
+                .sorted(Comparator.reverseOrder())
+                .collect(Collectors.toList());
+
+        if (dates.isEmpty()) return 0;
+
+        LocalDate today = LocalDate.now();
+        LocalDate yesterday = today.minusDays(1);
+
+        // Streak must start from today or yesterday
+        if (!dates.get(0).equals(today) && !dates.get(0).equals(yesterday)) return 0;
+
+        int streak = 0;
+        LocalDate expected = dates.get(0);
+        for (LocalDate date : dates) {
+            if (date.equals(expected)) {
+                streak++;
+                expected = expected.minusDays(1);
+            } else {
+                break;
+            }
+        }
+        return streak;
     }
 
     private UserResultResponse toUserResultResponse(TestResult result) {

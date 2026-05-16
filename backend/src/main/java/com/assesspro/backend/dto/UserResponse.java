@@ -14,6 +14,7 @@ public class UserResponse {
     private String name;
     private Language preferredLanguage;
     private int freeTestsUsed;
+    private int streak;
     @JsonProperty("isPro")
     private boolean isPro;
     @JsonProperty("isAdmin")
