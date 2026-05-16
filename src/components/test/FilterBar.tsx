@@ -49,19 +49,86 @@ interface FilterBarProps {
   showRoleFilter?: boolean;
 }
 
-const TYPE_OPTIONS: { value: AssessmentType | "all"; label: string }[] = [
-  { value: "all",                   label: "All types" },
-  { value: "numerical_reasoning",   label: "Numerical" },
-  { value: "logical_reasoning",     label: "Logical" },
-  { value: "verbal_reasoning",      label: "Verbal" },
-  { value: "situational_judgement", label: "Situational" },
-  { value: "data_interpretation",   label: "Data" },
-  { value: "abstract_reasoning",    label: "Abstract" },
-  { value: "critical_thinking",     label: "Critical Thinking" },
-  { value: "personality",           label: "Personality" },
-  { value: "leadership_assessment", label: "Leadership" },
-  { value: "coding_challenge",      label: "Coding" },
-  { value: "writing_assessment",    label: "Writing" },
+const TYPE_GROUPS: { label: string; options: { value: AssessmentType; label: string }[] }[] = [
+  {
+    label: "Cognitive & Reasoning",
+    options: [
+      { value: "numerical_reasoning",    label: "Numerical Reasoning" },
+      { value: "logical_reasoning",      label: "Logical Reasoning" },
+      { value: "verbal_reasoning",       label: "Verbal Reasoning" },
+      { value: "abstract_reasoning",     label: "Abstract Reasoning" },
+      { value: "critical_thinking",      label: "Critical Thinking" },
+      { value: "inductive_reasoning",    label: "Inductive Reasoning" },
+      { value: "deductive_reasoning",    label: "Deductive Reasoning" },
+      { value: "diagrammatic_reasoning", label: "Diagrammatic Reasoning" },
+      { value: "spatial_reasoning",      label: "Spatial Reasoning" },
+      { value: "mechanical_reasoning",   label: "Mechanical Reasoning" },
+      { value: "analytical_thinking",    label: "Analytical Thinking" },
+    ],
+  },
+  {
+    label: "Data & Interpretation",
+    options: [
+      { value: "data_interpretation", label: "Data Interpretation" },
+      { value: "error_checking",      label: "Error Checking" },
+    ],
+  },
+  {
+    label: "Verbal & Written",
+    options: [
+      { value: "reading_comprehension", label: "Reading Comprehension" },
+      { value: "grammar_spelling",      label: "Grammar & Spelling" },
+      { value: "writing_assessment",    label: "Writing Assessment" },
+      { value: "communication_skills",  label: "Communication Skills" },
+      { value: "presentation_skills",   label: "Presentation Skills" },
+    ],
+  },
+  {
+    label: "Personality & Behavioural",
+    options: [
+      { value: "personality",            label: "Personality & Work Style" },
+      { value: "situational_judgement",  label: "Situational Judgement" },
+      { value: "emotional_intelligence", label: "Emotional Intelligence" },
+      { value: "adaptability",           label: "Adaptability" },
+      { value: "cultural_fit",           label: "Cultural Fit" },
+    ],
+  },
+  {
+    label: "Leadership & Management",
+    options: [
+      { value: "leadership_assessment", label: "Leadership Assessment" },
+      { value: "decision_making",       label: "Decision Making" },
+      { value: "strategic_thinking",    label: "Strategic Thinking" },
+      { value: "project_management",    label: "Project Management" },
+      { value: "time_management",       label: "Time Management" },
+      { value: "risk_assessment",       label: "Risk Assessment" },
+    ],
+  },
+  {
+    label: "Interpersonal & Professional",
+    options: [
+      { value: "teamwork_collaboration", label: "Teamwork & Collaboration" },
+      { value: "conflict_resolution",    label: "Conflict Resolution" },
+      { value: "negotiation_skills",     label: "Negotiation Skills" },
+      { value: "customer_service",       label: "Customer Service" },
+      { value: "sales_aptitude",         label: "Sales Aptitude" },
+    ],
+  },
+  {
+    label: "Domain-specific",
+    options: [
+      { value: "financial_literacy", label: "Financial Literacy" },
+      { value: "excel_skills",       label: "Excel Skills" },
+      { value: "coding_challenge",   label: "Coding Challenge" },
+    ],
+  },
+  {
+    label: "Values & Creative",
+    options: [
+      { value: "ethics_compliance",   label: "Ethics & Compliance" },
+      { value: "creativity_innovation", label: "Creativity & Innovation" },
+    ],
+  },
 ];
 
 const DIFFICULTY_OPTIONS: { value: Difficulty | "all"; label: string }[] = [
@@ -127,7 +194,25 @@ export function FilterBar({
           </>
         )}
 
-        <FilterChips options={TYPE_OPTIONS} selected={selectedType} onChange={onTypeChange as (v: string) => void} />
+        <select
+          value={selectedType}
+          onChange={(e) => onTypeChange(e.target.value as AssessmentType | "all")}
+          className={cn(
+            "px-3 py-1.5 rounded-lg text-xs font-medium border transition-all outline-none cursor-pointer",
+            selectedType !== "all"
+              ? "border-[#4f46e5] bg-[#eef2ff] text-[#4f46e5]"
+              : "border-[#e2e8f0] bg-[#f1f5f9] text-[#64748b] hover:bg-[#e2e8f0]"
+          )}
+        >
+          <option value="all">All types</option>
+          {TYPE_GROUPS.map((group) => (
+            <optgroup key={group.label} label={group.label}>
+              {group.options.map((opt) => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
         <div className="w-px h-4 bg-[#e2e8f0]" />
         <FilterChips options={DIFFICULTY_OPTIONS} selected={selectedDifficulty} onChange={onDifficultyChange as (v: string) => void} />
         <div className="w-px h-4 bg-[#e2e8f0]" />

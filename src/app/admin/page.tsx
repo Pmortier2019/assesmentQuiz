@@ -31,6 +31,7 @@ export default function AdminPage() {
   const [genStatus, setGenStatus] = useState<Record<string, string[]>>({});
   const [search, setSearch] = useState("");
   const [generating, setGenerating] = useState<string | null>(null);
+  const [defaultFree, setDefaultFree] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [togglingFree, setTogglingFree] = useState<string | null>(null);
   const [genError, setGenError] = useState<string | null>(null);
@@ -58,12 +59,12 @@ export default function AdminPage() {
 
   useEffect(() => { refresh(); }, [refresh]);
 
-  async function handleGenerate(type: string, difficulty: string) {
+  async function handleGenerate(type: string, difficulty: string, isFree = defaultFree) {
     const key = `${type}__${difficulty}`;
     setGenerating(key);
     setGenError(null);
     try {
-      await generateTestOfType(type, difficulty);
+      await generateTestOfType(type, difficulty, isFree);
       await refresh();
     } catch (e) {
       setGenError(`Generation failed for ${type} ${difficulty}: ${e instanceof Error ? e.message : "Unknown error"}`);
@@ -166,14 +167,33 @@ export default function AdminPage() {
 
         {/* Generation status grid */}
         <div className="bg-white rounded-2xl border border-[#e2e8f0] p-6">
-          <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
             <div>
               <h2 className="font-display font-semibold text-base text-[#0D1B2E]">Test Library Coverage</h2>
               <p className="text-xs text-[#94a3b8] mt-0.5">Click a missing cell to generate that test</p>
             </div>
-            <div className="flex items-center gap-3 text-xs text-[#64748b]">
-              <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-emerald-100 border border-emerald-300 inline-block" /> Exists</span>
-              <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-[#f1f5f9] border border-[#e2e8f0] inline-block" /> Missing</span>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 text-xs text-[#64748b]">
+                <span className="font-medium">New tests:</span>
+                <div className="flex rounded-lg border border-[#e2e8f0] overflow-hidden font-semibold">
+                  <button
+                    onClick={() => setDefaultFree(true)}
+                    className={`px-3 py-1.5 transition-colors ${defaultFree ? "bg-emerald-500 text-white" : "bg-white text-[#64748b] hover:bg-[#f8fafc]"}`}
+                  >
+                    Free
+                  </button>
+                  <button
+                    onClick={() => setDefaultFree(false)}
+                    className={`px-3 py-1.5 transition-colors ${!defaultFree ? "bg-[#4f46e5] text-white" : "bg-white text-[#64748b] hover:bg-[#f8fafc]"}`}
+                  >
+                    Pro
+                  </button>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 text-xs text-[#64748b]">
+                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-emerald-100 border border-emerald-300 inline-block" /> Exists</span>
+                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-[#f1f5f9] border border-[#e2e8f0] inline-block" /> Missing</span>
+              </div>
             </div>
           </div>
 

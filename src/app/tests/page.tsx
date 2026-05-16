@@ -16,6 +16,7 @@ export default function TestsPage() {
   const [generating, setGenerating] = useState(false);
   const [generateProgress, setGenerateProgress] = useState<{ current: number; total: number; label: string } | null>(null);
   const [generateError, setGenerateError] = useState("");
+  const [generateAsFree, setGenerateAsFree] = useState(true);
   const [search, setSearch] = useState("");
   const [selectedType, setSelectedType] = useState<AssessmentType | "all">("all");
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | "all">("all");
@@ -111,7 +112,7 @@ export default function TestsPage() {
       const diffLabel = difficulty === "EASY" ? "Beginner" : difficulty === "MEDIUM" ? "Intermediate" : "Advanced";
       setGenerateProgress({ current: i + 1, total: todo.length, label: `${label} — ${diffLabel}` });
       try {
-        await generateTestOfType(type, difficulty);
+        await generateTestOfType(type, difficulty, generateAsFree);
       } catch {
         failed++;
       }
@@ -148,15 +149,32 @@ export default function TestsPage() {
                 {recommendedTests.length > 0 && ` · ${recommendedTests.length} recommended for you`}
               </p>
             </div>
-            <div className="flex flex-col items-end gap-1.5">
-              <button
-                onClick={handleGenerate}
-                disabled={generating}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity shadow-sm"
-              >
-                <Wand2 size={15} />
-                {generating ? "Generating…" : "Generate full test library"}
-              </button>
+            <div className="flex flex-col items-end gap-2">
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-[#64748b] font-medium">Generate as:</span>
+                <div className="flex rounded-lg border border-[#e2e8f0] overflow-hidden text-xs font-semibold">
+                  <button
+                    onClick={() => setGenerateAsFree(true)}
+                    className={`px-3 py-1.5 transition-colors ${generateAsFree ? "bg-emerald-500 text-white" : "bg-white text-[#64748b] hover:bg-[#f8fafc]"}`}
+                  >
+                    Free
+                  </button>
+                  <button
+                    onClick={() => setGenerateAsFree(false)}
+                    className={`px-3 py-1.5 transition-colors ${!generateAsFree ? "bg-[#4f46e5] text-white" : "bg-white text-[#64748b] hover:bg-[#f8fafc]"}`}
+                  >
+                    Pro
+                  </button>
+                </div>
+                <button
+                  onClick={handleGenerate}
+                  disabled={generating}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity shadow-sm"
+                >
+                  <Wand2 size={15} />
+                  {generating ? "Generating…" : "Generate full library"}
+                </button>
+              </div>
               {generating && generateProgress && (
                 <div className="flex flex-col items-end gap-1 min-w-[220px]">
                   <p className="text-xs text-[#64748b]">

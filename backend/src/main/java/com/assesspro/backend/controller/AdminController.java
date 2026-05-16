@@ -100,12 +100,13 @@ public class AdminController {
     public ResponseEntity<?> generateType(
             @PathVariable Long userId,
             @PathVariable String type,
-            @RequestParam(defaultValue = "MEDIUM") String difficulty) {
+            @RequestParam(defaultValue = "MEDIUM") String difficulty,
+            @RequestParam(defaultValue = "true") boolean isFree) {
         try {
             TestType testType = TestType.valueOf(type.toUpperCase());
             Difficulty diff = Difficulty.valueOf(difficulty.toUpperCase());
             var user = userService.getUserEntity(userId);
-            var test = aiTestGenerationService.generateForUserOfType(user, testType, diff);
+            var test = aiTestGenerationService.generateForUserOfType(user, testType, diff, isFree);
             return ResponseEntity.status(HttpStatus.CREATED).body(testService.toTestResponse(test));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid type or difficulty: " + e.getMessage());

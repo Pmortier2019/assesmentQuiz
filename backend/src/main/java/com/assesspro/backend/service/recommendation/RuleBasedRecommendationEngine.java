@@ -227,17 +227,45 @@ public class RuleBasedRecommendationEngine implements RecommendationEngine {
 
     private String typeLabel(TestType type) {
         return switch (type) {
-            case NUMERICAL_REASONING   -> "Numerical Reasoning";
-            case LOGICAL_REASONING     -> "Logical Reasoning";
-            case VERBAL_REASONING      -> "Verbal Reasoning";
-            case SITUATIONAL_JUDGEMENT -> "Situational Judgement";
+            case NUMERICAL_REASONING    -> "Numerical Reasoning";
+            case LOGICAL_REASONING      -> "Logical Reasoning";
+            case VERBAL_REASONING       -> "Verbal Reasoning";
+            case ABSTRACT_REASONING     -> "Abstract Reasoning";
+            case CRITICAL_THINKING      -> "Critical Thinking";
+            case INDUCTIVE_REASONING    -> "Inductive Reasoning";
+            case DEDUCTIVE_REASONING    -> "Deductive Reasoning";
+            case DIAGRAMMATIC_REASONING -> "Diagrammatic Reasoning";
+            case SPATIAL_REASONING      -> "Spatial Reasoning";
+            case MECHANICAL_REASONING   -> "Mechanical Reasoning";
+            case ANALYTICAL_THINKING    -> "Analytical Thinking";
+            case DATA_INTERPRETATION    -> "Data Interpretation";
+            case ERROR_CHECKING         -> "Error Checking";
+            case READING_COMPREHENSION  -> "Reading Comprehension";
+            case GRAMMAR_SPELLING       -> "Grammar & Spelling";
+            case WRITING_ASSESSMENT     -> "Writing Assessment";
+            case COMMUNICATION_SKILLS   -> "Communication Skills";
+            case PRESENTATION_SKILLS    -> "Presentation Skills";
             case PERSONALITY_WORK_STYLE -> "Personality & Work Style";
-            case DATA_INTERPRETATION   -> "Data Interpretation";
-            case ABSTRACT_REASONING    -> "Abstract Reasoning";
-            case CRITICAL_THINKING     -> "Critical Thinking";
-            case CODING_CHALLENGE      -> "Coding Challenge";
-            case LEADERSHIP_ASSESSMENT -> "Leadership Assessment";
-            case WRITING_ASSESSMENT    -> "Writing Assessment";
+            case SITUATIONAL_JUDGEMENT  -> "Situational Judgement";
+            case EMOTIONAL_INTELLIGENCE -> "Emotional Intelligence";
+            case ADAPTABILITY           -> "Adaptability";
+            case CULTURAL_FIT           -> "Cultural Fit";
+            case LEADERSHIP_ASSESSMENT  -> "Leadership Assessment";
+            case DECISION_MAKING        -> "Decision Making";
+            case STRATEGIC_THINKING     -> "Strategic Thinking";
+            case PROJECT_MANAGEMENT     -> "Project Management";
+            case TIME_MANAGEMENT        -> "Time Management";
+            case RISK_ASSESSMENT        -> "Risk Assessment";
+            case TEAMWORK_COLLABORATION -> "Teamwork & Collaboration";
+            case CONFLICT_RESOLUTION    -> "Conflict Resolution";
+            case NEGOTIATION_SKILLS     -> "Negotiation Skills";
+            case CUSTOMER_SERVICE       -> "Customer Service";
+            case SALES_APTITUDE         -> "Sales Aptitude";
+            case FINANCIAL_LITERACY     -> "Financial Literacy";
+            case EXCEL_SKILLS           -> "Excel Skills";
+            case CODING_CHALLENGE       -> "Coding Challenge";
+            case ETHICS_COMPLIANCE      -> "Ethics & Compliance";
+            case CREATIVITY_INNOVATION  -> "Creativity & Innovation";
         };
     }
 

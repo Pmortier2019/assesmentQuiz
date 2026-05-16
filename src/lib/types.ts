@@ -3,17 +3,54 @@
 export type Language = "en" | "nl" | "de" | "fr" | "es";
 
 export type AssessmentType =
+  // Cognitive & Reasoning
   | "numerical_reasoning"
   | "logical_reasoning"
   | "verbal_reasoning"
-  | "situational_judgement"
-  | "personality"
-  | "data_interpretation"
   | "abstract_reasoning"
   | "critical_thinking"
-  | "coding_challenge"
+  | "inductive_reasoning"
+  | "deductive_reasoning"
+  | "diagrammatic_reasoning"
+  | "spatial_reasoning"
+  | "mechanical_reasoning"
+  | "analytical_thinking"
+  // Data & Interpretation
+  | "data_interpretation"
+  | "error_checking"
+  // Verbal & Written
+  | "reading_comprehension"
+  | "grammar_spelling"
+  | "writing_assessment"
+  | "communication_skills"
+  | "presentation_skills"
+  // Personality & Behavioural
+  | "personality"
+  | "situational_judgement"
+  | "emotional_intelligence"
+  | "adaptability"
+  | "cultural_fit"
+  // Leadership & Management
   | "leadership_assessment"
-  | "writing_assessment";
+  | "decision_making"
+  | "strategic_thinking"
+  | "project_management"
+  | "time_management"
+  | "risk_assessment"
+  // Interpersonal & Professional
+  | "teamwork_collaboration"
+  | "conflict_resolution"
+  | "negotiation_skills"
+  | "customer_service"
+  | "sales_aptitude"
+  // Domain-specific
+  | "financial_literacy"
+  | "excel_skills"
+  | "coding_challenge"
+  // Values & Ethics
+  | "ethics_compliance"
+  // Creative
+  | "creativity_innovation";
 
 export type Difficulty = "beginner" | "intermediate" | "advanced";
 

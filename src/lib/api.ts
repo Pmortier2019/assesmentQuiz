@@ -28,17 +28,54 @@ function currentUserId(): number {
 
 function mapTestType(backend: string): AssessmentType {
   const map: Record<string, AssessmentType> = {
-    NUMERICAL_REASONING:   "numerical_reasoning",
-    LOGICAL_REASONING:     "logical_reasoning",
-    VERBAL_REASONING:      "verbal_reasoning",
-    SITUATIONAL_JUDGEMENT: "situational_judgement",
+    // Cognitive & Reasoning
+    NUMERICAL_REASONING:    "numerical_reasoning",
+    LOGICAL_REASONING:      "logical_reasoning",
+    VERBAL_REASONING:       "verbal_reasoning",
+    ABSTRACT_REASONING:     "abstract_reasoning",
+    CRITICAL_THINKING:      "critical_thinking",
+    INDUCTIVE_REASONING:    "inductive_reasoning",
+    DEDUCTIVE_REASONING:    "deductive_reasoning",
+    DIAGRAMMATIC_REASONING: "diagrammatic_reasoning",
+    SPATIAL_REASONING:      "spatial_reasoning",
+    MECHANICAL_REASONING:   "mechanical_reasoning",
+    ANALYTICAL_THINKING:    "analytical_thinking",
+    // Data & Interpretation
+    DATA_INTERPRETATION:    "data_interpretation",
+    ERROR_CHECKING:         "error_checking",
+    // Verbal & Written
+    READING_COMPREHENSION:  "reading_comprehension",
+    GRAMMAR_SPELLING:       "grammar_spelling",
+    WRITING_ASSESSMENT:     "writing_assessment",
+    COMMUNICATION_SKILLS:   "communication_skills",
+    PRESENTATION_SKILLS:    "presentation_skills",
+    // Personality & Behavioural
     PERSONALITY_WORK_STYLE: "personality",
-    DATA_INTERPRETATION:   "data_interpretation",
-    ABSTRACT_REASONING:    "abstract_reasoning",
-    CRITICAL_THINKING:     "critical_thinking",
-    CODING_CHALLENGE:      "coding_challenge",
-    LEADERSHIP_ASSESSMENT: "leadership_assessment",
-    WRITING_ASSESSMENT:    "writing_assessment",
+    SITUATIONAL_JUDGEMENT:  "situational_judgement",
+    EMOTIONAL_INTELLIGENCE: "emotional_intelligence",
+    ADAPTABILITY:           "adaptability",
+    CULTURAL_FIT:           "cultural_fit",
+    // Leadership & Management
+    LEADERSHIP_ASSESSMENT:  "leadership_assessment",
+    DECISION_MAKING:        "decision_making",
+    STRATEGIC_THINKING:     "strategic_thinking",
+    PROJECT_MANAGEMENT:     "project_management",
+    TIME_MANAGEMENT:        "time_management",
+    RISK_ASSESSMENT:        "risk_assessment",
+    // Interpersonal & Professional
+    TEAMWORK_COLLABORATION: "teamwork_collaboration",
+    CONFLICT_RESOLUTION:    "conflict_resolution",
+    NEGOTIATION_SKILLS:     "negotiation_skills",
+    CUSTOMER_SERVICE:       "customer_service",
+    SALES_APTITUDE:         "sales_aptitude",
+    // Domain-specific
+    FINANCIAL_LITERACY:     "financial_literacy",
+    EXCEL_SKILLS:           "excel_skills",
+    CODING_CHALLENGE:       "coding_challenge",
+    // Values & Ethics
+    ETHICS_COMPLIANCE:      "ethics_compliance",
+    // Creative
+    CREATIVITY_INNOVATION:  "creativity_innovation",
   };
   return map[backend] ?? "numerical_reasoning";
 }
@@ -54,17 +91,54 @@ function mapDifficulty(backend: string): Difficulty {
 
 function mapTestTypeToBackend(type: AssessmentType): string {
   const map: Record<AssessmentType, string> = {
-    numerical_reasoning:   "NUMERICAL_REASONING",
-    logical_reasoning:     "LOGICAL_REASONING",
-    verbal_reasoning:      "VERBAL_REASONING",
-    situational_judgement: "SITUATIONAL_JUDGEMENT",
-    personality:           "PERSONALITY_WORK_STYLE",
-    data_interpretation:   "DATA_INTERPRETATION",
-    abstract_reasoning:    "ABSTRACT_REASONING",
-    critical_thinking:     "CRITICAL_THINKING",
-    coding_challenge:      "CODING_CHALLENGE",
-    leadership_assessment: "LEADERSHIP_ASSESSMENT",
-    writing_assessment:    "WRITING_ASSESSMENT",
+    // Cognitive & Reasoning
+    numerical_reasoning:    "NUMERICAL_REASONING",
+    logical_reasoning:      "LOGICAL_REASONING",
+    verbal_reasoning:       "VERBAL_REASONING",
+    abstract_reasoning:     "ABSTRACT_REASONING",
+    critical_thinking:      "CRITICAL_THINKING",
+    inductive_reasoning:    "INDUCTIVE_REASONING",
+    deductive_reasoning:    "DEDUCTIVE_REASONING",
+    diagrammatic_reasoning: "DIAGRAMMATIC_REASONING",
+    spatial_reasoning:      "SPATIAL_REASONING",
+    mechanical_reasoning:   "MECHANICAL_REASONING",
+    analytical_thinking:    "ANALYTICAL_THINKING",
+    // Data & Interpretation
+    data_interpretation:    "DATA_INTERPRETATION",
+    error_checking:         "ERROR_CHECKING",
+    // Verbal & Written
+    reading_comprehension:  "READING_COMPREHENSION",
+    grammar_spelling:       "GRAMMAR_SPELLING",
+    writing_assessment:     "WRITING_ASSESSMENT",
+    communication_skills:   "COMMUNICATION_SKILLS",
+    presentation_skills:    "PRESENTATION_SKILLS",
+    // Personality & Behavioural
+    personality:            "PERSONALITY_WORK_STYLE",
+    situational_judgement:  "SITUATIONAL_JUDGEMENT",
+    emotional_intelligence: "EMOTIONAL_INTELLIGENCE",
+    adaptability:           "ADAPTABILITY",
+    cultural_fit:           "CULTURAL_FIT",
+    // Leadership & Management
+    leadership_assessment:  "LEADERSHIP_ASSESSMENT",
+    decision_making:        "DECISION_MAKING",
+    strategic_thinking:     "STRATEGIC_THINKING",
+    project_management:     "PROJECT_MANAGEMENT",
+    time_management:        "TIME_MANAGEMENT",
+    risk_assessment:        "RISK_ASSESSMENT",
+    // Interpersonal & Professional
+    teamwork_collaboration: "TEAMWORK_COLLABORATION",
+    conflict_resolution:    "CONFLICT_RESOLUTION",
+    negotiation_skills:     "NEGOTIATION_SKILLS",
+    customer_service:       "CUSTOMER_SERVICE",
+    sales_aptitude:         "SALES_APTITUDE",
+    // Domain-specific
+    financial_literacy:     "FINANCIAL_LITERACY",
+    excel_skills:           "EXCEL_SKILLS",
+    coding_challenge:       "CODING_CHALLENGE",
+    // Values & Ethics
+    ethics_compliance:      "ETHICS_COMPLIANCE",
+    // Creative
+    creativity_innovation:  "CREATIVITY_INNOVATION",
   };
   return map[type];
 }
@@ -473,17 +547,54 @@ export async function generateTestForMe(): Promise<Test> {
 }
 
 export const ALL_GENERATE_TYPES: { type: string; label: string }[] = [
-  { type: "NUMERICAL_REASONING",   label: "Numerical Reasoning" },
-  { type: "LOGICAL_REASONING",     label: "Logical Reasoning" },
-  { type: "VERBAL_REASONING",      label: "Verbal Reasoning" },
-  { type: "SITUATIONAL_JUDGEMENT", label: "Situational Judgement" },
-  { type: "DATA_INTERPRETATION",   label: "Data Interpretation" },
-  { type: "ABSTRACT_REASONING",    label: "Abstract Reasoning" },
-  { type: "CRITICAL_THINKING",     label: "Critical Thinking" },
-  { type: "PERSONALITY_WORK_STYLE",label: "Personality & Work Style" },
-  { type: "LEADERSHIP_ASSESSMENT", label: "Leadership Assessment" },
-  { type: "CODING_CHALLENGE",      label: "Coding Challenge" },
-  { type: "WRITING_ASSESSMENT",    label: "Writing Assessment" },
+  // Cognitive & Reasoning
+  { type: "NUMERICAL_REASONING",    label: "Numerical Reasoning" },
+  { type: "LOGICAL_REASONING",      label: "Logical Reasoning" },
+  { type: "VERBAL_REASONING",       label: "Verbal Reasoning" },
+  { type: "ABSTRACT_REASONING",     label: "Abstract Reasoning" },
+  { type: "CRITICAL_THINKING",      label: "Critical Thinking" },
+  { type: "INDUCTIVE_REASONING",    label: "Inductive Reasoning" },
+  { type: "DEDUCTIVE_REASONING",    label: "Deductive Reasoning" },
+  { type: "DIAGRAMMATIC_REASONING", label: "Diagrammatic Reasoning" },
+  { type: "SPATIAL_REASONING",      label: "Spatial Reasoning" },
+  { type: "MECHANICAL_REASONING",   label: "Mechanical Reasoning" },
+  { type: "ANALYTICAL_THINKING",    label: "Analytical Thinking" },
+  // Data & Interpretation
+  { type: "DATA_INTERPRETATION",    label: "Data Interpretation" },
+  { type: "ERROR_CHECKING",         label: "Error Checking" },
+  // Verbal & Written
+  { type: "READING_COMPREHENSION",  label: "Reading Comprehension" },
+  { type: "GRAMMAR_SPELLING",       label: "Grammar & Spelling" },
+  { type: "WRITING_ASSESSMENT",     label: "Writing Assessment" },
+  { type: "COMMUNICATION_SKILLS",   label: "Communication Skills" },
+  { type: "PRESENTATION_SKILLS",    label: "Presentation Skills" },
+  // Personality & Behavioural
+  { type: "PERSONALITY_WORK_STYLE", label: "Personality & Work Style" },
+  { type: "SITUATIONAL_JUDGEMENT",  label: "Situational Judgement" },
+  { type: "EMOTIONAL_INTELLIGENCE", label: "Emotional Intelligence" },
+  { type: "ADAPTABILITY",           label: "Adaptability" },
+  { type: "CULTURAL_FIT",           label: "Cultural Fit" },
+  // Leadership & Management
+  { type: "LEADERSHIP_ASSESSMENT",  label: "Leadership Assessment" },
+  { type: "DECISION_MAKING",        label: "Decision Making" },
+  { type: "STRATEGIC_THINKING",     label: "Strategic Thinking" },
+  { type: "PROJECT_MANAGEMENT",     label: "Project Management" },
+  { type: "TIME_MANAGEMENT",        label: "Time Management" },
+  { type: "RISK_ASSESSMENT",        label: "Risk Assessment" },
+  // Interpersonal & Professional
+  { type: "TEAMWORK_COLLABORATION", label: "Teamwork & Collaboration" },
+  { type: "CONFLICT_RESOLUTION",    label: "Conflict Resolution" },
+  { type: "NEGOTIATION_SKILLS",     label: "Negotiation Skills" },
+  { type: "CUSTOMER_SERVICE",       label: "Customer Service" },
+  { type: "SALES_APTITUDE",         label: "Sales Aptitude" },
+  // Domain-specific
+  { type: "FINANCIAL_LITERACY",     label: "Financial Literacy" },
+  { type: "EXCEL_SKILLS",           label: "Excel Skills" },
+  { type: "CODING_CHALLENGE",       label: "Coding Challenge" },
+  // Values & Ethics
+  { type: "ETHICS_COMPLIANCE",      label: "Ethics & Compliance" },
+  // Creative
+  { type: "CREATIVITY_INNOVATION",  label: "Creativity & Innovation" },
 ];
 
 export const ALL_DIFFICULTIES = ["EASY", "MEDIUM", "HARD"] as const;
@@ -492,9 +603,9 @@ export async function getGenerationStatus(): Promise<Record<string, string[]>> {
   return apiFetch<Record<string, string[]>>("/api/admin/generation-status");
 }
 
-export async function generateTestOfType(backendType: string, difficulty = "MEDIUM"): Promise<Test> {
+export async function generateTestOfType(backendType: string, difficulty = "MEDIUM", isFree = true): Promise<Test> {
   const result = await apiFetch<BackendTestListItem>(
-    `/api/admin/generate-type/${currentUserId()}/${backendType}?difficulty=${difficulty}`,
+    `/api/admin/generate-type/${currentUserId()}/${backendType}?difficulty=${difficulty}&isFree=${isFree}`,
     { method: "POST" }
   );
   return mapTestListItem(result);

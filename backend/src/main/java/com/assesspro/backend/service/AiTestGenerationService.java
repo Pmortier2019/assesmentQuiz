@@ -35,14 +35,14 @@ public class AiTestGenerationService {
      */
     @Transactional
     public AssessmentTest generateAndSave(TestType type, Difficulty difficulty, Language language, int numberOfQuestions) {
-        return generateAndSave(type, difficulty, numberOfQuestions, null, null);
+        return generateAndSave(type, difficulty, numberOfQuestions, null, null, true);
     }
 
     @Transactional
     public AssessmentTest generateAndSave(TestType type, Difficulty difficulty, int numberOfQuestions,
-                                          String targetRole, String targetIndustry) {
+                                          String targetRole, String targetIndustry, boolean isFree) {
         String prompt = buildPrompt(type, difficulty, numberOfQuestions, targetRole, targetIndustry);
-        log.info("Generating AI test: type={} difficulty={} role={} industry={}", type, difficulty, targetRole, targetIndustry);
+        log.info("Generating AI test: type={} difficulty={} role={} industry={} isFree={}", type, difficulty, targetRole, targetIndustry, isFree);
 
         String rawJson = aiClient.generateTest(prompt);
 
@@ -50,9 +50,9 @@ public class AiTestGenerationService {
         validateTestJson(testJson);
 
         AssessmentTest test = mapToEntity(testJson);
-        test.setType(type); // always use the requested type, ignore whatever Gemini returned
+        test.setType(type);
         test.setGeneratedByAI(true);
-        test.setFree(true);
+        test.setFree(isFree);
 
         AssessmentTest saved = testRepository.save(test);
         log.info("AI-generated test saved with id={}", saved.getId());
@@ -64,18 +64,23 @@ public class AiTestGenerationService {
         TestType type = inferTestType(user.getTargetRole());
         Difficulty difficulty = Difficulty.MEDIUM;
         int poolSize = 12;
-        return generateAndSave(type, difficulty, poolSize, user.getTargetRole(), user.getTargetIndustry());
+        return generateAndSave(type, difficulty, poolSize, user.getTargetRole(), user.getTargetIndustry(), true);
     }
 
     @Transactional
     public AssessmentTest generateForUserOfType(com.assesspro.backend.entity.User user, TestType type) {
-        return generateForUserOfType(user, type, Difficulty.MEDIUM);
+        return generateForUserOfType(user, type, Difficulty.MEDIUM, true);
     }
 
     @Transactional
     public AssessmentTest generateForUserOfType(com.assesspro.backend.entity.User user, TestType type, Difficulty difficulty) {
+        return generateForUserOfType(user, type, difficulty, true);
+    }
+
+    @Transactional
+    public AssessmentTest generateForUserOfType(com.assesspro.backend.entity.User user, TestType type, Difficulty difficulty, boolean isFree) {
         int poolSize = 30;
-        return generateAndSave(type, difficulty, poolSize, user.getTargetRole(), user.getTargetIndustry());
+        return generateAndSave(type, difficulty, poolSize, user.getTargetRole(), user.getTargetIndustry(), isFree);
     }
 
     private TestType inferTestType(String targetRole) {
@@ -90,17 +95,54 @@ public class AiTestGenerationService {
 
     private String typeDescription(TestType type) {
         return switch (type) {
-            case NUMERICAL_REASONING    -> "numerical reasoning (percentages, ratios, data tables, financial calculations)";
-            case LOGICAL_REASONING      -> "logical reasoning (deductive and inductive logic, syllogisms, sequences)";
-            case VERBAL_REASONING       -> "verbal reasoning (reading comprehension, argument analysis, inference)";
-            case SITUATIONAL_JUDGEMENT  -> "situational judgement (workplace scenarios, prioritisation, stakeholder management)";
-            case PERSONALITY_WORK_STYLE -> "personality and work style (behavioural preferences, motivators, team dynamics)";
-            case DATA_INTERPRETATION    -> "data interpretation (charts, graphs, tables, business metrics analysis)";
-            case ABSTRACT_REASONING     -> "abstract reasoning (patterns, shapes, matrix problems, non-verbal logic)";
-            case CRITICAL_THINKING      -> "critical thinking (assumptions, conclusions, argument evaluation, logical fallacies)";
-            case CODING_CHALLENGE       -> "coding and algorithmic thinking (pseudocode logic, complexity, debugging scenarios)";
-            case LEADERSHIP_ASSESSMENT  -> "leadership assessment (decision making, people management, strategic thinking scenarios)";
-            case WRITING_ASSESSMENT     -> "written communication assessment (email drafting, report structure, clarity and tone)";
+            // Cognitive & Reasoning
+            case NUMERICAL_REASONING      -> "numerical reasoning (percentages, ratios, data tables, financial calculations)";
+            case LOGICAL_REASONING        -> "logical reasoning (deductive and inductive logic, syllogisms, sequences)";
+            case VERBAL_REASONING         -> "verbal reasoning (reading comprehension, argument analysis, inference)";
+            case ABSTRACT_REASONING       -> "abstract reasoning (patterns, shapes, matrix problems, non-verbal logic)";
+            case CRITICAL_THINKING        -> "critical thinking (assumptions, conclusions, argument evaluation, logical fallacies)";
+            case INDUCTIVE_REASONING      -> "inductive reasoning (pattern recognition, rule inference from examples, generalisation)";
+            case DEDUCTIVE_REASONING      -> "deductive reasoning (applying rules to reach valid conclusions, syllogisms, logical deduction)";
+            case DIAGRAMMATIC_REASONING   -> "diagrammatic reasoning (flowcharts, process diagrams, input-output rules, symbol sequences)";
+            case SPATIAL_REASONING        -> "spatial reasoning (mental rotation, 2D/3D shapes, unfolded nets, map navigation)";
+            case MECHANICAL_REASONING     -> "mechanical reasoning (levers, pulleys, gears, forces, basic physics in workplace machinery)";
+            case ANALYTICAL_THINKING      -> "analytical thinking (breaking complex problems into components, root-cause analysis, structured thinking)";
+            // Data & Interpretation
+            case DATA_INTERPRETATION      -> "data interpretation (charts, graphs, tables, business metrics analysis)";
+            case ERROR_CHECKING           -> "error checking (spotting discrepancies in tables, codes, text, and numerical data)";
+            // Verbal & Written
+            case READING_COMPREHENSION    -> "reading comprehension (extracting meaning from dense passages, identifying main ideas and supporting details)";
+            case GRAMMAR_SPELLING         -> "grammar and spelling (correct sentence structure, punctuation, vocabulary, common errors)";
+            case WRITING_ASSESSMENT       -> "written communication assessment (email drafting, report structure, clarity and tone)";
+            case COMMUNICATION_SKILLS     -> "professional communication skills (clear messaging, active listening scenarios, stakeholder communication)";
+            case PRESENTATION_SKILLS      -> "presentation skills (structuring arguments, slide logic, audience-appropriate language, Q&A handling)";
+            // Personality & Behavioural
+            case PERSONALITY_WORK_STYLE   -> "personality and work style (behavioural preferences, motivators, team dynamics)";
+            case SITUATIONAL_JUDGEMENT    -> "situational judgement (workplace scenarios, prioritisation, stakeholder management)";
+            case EMOTIONAL_INTELLIGENCE   -> "emotional intelligence (self-awareness, empathy, managing emotions under pressure, interpersonal sensitivity)";
+            case ADAPTABILITY             -> "adaptability assessment (handling change, ambiguity, and uncertainty in professional environments)";
+            case CULTURAL_FIT             -> "cultural fit and values alignment (organisational values, teamwork expectations, attitude in diverse workplaces)";
+            // Leadership & Management
+            case LEADERSHIP_ASSESSMENT    -> "leadership assessment (decision making, people management, strategic thinking scenarios)";
+            case DECISION_MAKING          -> "decision making (evaluating options under time pressure, risk-benefit trade-offs, stakeholder impact)";
+            case STRATEGIC_THINKING       -> "strategic thinking (long-term planning, competitive analysis, setting priorities, scenario planning)";
+            case PROJECT_MANAGEMENT       -> "project management (planning, scheduling, resource allocation, risk and stakeholder management)";
+            case TIME_MANAGEMENT          -> "time management (prioritisation frameworks, deadline management, workload planning)";
+            case RISK_ASSESSMENT          -> "risk assessment (identifying, quantifying, and mitigating business and operational risks)";
+            // Interpersonal & Professional
+            case TEAMWORK_COLLABORATION   -> "teamwork and collaboration (working in cross-functional teams, managing group dynamics, shared goals)";
+            case CONFLICT_RESOLUTION      -> "conflict resolution (de-escalation, mediation, assertive communication, win-win outcomes)";
+            case NEGOTIATION_SKILLS       -> "negotiation skills (BATNA, anchoring, persuasion techniques, closing deals)";
+            case CUSTOMER_SERVICE         -> "customer service scenarios (handling complaints, empathy, solution focus, service recovery)";
+            case SALES_APTITUDE           -> "sales aptitude (prospecting, objection handling, closing techniques, pipeline management)";
+            // Domain-specific
+            case FINANCIAL_LITERACY       -> "financial literacy (budgets, P&L statements, cash flow, investment concepts, KPIs)";
+            case EXCEL_SKILLS             -> "Excel and spreadsheet skills (formulas, pivot tables, data analysis, VLOOKUP, conditional formatting)";
+            case CODING_CHALLENGE         -> "coding and algorithmic thinking (pseudocode logic, complexity, debugging scenarios)";
+            // Values & Ethics
+            case ETHICS_COMPLIANCE        -> "ethics and compliance (recognising ethical dilemmas, corporate governance, whistleblowing, GDPR scenarios)";
+            // Creative
+            case CREATIVITY_INNOVATION    -> "creativity and innovation (lateral thinking, brainstorming, identifying novel solutions to business problems)";
         };
     }
 
