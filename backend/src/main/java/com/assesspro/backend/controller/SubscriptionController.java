@@ -20,10 +20,20 @@ public class SubscriptionController {
     }
 
     /**
-     * POST /api/users/{userId}/subscription/mock-upgrade
+     * GET /api/users/{userId}/subscription/checkout-url
      *
-     * Simulates a Pro upgrade without Stripe.
-     * TODO: Replace this endpoint with a Stripe Checkout redirect once payments are wired up.
+     * Returns the Lemon Squeezy hosted checkout URL for the given user.
+     * The frontend redirects the user to this URL to complete payment.
+     */
+    @GetMapping("/checkout-url")
+    public ResponseEntity<java.util.Map<String, String>> getCheckoutUrl(@PathVariable Long userId) {
+        String url = subscriptionService.getCheckoutUrl(userId);
+        return ResponseEntity.ok(java.util.Map.of("checkoutUrl", url));
+    }
+
+    /**
+     * POST /api/users/{userId}/subscription/mock-upgrade
+     * Simulates a Pro upgrade for local testing (no payment).
      */
     @PostMapping("/mock-upgrade")
     public ResponseEntity<SubscriptionResponse> mockUpgrade(@PathVariable Long userId) {

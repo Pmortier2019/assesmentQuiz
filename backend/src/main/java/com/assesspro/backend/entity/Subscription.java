@@ -35,7 +35,6 @@ public class Subscription {
     private LocalDateTime startedAt;
     private LocalDateTime expiresAt;
 
-    // TODO: Add stripeSubscriptionId and stripeCustomerId fields when Stripe is integrated
-    // private String stripeSubscriptionId;
-    // private String stripeCustomerId;
+    private String lsSubscriptionId;   // Lemon Squeezy subscription ID
+    private String lsCustomerId;        // Lemon Squeezy customer ID
 }

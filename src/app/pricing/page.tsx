@@ -1,7 +1,10 @@
+"use client";
+
 import { Check, ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { PricingCard } from "@/components/cards/PricingCard";
+import { UpgradeButton } from "@/components/ui/UpgradeButton";
 
 const FAQ = [
   {
@@ -51,14 +54,17 @@ export default function PricingPage() {
         </section>
 
         {/* Pricing cards */}
-        <section className="max-w-4xl mx-auto px-4 sm:px-6 -mt-8 pb-16">
+        <section className="max-w-4xl mx-auto px-4 sm:px-6 -mt-8 pb-8">
           <div className="grid sm:grid-cols-2 gap-6 items-center">
             <PricingCard plan="free" />
             <PricingCard plan="pro" highlighted />
           </div>
-          <p className="text-center text-sm text-[#94a3b8] mt-6">
-            Cancel anytime · No hidden fees · Billed monthly
-          </p>
+          <div className="flex flex-col items-center gap-3 mt-8">
+            <UpgradeButton label="Upgrade to Pro — €4/mo" size="lg" />
+            <p className="text-sm text-[#94a3b8]">
+              Cancel anytime · No hidden fees · Billed monthly via Lemon Squeezy
+            </p>
+          </div>
         </section>
 
         {/* Feature comparison */}

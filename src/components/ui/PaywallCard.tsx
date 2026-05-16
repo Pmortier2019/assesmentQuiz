@@ -1,8 +1,9 @@
 "use client";
 
-import { Lock, Sparkles } from "lucide-react";
+import { Lock } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { UpgradeButton } from "@/components/ui/UpgradeButton";
 
 interface PaywallCardProps {
   title?: string;
@@ -46,14 +47,8 @@ export function PaywallCard({
           )}
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3">
-          <Link
-            href="/pricing"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white font-semibold text-sm shadow-lg hover:opacity-90 transition-opacity"
-          >
-            <Sparkles size={16} />
-            Upgrade to Pro — €4/mo
-          </Link>
+        <div className="flex flex-col sm:flex-row gap-3 items-center">
+          <UpgradeButton label="Upgrade to Pro — €4/mo" />
           {!compact && (
             <Link
               href="/tests"

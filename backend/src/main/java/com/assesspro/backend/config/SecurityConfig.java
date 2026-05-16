@@ -31,6 +31,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 // Tests — public read access
                 .requestMatchers(HttpMethod.GET, "/api/tests", "/api/tests/**").permitAll()
+                // Webhook — called by Lemon Squeezy, verified via HMAC signature
+                .requestMatchers("/api/webhooks/**").permitAll()
                 // Admin endpoints — ADMIN role only
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 // Everything else requires a valid JWT

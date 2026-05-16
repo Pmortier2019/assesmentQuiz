@@ -453,12 +453,9 @@ export async function getResultById(id: string): Promise<TestResult | null> {
 // ─── Subscription ─────────────────────────────────────────────────────────────
 
 export async function startCheckout(): Promise<{ checkoutUrl: string }> {
-  await apiFetch(
-    `/api/users/${currentUserId()}/subscription/mock-upgrade`,
-    { method: "POST" }
+  return apiFetch<{ checkoutUrl: string }>(
+    `/api/users/${currentUserId()}/subscription/checkout-url`
   );
-  // TODO: replace mock-upgrade with real Stripe checkout URL
-  return { checkoutUrl: "/pricing?checkout=mock" };
 }
 
 export async function cancelSubscription(): Promise<void> {

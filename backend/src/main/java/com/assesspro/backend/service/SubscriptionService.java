@@ -8,17 +8,26 @@ import com.assesspro.backend.exception.ResourceNotFoundException;
 import com.assesspro.backend.repository.SubscriptionRepository;
 import com.assesspro.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SubscriptionService {
 
     private final SubscriptionRepository subscriptionRepository;
     private final UserRepository userRepository;
+
+    @Value("${LEMON_SQUEEZY_VARIANT_ID:}")
+    private String variantId;
+
+    @Value("${LEMON_SQUEEZY_STORE_SLUG:mortier}")
+    private String storeSlug;
 
     @Transactional
     public SubscriptionResponse getSubscription(Long userId) {
@@ -28,14 +37,57 @@ public class SubscriptionService {
     }
 
     /**
-     * Mock upgrade — grants the user Pro access immediately.
-     *
-     * TODO: Replace this with a real Stripe checkout flow:
-     *   1. Create a Stripe Checkout Session via the Stripe Java SDK
-     *   2. Return the session URL so the frontend can redirect the user
-     *   3. Handle the webhook event `checkout.session.completed` to actually activate the subscription
-     *   4. Store stripeSubscriptionId and stripeCustomerId on the Subscription entity
+     * Returns the Lemon Squeezy hosted checkout URL for the given user.
+     * Embeds the user's email and ID in the URL so the webhook knows who paid.
      */
+    public String getCheckoutUrl(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
+
+        return String.format(
+            "https://%s.lemonsqueezy.com/checkout/buy/%s?checkout[email]=%s&checkout[custom][user_id]=%d",
+            storeSlug, variantId,
+            encodeEmail(user.getEmail()),
+            userId
+        );
+    }
+
+    /**
+     * Called by the Lemon Squeezy webhook controller.
+     * Activates or cancels the subscription based on the event.
+     */
+    @Transactional
+    public void handleWebhookEvent(String eventName, String lsSubscriptionId,
+                                    String lsCustomerId, Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            log.warn("Webhook: user {} not found for event {}", userId, eventName);
+            return;
+        }
+
+        Subscription sub = subscriptionRepository.findByUserId(userId)
+                .orElse(Subscription.builder().user(user).build());
+
+        switch (eventName) {
+            case "subscription_created", "subscription_updated" -> {
+                sub.setStatus(SubscriptionStatus.ACTIVE);
+                sub.setPlan("PRO_MONTHLY");
+                sub.setLsSubscriptionId(lsSubscriptionId);
+                sub.setLsCustomerId(lsCustomerId);
+                sub.setStartedAt(LocalDateTime.now());
+                sub.setExpiresAt(LocalDateTime.now().plusMonths(1));
+                log.info("Subscription activated for user {}", userId);
+            }
+            case "subscription_cancelled", "subscription_expired" -> {
+                sub.setStatus(SubscriptionStatus.CANCELLED);
+                log.info("Subscription cancelled for user {}", userId);
+            }
+            default -> log.debug("Unhandled webhook event: {}", eventName);
+        }
+
+        subscriptionRepository.save(sub);
+    }
+
     @Transactional
     public SubscriptionResponse mockUpgrade(Long userId) {
         User user = userRepository.findById(userId)
@@ -75,5 +127,9 @@ public class SubscriptionService {
                 .expiresAt(sub.getExpiresAt())
                 .isPro(sub.getStatus() == SubscriptionStatus.ACTIVE)
                 .build();
+    }
+
+    private String encodeEmail(String email) {
+        return email.replace("@", "%40").replace("+", "%2B");
     }
 }
