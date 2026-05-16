@@ -4,11 +4,17 @@ import com.assesspro.backend.dto.GenerateTestRequest;
 import com.assesspro.backend.dto.ImportTestRequest;
 import com.assesspro.backend.dto.TestResponse;
 import com.assesspro.backend.entity.AssessmentTest;
+import com.assesspro.backend.entity.enums.Difficulty;
 import com.assesspro.backend.entity.enums.TestType;
+import com.assesspro.backend.repository.AssessmentTestRepository;
 import com.assesspro.backend.service.AiTestGenerationService;
 import com.assesspro.backend.service.ImportTestService;
 import com.assesspro.backend.service.TestService;
 import com.assesspro.backend.service.UserService;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +30,7 @@ public class AdminController {
     private final TestService testService;
     private final ImportTestService importTestService;
     private final UserService userService;
+    private final AssessmentTestRepository testRepository;
 
     /**
      * POST /api/admin/tests/generate
@@ -79,23 +86,48 @@ public class AdminController {
     }
 
     /**
-     * POST /api/admin/generate-type/{userId}/{type}
+     * POST /api/admin/generate-type/{userId}/{type}?difficulty=EASY|MEDIUM|HARD
      *
-     * Generates one AI test of the given TestType for the user's career context.
-     * Called once per type by the frontend batch-generation flow.
+     * Generates one AI test of the given TestType + difficulty for the user's career context.
+     * Called once per combination by the frontend bulk-generation flow.
      */
     @PostMapping("/generate-type/{userId}/{type}")
-    public ResponseEntity<?> generateType(@PathVariable Long userId, @PathVariable String type) {
+    public ResponseEntity<?> generateType(
+            @PathVariable Long userId,
+            @PathVariable String type,
+            @RequestParam(defaultValue = "MEDIUM") String difficulty) {
         try {
             TestType testType = TestType.valueOf(type.toUpperCase());
+            Difficulty diff = Difficulty.valueOf(difficulty.toUpperCase());
             var user = userService.getUserEntity(userId);
-            var test = aiTestGenerationService.generateForUserOfType(user, testType);
+            var test = aiTestGenerationService.generateForUserOfType(user, testType, diff);
             return ResponseEntity.status(HttpStatus.CREATED).body(testService.toTestResponse(test));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Unknown test type: " + type);
+            return ResponseEntity.badRequest().body("Invalid type or difficulty: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
                     .body("Test generation failed: " + e.getMessage());
         }
+    }
+
+    /**
+     * GET /api/admin/generation-status
+     *
+     * Returns which type+difficulty combinations already exist in the database.
+     * Used by the frontend to skip already-generated combinations.
+     */
+    @GetMapping("/generation-status")
+    public ResponseEntity<Map<String, List<String>>> generationStatus() {
+        Map<String, List<String>> existing = new HashMap<>();
+        for (TestType type : TestType.values()) {
+            List<String> difficulties = testRepository.findByType(type).stream()
+                    .map(t -> t.getDifficulty().name())
+                    .distinct()
+                    .toList();
+            if (!difficulties.isEmpty()) {
+                existing.put(type.name(), difficulties);
+            }
+        }
+        return ResponseEntity.ok(existing);
     }
 }

@@ -69,7 +69,11 @@ public class AiTestGenerationService {
 
     @Transactional
     public AssessmentTest generateForUserOfType(com.assesspro.backend.entity.User user, TestType type) {
-        Difficulty difficulty = Difficulty.MEDIUM;
+        return generateForUserOfType(user, type, Difficulty.MEDIUM);
+    }
+
+    @Transactional
+    public AssessmentTest generateForUserOfType(com.assesspro.backend.entity.User user, TestType type, Difficulty difficulty) {
         int poolSize = 12;
         return generateAndSave(type, difficulty, poolSize, user.getTargetRole(), user.getTargetIndustry());
     }

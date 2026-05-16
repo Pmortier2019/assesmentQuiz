@@ -7,7 +7,7 @@ import { Sidebar } from "@/components/layout/Sidebar";
 import { TestCard } from "@/components/cards/TestCard";
 import { FilterBar } from "@/components/test/FilterBar";
 import type { SortOption } from "@/components/test/FilterBar";
-import { getTests, generateTestOfType, ALL_GENERATE_TYPES } from "@/lib/api";
+import { getTests, generateTestOfType, getGenerationStatus, ALL_GENERATE_TYPES, ALL_DIFFICULTIES } from "@/lib/api";
 import type { Test, AssessmentType, Difficulty, RoleCategory, IndustryCategory } from "@/lib/types";
 
 export default function TestsPage() {
@@ -84,12 +84,34 @@ export default function TestsPage() {
     setGenerateError("");
     setGenerateProgress(null);
 
+    // Check which type+difficulty combos already exist
+    let existing: Record<string, string[]> = {};
+    try { existing = await getGenerationStatus(); } catch { /* skip check on error */ }
+
+    // Build full list of 33 combinations, skip existing ones
+    const todo: { type: string; label: string; difficulty: string }[] = [];
+    for (const { type, label } of ALL_GENERATE_TYPES) {
+      for (const diff of ALL_DIFFICULTIES) {
+        const alreadyExists = existing[type]?.includes(diff);
+        if (!alreadyExists) todo.push({ type, label, difficulty: diff });
+      }
+    }
+
+    if (todo.length === 0) {
+      setGenerating(false);
+      setGenerateError("");
+      const result = await getTests({});
+      setTests(result.data);
+      return;
+    }
+
     let failed = 0;
-    for (let i = 0; i < ALL_GENERATE_TYPES.length; i++) {
-      const { type, label } = ALL_GENERATE_TYPES[i];
-      setGenerateProgress({ current: i + 1, total: ALL_GENERATE_TYPES.length, label });
+    for (let i = 0; i < todo.length; i++) {
+      const { type, label, difficulty } = todo[i];
+      const diffLabel = difficulty === "EASY" ? "Beginner" : difficulty === "MEDIUM" ? "Intermediate" : "Advanced";
+      setGenerateProgress({ current: i + 1, total: todo.length, label: `${label} — ${diffLabel}` });
       try {
-        await generateTestOfType(type);
+        await generateTestOfType(type, difficulty);
       } catch {
         failed++;
       }
@@ -98,11 +120,10 @@ export default function TestsPage() {
     setGenerating(false);
     setGenerateProgress(null);
 
-    if (failed === ALL_GENERATE_TYPES.length) {
+    if (failed === todo.length) {
       setGenerateError("Generation failed — try again in a moment.");
     } else {
-      if (failed > 0) setGenerateError(`${failed} type(s) failed — the rest were generated.`);
-      // Reload test list
+      if (failed > 0) setGenerateError(`${failed} combinatie(s) mislukt — de rest is gegenereerd.`);
       const result = await getTests({});
       setTests(result.data);
     }

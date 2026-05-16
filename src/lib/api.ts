@@ -482,9 +482,15 @@ export const ALL_GENERATE_TYPES: { type: string; label: string }[] = [
   { type: "WRITING_ASSESSMENT",    label: "Writing Assessment" },
 ];
 
-export async function generateTestOfType(backendType: string): Promise<Test> {
+export const ALL_DIFFICULTIES = ["EASY", "MEDIUM", "HARD"] as const;
+
+export async function getGenerationStatus(): Promise<Record<string, string[]>> {
+  return apiFetch<Record<string, string[]>>("/api/admin/generation-status");
+}
+
+export async function generateTestOfType(backendType: string, difficulty = "MEDIUM"): Promise<Test> {
   const result = await apiFetch<BackendTestListItem>(
-    `/api/admin/generate-type/${CURRENT_USER_ID}/${backendType}`,
+    `/api/admin/generate-type/${CURRENT_USER_ID}/${backendType}?difficulty=${difficulty}`,
     { method: "POST" }
   );
   return mapTestListItem(result);
