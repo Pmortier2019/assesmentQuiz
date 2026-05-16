@@ -46,7 +46,7 @@ public class GeminiAiClient implements AiClient {
                     .uri(URI.create(ENDPOINT + "?key=" + apiKey))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                    .timeout(Duration.ofSeconds(90))
+                    .timeout(Duration.ofSeconds(150))
                     .build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());

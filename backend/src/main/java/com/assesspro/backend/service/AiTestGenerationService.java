@@ -74,7 +74,7 @@ public class AiTestGenerationService {
 
     @Transactional
     public AssessmentTest generateForUserOfType(com.assesspro.backend.entity.User user, TestType type, Difficulty difficulty) {
-        int poolSize = 12;
+        int poolSize = 30;
         return generateAndSave(type, difficulty, poolSize, user.getTargetRole(), user.getTargetIndustry());
     }
 
@@ -108,7 +108,7 @@ public class AiTestGenerationService {
                                 String targetRole, String targetIndustry) {
         String role     = targetRole     != null ? targetRole     : "business professional";
         String industry = targetIndustry != null ? targetIndustry : "Finance and Consulting";
-        int displayCount = Math.max(5, count - 4);
+        int displayCount = count >= 20 ? 10 : Math.max(5, count - 4);
         String typeFocus = typeDescription(type);
 
         return """
@@ -154,11 +154,13 @@ public class AiTestGenerationService {
                 2. Wrong answers must be plausible — use near-miss values or common mistakes.
                 3. Use realistic business data: revenue figures, percentages, ratios, org decisions.
                 4. Vary difficulty across questions even within the same level.
-                5. Return ONLY the JSON object — nothing else.
+                5. All %d questions must be unique — no repeated scenarios or question stems.
+                6. Return ONLY the JSON object — nothing else. Do not truncate.
                 """.formatted(
                 type.name(), typeFocus, role, industry,
                 difficulty.name(), count, displayCount,
-                type.name(), difficulty.name(), displayCount
+                type.name(), difficulty.name(), displayCount,
+                count
         );
     }
 
