@@ -24,7 +24,21 @@
       "PowerShell(try { \\(Invoke-WebRequest -Uri \"http://localhost:8080/api/tests/1\" -UseBasicParsing\\).Content | ConvertFrom-Json | Select-Object id, title, @{N='questionCount';E={$_.questions.Count}} } catch { $_.Exception.Response.GetResponseStream\\(\\) | ForEach-Object { \\(New-Object System.IO.StreamReader\\($_\\)\\).ReadToEnd\\(\\) } })",
       "PowerShell(Write-Host \"=== GET /api/tests?access=free ===\"; \\(Invoke-WebRequest -Uri \"http://localhost:8080/api/tests?access=free\" -UseBasicParsing\\).Content | ConvertFrom-Json | ForEach-Object { \"[$\\($_.id\\)] isFree=$\\($_.isFree\\) isAI=$\\($_.isGeneratedByAI\\) $\\($_.title\\)\" })",
       "PowerShell(Write-Host \"=== GET /api/users/1 ===\"; \\(Invoke-WebRequest -Uri \"http://localhost:8080/api/users/1\" -UseBasicParsing\\).Content | ConvertFrom-Json | ConvertTo-Json)",
-      "PowerShell(Write-Host \"=== GET /api/users/1/subscription ===\"; \\(Invoke-WebRequest -Uri \"http://localhost:8080/api/users/1/subscription\" -UseBasicParsing\\).Content | ConvertFrom-Json | ConvertTo-Json; Write-Host \"=== POST /api/admin/tests/generate ===\"; $body = '{\"type\":\"LOGICAL_REASONING\",\"difficulty\":\"EASY\",\"language\":\"EN\",\"numberOfQuestions\":3}'; \\(Invoke-WebRequest -Uri \"http://localhost:8080/api/admin/tests/generate\" -Method POST -Body $body -ContentType \"application/json\" -UseBasicParsing\\).Content | ConvertFrom-Json | ConvertTo-Json)"
+      "PowerShell(Write-Host \"=== GET /api/users/1/subscription ===\"; \\(Invoke-WebRequest -Uri \"http://localhost:8080/api/users/1/subscription\" -UseBasicParsing\\).Content | ConvertFrom-Json | ConvertTo-Json; Write-Host \"=== POST /api/admin/tests/generate ===\"; $body = '{\"type\":\"LOGICAL_REASONING\",\"difficulty\":\"EASY\",\"language\":\"EN\",\"numberOfQuestions\":3}'; \\(Invoke-WebRequest -Uri \"http://localhost:8080/api/admin/tests/generate\" -Method POST -Body $body -ContentType \"application/json\" -UseBasicParsing\\).Content | ConvertFrom-Json | ConvertTo-Json)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(gh run *)",
+      "Bash(timeout 30 tail -f \"C:\\\\Users\\\\Piete\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-Piete-assesmentQuiz\\\\8b72dd2a-ba3a-496f-8ed4-65395e59dbe9\\\\tasks\\\\bndch9ksd.output\")",
+      "Bash(timeout 60 powershell *)",
+      "Bash(choco --version)",
+      "Bash(scoop --version)",
+      "PowerShell(gh project *)",
+      "PowerShell(& \"C:\\\\Users\\\\Piete\\\\.fly\\\\bin\\\\flyctl.exe\" postgres create --name assesspro-db --region ams --initial-cluster-size 1 --vm-size shared-cpu-1x --volume-size 1 2>&1)",
+      "PowerShell($gh = \"C:\\\\Program Files\\\\GitHub CLI\\\\gh.exe\")",
+      "PowerShell(& \"C:\\\\Users\\\\Piete\\\\.fly\\\\bin\\\\flyctl.exe\" postgres attach assesspro-db --app app-white-shadow-5362 2>&1)",
+      "Bash(curl -s \"https://app-white-shadow-5362.fly.dev/api/tests\")",
+      "Bash(fly deploy *)"
     ]
   }
 }

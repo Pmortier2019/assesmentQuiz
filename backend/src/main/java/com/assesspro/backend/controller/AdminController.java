@@ -4,17 +4,20 @@ import com.assesspro.backend.dto.GenerateTestRequest;
 import com.assesspro.backend.dto.ImportTestRequest;
 import com.assesspro.backend.dto.TestResponse;
 import com.assesspro.backend.entity.AssessmentTest;
+import com.assesspro.backend.entity.TestResult;
+import com.assesspro.backend.entity.User;
 import com.assesspro.backend.entity.enums.Difficulty;
 import com.assesspro.backend.entity.enums.TestType;
 import com.assesspro.backend.repository.AssessmentTestRepository;
+import com.assesspro.backend.repository.TestResultRepository;
+import com.assesspro.backend.repository.UserRepository;
 import com.assesspro.backend.service.AiTestGenerationService;
 import com.assesspro.backend.service.ImportTestService;
 import com.assesspro.backend.service.TestService;
 import com.assesspro.backend.service.UserService;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,6 +34,8 @@ public class AdminController {
     private final ImportTestService importTestService;
     private final UserService userService;
     private final AssessmentTestRepository testRepository;
+    private final TestResultRepository resultRepository;
+    private final UserRepository userRepository;
 
     /**
      * POST /api/admin/tests/generate
@@ -129,5 +134,89 @@ public class AdminController {
             }
         }
         return ResponseEntity.ok(existing);
+    }
+
+    /**
+     * GET /api/admin/stats
+     * Platform-wide counts for the admin dashboard.
+     */
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Object>> stats() {
+        long totalTests   = testRepository.count();
+        long totalUsers   = userRepository.count();
+        long totalResults = resultRepository.count();
+        long aiTests      = testRepository.findAll().stream().filter(AssessmentTest::isGeneratedByAI).count();
+        long freeTests    = testRepository.findByIsFreeTrue().size();
+
+        Map<String, Object> stats = new LinkedHashMap<>();
+        stats.put("totalTests",   totalTests);
+        stats.put("totalUsers",   totalUsers);
+        stats.put("totalResults", totalResults);
+        stats.put("aiTests",      aiTests);
+        stats.put("freeTests",    freeTests);
+        return ResponseEntity.ok(stats);
+    }
+
+    /**
+     * GET /api/admin/users
+     * All users with result count and average score.
+     */
+    @GetMapping("/users")
+    public ResponseEntity<List<Map<String, Object>>> adminUsers() {
+        List<User> users = userRepository.findAll();
+        List<Map<String, Object>> result = users.stream().map(u -> {
+            List<TestResult> results = resultRepository.findByUserIdOrderByCreatedAtDesc(u.getId());
+            double avgScore = results.stream().mapToInt(TestResult::getScore).average().orElse(0);
+            Map<String, Object> row = new LinkedHashMap<>();
+            row.put("id",          u.getId());
+            row.put("name",        u.getName());
+            row.put("email",       u.getEmail());
+            row.put("targetRole",  u.getTargetRole());
+            row.put("resultCount", results.size());
+            row.put("avgScore",    (int) Math.round(avgScore));
+            row.put("createdAt",   u.getCreatedAt());
+            return row;
+        }).collect(Collectors.toList());
+        return ResponseEntity.ok(result);
+    }
+
+    /**
+     * GET /api/admin/tests
+     * All tests with question count for the admin test library table.
+     */
+    @GetMapping("/tests")
+    public ResponseEntity<List<TestResponse>> adminTests() {
+        return ResponseEntity.ok(
+            testRepository.findAll().stream()
+                .sorted(Comparator.comparing(AssessmentTest::getCreatedAt).reversed())
+                .map(testService::toTestResponse)
+                .collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * DELETE /api/admin/tests/{id}
+     */
+    @DeleteMapping("/tests/{id}")
+    public ResponseEntity<Void> deleteTest(@PathVariable Long id) {
+        if (!testRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        testRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * PATCH /api/admin/tests/{id}/free?isFree=true|false
+     */
+    @PatchMapping("/tests/{id}/free")
+    public ResponseEntity<TestResponse> setTestFree(
+            @PathVariable Long id,
+            @RequestParam boolean isFree) {
+        return testRepository.findById(id).map(test -> {
+            test.setFree(isFree);
+            testRepository.save(test);
+            return ResponseEntity.ok(testService.toTestResponse(test));
+        }).orElse(ResponseEntity.notFound().build());
     }
 }

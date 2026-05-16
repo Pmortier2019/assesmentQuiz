@@ -513,6 +513,49 @@ export async function importTest(json: unknown): Promise<Test> {
   return mapTestListItem(result);
 }
 
+export interface AdminStats {
+  totalTests: number;
+  totalUsers: number;
+  totalResults: number;
+  aiTests: number;
+  freeTests: number;
+}
+
+export interface AdminUser {
+  id: number;
+  name: string;
+  email: string;
+  targetRole: string | null;
+  resultCount: number;
+  avgScore: number;
+  createdAt: string;
+}
+
+export async function getAdminStats(): Promise<AdminStats> {
+  return apiFetch<AdminStats>("/api/admin/stats");
+}
+
+export async function getAdminUsers(): Promise<AdminUser[]> {
+  return apiFetch<AdminUser[]>("/api/admin/users");
+}
+
+export async function getAdminTests(): Promise<Test[]> {
+  const items = await apiFetch<BackendTestListItem[]>("/api/admin/tests");
+  return items.map(mapTestListItem);
+}
+
+export async function deleteTest(id: string): Promise<void> {
+  await apiFetch(`/api/admin/tests/${id}`, { method: "DELETE" });
+}
+
+export async function setTestFree(id: string, isFree: boolean): Promise<Test> {
+  const result = await apiFetch<BackendTestListItem>(
+    `/api/admin/tests/${id}/free?isFree=${isFree}`,
+    { method: "PATCH" }
+  );
+  return mapTestListItem(result);
+}
+
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
 interface AuthResponse {

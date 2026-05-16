@@ -110,11 +110,22 @@ export default async function DashboardPage() {
 
   const lockedTests = tests.filter((t) => !t.isFree).slice(0, 3);
 
-  const skillAreas = [
-    { name: "Numerical Reasoning", score: 80, icon: "📊" },
-    { name: "Logical Reasoning",   score: 65, icon: "🧩" },
-    { name: "Verbal Reasoning",    score: 72, icon: "📝" },
-  ];
+  // Compute skill scores from real results data
+  const skillScoreMap = new Map<string, { total: number; count: number }>();
+  for (const result of results) {
+    const test = tests.find((t) => t.id === result.testId);
+    if (!test) continue;
+    const existing = skillScoreMap.get(test.type) ?? { total: 0, count: 0 };
+    skillScoreMap.set(test.type, { total: existing.total + result.score, count: existing.count + 1 });
+  }
+  const skillAreas = Array.from(skillScoreMap.entries())
+    .map(([type, { total, count }]) => ({
+      name: ASSESSMENT_TYPE_LABELS[type as keyof typeof ASSESSMENT_TYPE_LABELS] ?? type,
+      icon: ASSESSMENT_TYPE_ICONS[type as keyof typeof ASSESSMENT_TYPE_ICONS] ?? "📋",
+      score: Math.round(total / count),
+    }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5);
 
   return (
     <div className="flex min-h-screen bg-[#f8fafc]">
@@ -340,20 +351,30 @@ export default async function DashboardPage() {
                 <h2 className="font-display font-semibold text-base text-[#0D1B2E]">Skill Overview</h2>
                 <BarChart3 size={16} className="text-[#94a3b8]" />
               </div>
-              <div className="flex flex-col gap-4">
-                {skillAreas.map((skill) => (
-                  <div key={skill.name}>
-                    <div className="flex items-center justify-between mb-1.5">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm">{skill.icon}</span>
-                        <span className="text-sm font-medium text-[#334155]">{skill.name}</span>
-                      </div>
-                      <span className={`text-sm font-bold ${getScoreColor(skill.score)}`}>{skill.score}%</span>
-                    </div>
-                    <ProgressBar value={skill.score} size="sm" />
+              {skillAreas.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-8 gap-3 text-center">
+                  <div className="w-10 h-10 rounded-xl bg-[#f1f5f9] flex items-center justify-center">
+                    <BarChart3 size={18} className="text-[#94a3b8]" />
                   </div>
-                ))}
-              </div>
+                  <p className="text-sm text-[#64748b]">Complete tests to see your skill breakdown.</p>
+                  <Link href="/tests" className="text-sm font-semibold text-[#4f46e5] hover:underline">Browse tests</Link>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-4">
+                  {skillAreas.map((skill) => (
+                    <div key={skill.name}>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm">{skill.icon}</span>
+                          <span className="text-sm font-medium text-[#334155]">{skill.name}</span>
+                        </div>
+                        <span className={`text-sm font-bold ${getScoreColor(skill.score)}`}>{skill.score}%</span>
+                      </div>
+                      <ProgressBar value={skill.score} size="sm" />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="card p-5">
