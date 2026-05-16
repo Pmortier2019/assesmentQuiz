@@ -11,12 +11,14 @@ import { TestCard } from "@/components/cards/TestCard";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Navbar } from "@/components/layout/Navbar";
 import { ASSESSMENT_TYPE_LABELS, ASSESSMENT_TYPE_ICONS, getScoreColor, formatTime } from "@/lib/utils";
+import { useT } from "@/lib/i18n";
 import type { TestResult, Test } from "@/lib/types";
 import { Suspense } from "react";
 
 function ResultsContent() {
   const searchParams = useSearchParams();
   const resultId = searchParams.get("resultId");
+  const { t } = useT();
   const [result, setResult] = useState<TestResult | null>(null);
   const [allResults, setAllResults] = useState<TestResult[]>([]);
   const [allTests, setAllTests] = useState<Test[]>([]);
@@ -58,10 +60,10 @@ function ResultsContent() {
   if (!result) {
     return (
       <div className="flex flex-col items-center justify-center py-24 gap-4 text-center">
-        <p className="font-display font-semibold text-[#0D1B2E] text-xl">No results yet</p>
-        <p className="text-[#64748b] text-sm">Complete a test to see your results here.</p>
+        <p className="font-display font-semibold text-[#0D1B2E] text-xl">{t("results_no_results")}</p>
+        <p className="text-[#64748b] text-sm">{t("results_complete_test")}</p>
         <Link href="/tests" className="px-5 py-2.5 rounded-xl bg-[#0D1B2E] text-white text-sm font-semibold">
-          Browse tests
+          {t("results_browse")}
         </Link>
       </div>
     );
@@ -72,7 +74,7 @@ function ResultsContent() {
       {/* Back */}
       <Link href="/tests" className="flex items-center gap-2 text-sm text-[#64748b] hover:text-[#0D1B2E] transition-colors w-fit">
         <ChevronLeft size={16} />
-        Back to tests
+        {t("results_back")}
       </Link>
 
       {/* Header */}
@@ -96,7 +98,7 @@ function ResultsContent() {
           <div className="animate-fade-up delay-200">
             <h2 className="font-display font-semibold text-base text-[#0D1B2E] mb-3 flex items-center gap-2">
               <Sparkles size={16} className="text-[#4f46e5]" />
-              AI Feedback
+              {t("results_ai_feedback")}
             </h2>
             <FeedbackCard feedback={result.aiFeedback} isProUser={isProUser} />
           </div>
@@ -106,7 +108,7 @@ function ResultsContent() {
             <div className="animate-fade-up delay-300">
               <h2 className="font-display font-semibold text-base text-[#0D1B2E] mb-3 flex items-center gap-2">
                 <ClipboardList size={16} className="text-[#4f46e5]" />
-                Question Review
+                {t("results_q_review")}
               </h2>
               <div className="flex flex-col gap-4">
                 {result.questionResults.map((qr, idx) => (
@@ -149,7 +151,7 @@ function ResultsContent() {
                     </div>
                     {qr.explanation && (
                       <div className="ml-9 p-3 rounded-lg bg-[#eef2ff] border border-[#c7d2fe]">
-                        <p className="text-xs text-[#4f46e5] font-semibold mb-1">Explanation</p>
+                        <p className="text-xs text-[#4f46e5] font-semibold mb-1">{t("results_explanation")}</p>
                         <p className="text-sm text-[#1e1b4b] leading-relaxed">{qr.explanation}</p>
                       </div>
                     )}
@@ -162,14 +164,14 @@ function ResultsContent() {
           {/* CTA */}
           <div className="animate-fade-up delay-400 p-6 rounded-2xl bg-gradient-to-br from-[#0D1B2E] to-[#1a2f4a] text-white flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <h3 className="font-display font-bold text-lg mb-1">Keep the momentum going</h3>
-              <p className="text-sm text-white/60">Practice daily to see consistent score improvements.</p>
+              <h3 className="font-display font-bold text-lg mb-1">{t("results_keep_going")}</h3>
+              <p className="text-sm text-white/60">{t("results_practice_daily")}</p>
             </div>
             <Link
               href="/tests"
               className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white font-semibold text-sm whitespace-nowrap hover:opacity-90 transition-opacity"
             >
-              Continue practicing
+              {t("results_continue")}
               <ArrowRight size={15} />
             </Link>
           </div>
@@ -180,11 +182,11 @@ function ResultsContent() {
           {/* Recommended next */}
           <div className="card p-4">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-display font-semibold text-sm text-[#0D1B2E]">Recommended next</h3>
+              <h3 className="font-display font-semibold text-sm text-[#0D1B2E]">{t("results_recommended")}</h3>
               <span className="text-[10px] font-semibold text-[#4f46e5] bg-[#eef2ff] px-2 py-0.5 rounded-full">AI</span>
             </div>
             {recommendedTests.length === 0 ? (
-              <p className="text-xs text-[#94a3b8] text-center py-4">No recommendations yet — complete more tests.</p>
+              <p className="text-xs text-[#94a3b8] text-center py-4">{t("results_no_recommendations")}</p>
             ) : (
               <div className="flex flex-col gap-3">
                 {recommendedTests.map((t) => (
@@ -210,7 +212,7 @@ function ResultsContent() {
           {/* History */}
           {allResults.length > 1 && (
             <div className="card p-4">
-              <h3 className="font-display font-semibold text-sm text-[#0D1B2E] mb-4">Your history</h3>
+              <h3 className="font-display font-semibold text-sm text-[#0D1B2E] mb-4">{t("results_history")}</h3>
               <div className="flex flex-col gap-3">
                 {allResults.map((r) => {
                   const t = allTests.find((x) => x.id === r.testId);

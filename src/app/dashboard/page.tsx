@@ -10,12 +10,12 @@ import { DailyChallengeCard } from "@/components/cards/DailyChallengeCard";
 import { PreparationPathCard } from "@/components/cards/PreparationPathCard";
 import { CareerSetupBanner } from "@/components/cards/CareerSetupBanner";
 import { ProgressBar } from "@/components/ui/ProgressBar";
-import { StreakBadge } from "@/components/ui/StreakBadge";
 import { PaywallCard } from "@/components/ui/PaywallCard";
 import {
   getCurrentUser, getTests, getUserResults,
   getPreparationPath, getRecommendedTests,
 } from "@/lib/api";
+import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import {
   ASSESSMENT_TYPE_LABELS, ASSESSMENT_TYPE_ICONS, getScoreColor, formatTime,
 } from "@/lib/utils";
@@ -139,42 +139,17 @@ export default async function DashboardPage() {
         <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 flex flex-col gap-8">
 
           {/* Welcome */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 animate-fade-up">
-            <div>
-              <h1 className="font-display font-bold text-2xl text-[#0D1B2E]">
-                Good morning, {user.name.split(" ")[0]} 👋
-              </h1>
-              {hasCareerTargets ? (
-                <p className="text-[#64748b] text-sm mt-1">
-                  Preparing for{" "}
-                  <span className="font-semibold text-[#4f46e5]">{user.targetRole}</span>
-                  {user.targetIndustry && (
-                    <> in <span className="font-semibold text-[#0891b2]">{user.targetIndustry}</span></>
-                  )}
-                  {user.targetCompany && (
-                    <> · <span className="font-semibold text-[#7c3aed]">{user.targetCompany}</span></>
-                  )}
-                </p>
-              ) : (
-                <p className="text-[#64748b] text-sm mt-1">
-                  {isAtLimit
-                    ? "You've used all free tests — upgrade to keep going."
-                    : `${FREE_TESTS_LIMIT - user.freeTestsUsed} free test${FREE_TESTS_LIMIT - user.freeTestsUsed !== 1 ? "s" : ""} remaining.`}
-                </p>
-              )}
-            </div>
-            <div className="flex items-center gap-3">
-              {hasCareerTargets && (
-                <Link
-                  href="/onboarding"
-                  className="text-xs font-semibold text-[#4f46e5] hover:underline"
-                >
-                  Edit targets
-                </Link>
-              )}
-              <StreakBadge count={user.streak} />
-            </div>
-          </div>
+          <DashboardHeader
+            userName={user.name}
+            streak={user.streak}
+            targetRole={user.targetRole}
+            targetIndustry={user.targetIndustry}
+            targetCompany={user.targetCompany}
+            freeTestsUsed={user.freeTestsUsed}
+            freeTestsLimit={FREE_TESTS_LIMIT}
+            hasCareerTargets={hasCareerTargets}
+            isAtLimit={isAtLimit}
+          />
 
           {/* Paywall banner */}
           {isAtLimit && (

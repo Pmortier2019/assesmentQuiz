@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { Menu, X, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useT } from "@/lib/i18n";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 
 interface NavbarProps {
   transparent?: boolean;
@@ -11,6 +13,7 @@ interface NavbarProps {
 
 export function Navbar({ transparent = false }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { t } = useT();
 
   return (
     <header
@@ -34,30 +37,22 @@ export function Navbar({ transparent = false }: NavbarProps) {
           </Link>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-8">
-            <Link
-              href="/tests"
-              className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E] transition-colors"
-            >
-              Tests
+          <div className="hidden md:flex items-center gap-6">
+            <Link href="/tests" className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E] transition-colors">
+              {t("nav_tests")}
             </Link>
-            <Link
-              href="/pricing"
-              className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E] transition-colors"
-            >
-              Pricing
+            <Link href="/pricing" className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E] transition-colors">
+              {t("nav_pricing")}
             </Link>
-            <Link
-              href="/login"
-              className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E] transition-colors"
-            >
-              Login
+            <Link href="/login" className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E] transition-colors">
+              {t("nav_login")}
             </Link>
+            <LanguageSwitcher />
             <Link
               href="/onboarding"
               className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity"
             >
-              Start Practicing
+              {t("nav_start")}
             </Link>
           </div>
 
@@ -76,33 +71,22 @@ export function Navbar({ transparent = false }: NavbarProps) {
       {mobileOpen && (
         <div className="md:hidden border-t border-[#e2e8f0] bg-white animate-fade-in">
           <div className="px-4 py-4 flex flex-col gap-4">
-            <Link
-              href="/tests"
-              className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E]"
-              onClick={() => setMobileOpen(false)}
-            >
-              Tests
+            <Link href="/tests" className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E]" onClick={() => setMobileOpen(false)}>
+              {t("nav_tests")}
             </Link>
-            <Link
-              href="/pricing"
-              className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E]"
-              onClick={() => setMobileOpen(false)}
-            >
-              Pricing
+            <Link href="/pricing" className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E]" onClick={() => setMobileOpen(false)}>
+              {t("nav_pricing")}
             </Link>
-            <Link
-              href="/login"
-              className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E]"
-              onClick={() => setMobileOpen(false)}
-            >
-              Login
+            <Link href="/login" className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E]" onClick={() => setMobileOpen(false)}>
+              {t("nav_login")}
             </Link>
+            <LanguageSwitcher />
             <Link
               href="/onboarding"
               className="px-4 py-2.5 rounded-lg bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold text-center"
               onClick={() => setMobileOpen(false)}
             >
-              Start Practicing
+              {t("nav_start")}
             </Link>
           </div>
         </div>
