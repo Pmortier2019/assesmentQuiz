@@ -16,8 +16,13 @@ import type {
   PreparationPath,
 } from "./types";
 
+import { getToken, getUserIdFromToken, saveAuth, clearAuth } from "./auth";
+
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
-const CURRENT_USER_ID = 1; // hardcoded until auth is implemented
+
+function currentUserId(): number {
+  return getUserIdFromToken() ?? 1; // fallback to 1 for seeded demo user
+}
 
 // ─── Type mappers ─────────────────────────────────────────────────────────────
 
@@ -299,10 +304,12 @@ function mapUser(u: BackendUserResponse): User {
 // ─── HTTP helper ──────────────────────────────────────────────────────────────
 
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
+  const token = getToken();
   const res = await fetch(`${BASE_URL}${path}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options?.headers,
     },
     cache: "no-store",
@@ -363,7 +370,7 @@ export async function getTests(
 export async function getTestById(id: string): Promise<Test | null> {
   try {
     const detail = await apiFetch<BackendTestDetail>(
-      `/api/tests/${id}?userId=${CURRENT_USER_ID}`
+      `/api/tests/${id}?userId=${currentUserId()}`
     );
     return mapTestDetail(detail);
   } catch {
@@ -374,7 +381,7 @@ export async function getTestById(id: string): Promise<Test | null> {
 // ─── User ─────────────────────────────────────────────────────────────────────
 
 export async function getCurrentUser(): Promise<User> {
-  const u = await apiFetch<BackendUserResponse>(`/api/users/${CURRENT_USER_ID}`);
+  const u = await apiFetch<BackendUserResponse>(`/api/users/${currentUserId()}`);
   return mapUser(u);
 }
 
@@ -390,7 +397,7 @@ export async function saveOnboarding(data: OnboardingData): Promise<void> {
 
 export async function updateCareerTargets(targets: CareerTargets): Promise<User> {
   const u = await apiFetch<BackendUserResponse>(
-    `/api/users/${CURRENT_USER_ID}/career-targets`,
+    `/api/users/${currentUserId()}/career-targets`,
     { method: "PATCH", body: JSON.stringify(targets) }
   );
   return mapUser(u);
@@ -398,13 +405,13 @@ export async function updateCareerTargets(targets: CareerTargets): Promise<User>
 
 export async function getPreparationPath(): Promise<PreparationPath> {
   return apiFetch<PreparationPath>(
-    `/api/users/${CURRENT_USER_ID}/preparation-path`
+    `/api/users/${currentUserId()}/preparation-path`
   );
 }
 
 export async function getRecommendedTests(): Promise<Test[]> {
   const items = await apiFetch<BackendTestListItem[]>(
-    `/api/tests/recommended/${CURRENT_USER_ID}`
+    `/api/tests/recommended/${currentUserId()}`
   );
   return items.map(mapTestListItem);
 }
@@ -417,7 +424,7 @@ export async function submitTest(
   timeTakenSeconds: number
 ): Promise<TestResult> {
   const body = {
-    userId: CURRENT_USER_ID,
+    userId: currentUserId(),
     timeTakenSeconds,
     answers: answers.map((a) => ({
       questionId: Number(a.questionId),
@@ -433,7 +440,7 @@ export async function submitTest(
 
 export async function getUserResults(): Promise<TestResult[]> {
   const results = await apiFetch<BackendUserResult[]>(
-    `/api/users/${CURRENT_USER_ID}/results`
+    `/api/users/${currentUserId()}/results`
   );
   return results.map(mapUserResult);
 }
@@ -447,7 +454,7 @@ export async function getResultById(id: string): Promise<TestResult | null> {
 
 export async function startCheckout(): Promise<{ checkoutUrl: string }> {
   await apiFetch(
-    `/api/users/${CURRENT_USER_ID}/subscription/mock-upgrade`,
+    `/api/users/${currentUserId()}/subscription/mock-upgrade`,
     { method: "POST" }
   );
   // TODO: replace mock-upgrade with real Stripe checkout URL
@@ -462,7 +469,7 @@ export async function cancelSubscription(): Promise<void> {
 
 export async function generateTestForMe(): Promise<Test> {
   const result = await apiFetch<BackendTestListItem>(
-    `/api/admin/generate-for-user/${CURRENT_USER_ID}`,
+    `/api/admin/generate-for-user/${currentUserId()}`,
     { method: "POST" }
   );
   return mapTestListItem(result);
@@ -490,7 +497,7 @@ export async function getGenerationStatus(): Promise<Record<string, string[]>> {
 
 export async function generateTestOfType(backendType: string, difficulty = "MEDIUM"): Promise<Test> {
   const result = await apiFetch<BackendTestListItem>(
-    `/api/admin/generate-type/${CURRENT_USER_ID}/${backendType}?difficulty=${difficulty}`,
+    `/api/admin/generate-type/${currentUserId()}/${backendType}?difficulty=${difficulty}`,
     { method: "POST" }
   );
   return mapTestListItem(result);
@@ -508,20 +515,29 @@ export async function importTest(json: unknown): Promise<Test> {
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
-export async function login(_email: string, _password: string): Promise<User> {
-  // TODO: POST /api/auth/login → returns JWT / session
-  return getCurrentUser();
+interface AuthResponse {
+  token: string;
+  user: BackendUserResponse;
 }
 
-export async function register(
-  _name: string,
-  _email: string,
-  _password: string
-): Promise<User> {
-  // TODO: POST /api/auth/register
-  return getCurrentUser();
+export async function login(email: string, password: string): Promise<User> {
+  const res = await apiFetch<AuthResponse>("/api/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+  });
+  saveAuth(res.token, res.user);
+  return mapUser(res.user);
+}
+
+export async function register(name: string, email: string, password: string): Promise<User> {
+  const res = await apiFetch<AuthResponse>("/api/auth/register", {
+    method: "POST",
+    body: JSON.stringify({ name, email, password }),
+  });
+  saveAuth(res.token, res.user);
+  return mapUser(res.user);
 }
 
 export async function logout(): Promise<void> {
-  // TODO: POST /api/auth/logout
+  clearAuth();
 }

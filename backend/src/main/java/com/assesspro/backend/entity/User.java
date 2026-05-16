@@ -24,6 +24,8 @@ public class User {
     @Column(nullable = false)
     private String name;
 
+    private String passwordHash;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
