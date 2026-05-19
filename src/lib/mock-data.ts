@@ -4,8 +4,8 @@ import type { Test, User, TestResult } from "./types";
 
 export const MOCK_USER: User = {
   id: "user_001",
-  email: "pierre@mortierasses.io",
-  name: "Pierre Mortier",
+  email: "demo@ready-to-ace.com",
+  name: "Demo User",
   subscription: "free",
   freeTestsUsed: 3,
   streak: 7,

@@ -118,7 +118,7 @@ export default function AdminPage() {
               <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
                 <Zap size={13} className="text-white fill-white" />
               </div>
-              <span className="font-display font-bold text-[#0D1B2E]">AssessPro</span>
+              <span className="font-display font-bold text-[#0D1B2E]">Ready to Ace</span>
             </Link>
             <ChevronRight size={14} className="text-[#94a3b8]" />
             <span className="text-sm font-semibold text-[#4f46e5]">Admin</span>

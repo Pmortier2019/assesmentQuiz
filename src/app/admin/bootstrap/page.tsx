@@ -32,7 +32,7 @@ export default function AdminBootstrapPage() {
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
             <Zap size={15} className="text-white fill-white" />
           </div>
-          <span className="font-display font-bold text-[#0D1B2E]">AssessPro</span>
+          <span className="font-display font-bold text-[#0D1B2E]">Ready to Ace</span>
         </div>
 
         <div className="bg-white rounded-2xl border border-[#e2e8f0] p-8 shadow-sm">

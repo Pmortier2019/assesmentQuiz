@@ -4,15 +4,15 @@ import { LanguageProvider } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: {
-    default: "Mortier Asses — Train for job assessments. Every day.",
-    template: "%s | Mortier Asses",
+    default: "Ready to Ace — Train for job assessments. Every day.",
+    template: "%s | Ready to Ace",
   },
   description:
     "Practice the tests companies use during hiring. Start with 5 free assessments, then unlock unlimited AI-generated practice for €4/month.",
   keywords: ["assessment", "job application", "practice tests", "numerical reasoning", "logical reasoning"],
-  authors: [{ name: "Mortier Asses" }],
+  authors: [{ name: "Ready to Ace" }],
   openGraph: {
-    title: "Mortier Asses — Train for job assessments",
+    title: "Ready to Ace — Train for job assessments",
     description: "Practice numerical, logical, verbal reasoning and more. Duolingo for professionals.",
     type: "website",
   },

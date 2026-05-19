@@ -18,7 +18,7 @@ function Footer() {
               <Zap size={13} className="text-white fill-white" />
             </div>
             <span className="font-display font-bold text-[#0D1B2E]">
-              Mortier <span className="gradient-text">Asses</span>
+              Ready to <span className="gradient-text">Ace</span>
             </span>
           </Link>
           <div className="flex items-center gap-6 text-sm text-[#94a3b8]">
@@ -26,7 +26,7 @@ function Footer() {
             <Link href="/pricing" className="hover:text-[#475569] transition-colors">Pricing</Link>
             <Link href="/login" className="hover:text-[#475569] transition-colors">Login</Link>
           </div>
-          <p className="text-xs text-[#94a3b8]">© 2026 Mortier Asses. All rights reserved.</p>
+          <p className="text-xs text-[#94a3b8]">© 2026 Ready to Ace. All rights reserved.</p>
         </div>
       </div>
     </footer>

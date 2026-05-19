@@ -15,7 +15,7 @@ interface SidebarProps {
   userName?: string;
 }
 
-export function Sidebar({ streak = 7, userName = "Pierre Mortier" }: SidebarProps) {
+export function Sidebar({ streak = 7, userName = "User" }: SidebarProps) {
   const pathname = usePathname();
   const { t } = useT();
 
@@ -35,7 +35,7 @@ export function Sidebar({ streak = 7, userName = "Pierre Mortier" }: SidebarProp
           <Zap size={14} className="text-white fill-white" />
         </div>
         <span className="font-display font-bold text-[#0D1B2E] text-lg tracking-tight">
-          Mortier <span className="gradient-text">Asses</span>
+          Ready to <span className="gradient-text">Ace</span>
         </span>
       </Link>
 
