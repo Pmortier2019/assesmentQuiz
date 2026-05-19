@@ -12,14 +12,18 @@ primary_region = "ams"
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true
-  min_machines_running = 0
+  min_machines_running = 1
 
   [[http_service.checks]]
-    grace_period = "60s"
-    interval = "30s"
+    grace_period = "90s"
+    interval = "15s"
     method = "GET"
-    path = "/api/tests"
-    timeout = "10s"
+    path = "/api/health"
+    timeout = "5s"
+
+[deploy]
+  strategy = "bluegreen"
+  wait_timeout = "120s"
 
 [[vm]]
   memory = "512mb"

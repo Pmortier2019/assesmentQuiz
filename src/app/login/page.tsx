@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Zap, ArrowRight } from "lucide-react";
-import { login, register } from "@/lib/api";
+import { login, register, ApiError } from "@/lib/api";
 
 type Mode = "login" | "register";
 
@@ -17,10 +17,12 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isServiceDown, setIsServiceDown] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault();
     setError("");
+    setIsServiceDown(false);
     setLoading(true);
     try {
       if (mode === "login") {
@@ -29,8 +31,23 @@ export default function LoginPage() {
         await register(name, email, password);
       }
       router.push("/dashboard");
-    } catch {
-      setError("Something went wrong. Please try again.");
+    } catch (err) {
+      if (err instanceof ApiError) {
+        if (err.status === 0 || err.status === 502 || err.status === 503) {
+          setIsServiceDown(true);
+          setError("Service is tijdelijk niet bereikbaar. Probeer het over 30 seconden opnieuw.");
+        } else if (err.status === 401 || err.status === 403) {
+          setError("Onjuist e-mailadres of wachtwoord.");
+        } else if (err.status === 409) {
+          setError("Dit e-mailadres is al in gebruik.");
+        } else if (err.status === 400) {
+          setError("Controleer je gegevens en probeer het opnieuw.");
+        } else {
+          setError("Er is iets misgegaan. Probeer het opnieuw.");
+        }
+      } else {
+        setError("Geen verbinding met de server. Controleer je internet.");
+      }
     } finally {
       setLoading(false);
     }
@@ -140,9 +157,18 @@ export default function LoginPage() {
               </div>
 
               {error && (
-                <p className="text-xs text-[#e11d48] bg-[#fff1f2] border border-[#fecdd3] rounded-lg px-3 py-2">
-                  {error}
-                </p>
+                <div className="rounded-lg bg-[#fff1f2] border border-[#fecdd3] px-3 py-2.5 flex items-start justify-between gap-3">
+                  <p className="text-xs text-[#e11d48] leading-relaxed">{error}</p>
+                  {isServiceDown && (
+                    <button
+                      type="button"
+                      onClick={() => handleSubmit()}
+                      className="flex-shrink-0 text-xs font-semibold text-[#4f46e5] hover:underline whitespace-nowrap"
+                    >
+                      Opnieuw proberen
+                    </button>
+                  )}
+                </div>
               )}
 
               <button
