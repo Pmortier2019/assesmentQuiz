@@ -45,6 +45,7 @@ public class User {
     private String targetRole;
     private String targetIndustry;
     private String targetCompany;
+    private String level; // beginner / intermediate / advanced
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Subscription subscription;

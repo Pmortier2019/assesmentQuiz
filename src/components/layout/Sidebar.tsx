@@ -1,14 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
-  LayoutDashboard, BookOpen, Trophy, TrendingUp, CreditCard, Zap, ChevronRight, BarChart2,
+  LayoutDashboard, BookOpen, Trophy, TrendingUp, CreditCard, Zap, ChevronRight, BarChart2, LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StreakBadge } from "@/components/ui/StreakBadge";
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 import { useT } from "@/lib/i18n";
+import { logout } from "@/lib/api";
 
 interface SidebarProps {
   streak?: number;
@@ -17,7 +18,13 @@ interface SidebarProps {
 
 export function Sidebar({ streak = 7, userName = "Pierre" }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const { t } = useT();
+
+  const handleLogout = () => {
+    logout();
+    router.push("/");
+  };
 
   const NAV_ITEMS = [
     { href: "/dashboard", icon: LayoutDashboard, label: t("nav_dashboard") },
@@ -82,6 +89,13 @@ export function Sidebar({ streak = 7, userName = "Pierre" }: SidebarProps) {
           </div>
           <TrendingUp size={14} className="text-[#94a3b8]" />
         </div>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs text-[#94a3b8] hover:text-[#e11d48] hover:bg-rose-50 transition-colors w-full"
+        >
+          <LogOut size={14} />
+          Log out
+        </button>
       </div>
     </aside>
   );

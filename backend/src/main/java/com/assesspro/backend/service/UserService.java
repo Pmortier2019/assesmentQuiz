@@ -108,6 +108,7 @@ public class UserService {
         user.setTargetRole(request.getTargetRole());
         user.setTargetIndustry(request.getTargetIndustry());
         user.setTargetCompany(request.getTargetCompany());
+        if (request.getLevel() != null) user.setLevel(request.getLevel());
         userRepository.save(user);
         return toUserResponse(user);
     }

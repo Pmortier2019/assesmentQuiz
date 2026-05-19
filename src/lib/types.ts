@@ -212,6 +212,7 @@ export interface CareerTargets {
   targetRole?: string;
   targetIndustry?: string;
   targetCompany?: string;
+  level?: string;
 }
 
 export interface PreparationPath {

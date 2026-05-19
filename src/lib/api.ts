@@ -403,6 +403,11 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
     throw new ApiError(0, "Network error");
   }
   if (!res.ok) {
+    // Expired/invalid token on protected endpoints → auto-logout
+    if (res.status === 401 && !path.startsWith("/api/auth/")) {
+      clearAuth();
+      if (typeof window !== "undefined") window.location.href = "/login";
+    }
     const text = await res.text().catch(() => "");
     throw new ApiError(res.status, text || res.statusText);
   }
@@ -474,11 +479,12 @@ export async function getCurrentUser(): Promise<User> {
 }
 
 export async function saveOnboarding(data: OnboardingData): Promise<void> {
-  if (data.targetRole || data.targetIndustry || data.targetCompany) {
+  if (data.targetRole || data.targetIndustry || data.targetCompany || data.level) {
     await updateCareerTargets({
       targetRole: data.targetRole,
       targetIndustry: data.targetIndustry,
       targetCompany: data.targetCompany,
+      level: data.level,
     });
   }
 }
@@ -732,4 +738,18 @@ export async function adminBootstrap(email: string, password: string): Promise<U
 
 export async function logout(): Promise<void> {
   clearAuth();
+}
+
+export async function forgotPassword(email: string): Promise<void> {
+  await apiFetch("/api/auth/forgot-password", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
+}
+
+export async function resetPassword(token: string, newPassword: string): Promise<void> {
+  await apiFetch("/api/auth/reset-password", {
+    method: "POST",
+    body: JSON.stringify({ token, newPassword }),
+  });
 }

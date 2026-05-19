@@ -7,4 +7,5 @@ public class CareerTargetsRequest {
     private String targetRole;
     private String targetIndustry;
     private String targetCompany;
+    private String level;
 }

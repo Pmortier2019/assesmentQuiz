@@ -2,10 +2,13 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, Zap } from "lucide-react";
+import { Menu, X, Zap, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useT } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
+import { logout } from "@/lib/api";
+import { isLoggedIn } from "@/lib/auth";
 
 interface NavbarProps {
   transparent?: boolean;
@@ -13,7 +16,15 @@ interface NavbarProps {
 
 export function Navbar({ transparent = false }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const router = useRouter();
   const { t } = useT();
+  const loggedIn = typeof window !== "undefined" ? isLoggedIn() : false;
+
+  const handleLogout = () => {
+    logout();
+    setMobileOpen(false);
+    router.push("/");
+  };
 
   return (
     <header
@@ -77,17 +88,29 @@ export function Navbar({ transparent = false }: NavbarProps) {
             <Link href="/pricing" className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E]" onClick={() => setMobileOpen(false)}>
               {t("nav_pricing")}
             </Link>
-            <Link href="/login" className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E]" onClick={() => setMobileOpen(false)}>
-              {t("nav_login")}
-            </Link>
+            {loggedIn ? (
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 text-sm font-medium text-[#e11d48] hover:text-rose-700"
+              >
+                <LogOut size={15} />
+                Log out
+              </button>
+            ) : (
+              <>
+                <Link href="/login" className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E]" onClick={() => setMobileOpen(false)}>
+                  {t("nav_login")}
+                </Link>
+                <Link
+                  href="/onboarding"
+                  className="px-4 py-2.5 rounded-lg bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold text-center"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {t("nav_start")}
+                </Link>
+              </>
+            )}
             <LanguageSwitcher />
-            <Link
-              href="/onboarding"
-              className="px-4 py-2.5 rounded-lg bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold text-center"
-              onClick={() => setMobileOpen(false)}
-            >
-              {t("nav_start")}
-            </Link>
           </div>
         </div>
       )}

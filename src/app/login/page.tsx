@@ -1,15 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff, Zap, ArrowRight } from "lucide-react";
 import { login, register, ApiError } from "@/lib/api";
 
 type Mode = "login" | "register";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const from = searchParams.get("from");
   const [mode, setMode] = useState<Mode>("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -26,11 +28,14 @@ export default function LoginPage() {
     setLoading(true);
     try {
       if (mode === "login") {
-        await login(email, password);
+        const user = await login(email, password);
+        if (from && from !== "/login") router.push(from);
+        else if (!user.targetRole) router.push("/onboarding");
+        else router.push("/dashboard");
       } else {
         await register(name, email, password);
+        router.push("/onboarding");
       }
-      router.push("/dashboard");
     } catch (err) {
       if (err instanceof ApiError) {
         if (err.status === 0 || err.status === 502 || err.status === 503) {
@@ -132,9 +137,9 @@ export default function LoginPage() {
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="text-xs font-semibold text-[#475569]">Password</label>
                   {mode === "login" && (
-                    <button type="button" className="text-xs text-[#4f46e5] hover:underline">
+                    <Link href="/forgot-password" className="text-xs text-[#4f46e5] hover:underline">
                       Forgot password?
-                    </button>
+                    </Link>
                   )}
                 </div>
                 <div className="relative">
@@ -203,5 +208,13 @@ export default function LoginPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   );
 }
