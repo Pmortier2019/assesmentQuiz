@@ -1,13 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Sparkles, PackageOpen, Star, Wand2 } from "lucide-react";
+import { Sparkles, PackageOpen, Star, Wand2, Lock } from "lucide-react";
+import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { TestCard } from "@/components/cards/TestCard";
 import { FilterBar } from "@/components/test/FilterBar";
 import type { SortOption } from "@/components/test/FilterBar";
-import { getTests, generateTestOfType, getGenerationStatus, ALL_GENERATE_TYPES, ALL_DIFFICULTIES } from "@/lib/api";
+import { getTests, generateTestOfType, getGenerationStatus, getCurrentUser, ALL_GENERATE_TYPES, ALL_DIFFICULTIES } from "@/lib/api";
+import { isAdmin, isLoggedIn } from "@/lib/auth";
 import type { Test, AssessmentType, Difficulty, RoleCategory, IndustryCategory } from "@/lib/types";
 
 export default function TestsPage() {
@@ -17,6 +19,9 @@ export default function TestsPage() {
   const [generateProgress, setGenerateProgress] = useState<{ current: number; total: number; label: string } | null>(null);
   const [generateError, setGenerateError] = useState("");
   const [generateAsFree, setGenerateAsFree] = useState(true);
+  const [adminMode, setAdminMode] = useState(false);
+  const [freeTestsUsed, setFreeTestsUsed] = useState<number | null>(null);
+  const [isPro, setIsPro] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedType, setSelectedType] = useState<AssessmentType | "all">("all");
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | "all">("all");
@@ -24,6 +29,16 @@ export default function TestsPage() {
   const [selectedRole, setSelectedRole] = useState<RoleCategory | "all">("all");
   const [selectedIndustry, setSelectedIndustry] = useState<IndustryCategory | "all">("all");
   const [sortBy, setSortBy] = useState<SortOption>("default");
+
+  useEffect(() => {
+    setAdminMode(isAdmin());
+    if (isLoggedIn()) {
+      getCurrentUser().then((u) => {
+        setFreeTestsUsed(u.freeTestsUsed);
+        setIsPro(u.subscription === "pro");
+      }).catch(() => {});
+    }
+  }, []);
 
   useEffect(() => {
     const load = async () => {
@@ -149,50 +164,85 @@ export default function TestsPage() {
                 {recommendedTests.length > 0 && ` · ${recommendedTests.length} recommended for you`}
               </p>
             </div>
-            <div className="flex flex-col items-end gap-2">
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-[#64748b] font-medium">Generate as:</span>
-                <div className="flex rounded-lg border border-[#e2e8f0] overflow-hidden text-xs font-semibold">
-                  <button
-                    onClick={() => setGenerateAsFree(true)}
-                    className={`px-3 py-1.5 transition-colors ${generateAsFree ? "bg-emerald-500 text-white" : "bg-white text-[#64748b] hover:bg-[#f8fafc]"}`}
-                  >
-                    Free
-                  </button>
-                  <button
-                    onClick={() => setGenerateAsFree(false)}
-                    className={`px-3 py-1.5 transition-colors ${!generateAsFree ? "bg-[#4f46e5] text-white" : "bg-white text-[#64748b] hover:bg-[#f8fafc]"}`}
-                  >
-                    Pro
-                  </button>
-                </div>
-                <button
-                  onClick={handleGenerate}
-                  disabled={generating}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity shadow-sm"
-                >
-                  <Wand2 size={15} />
-                  {generating ? "Generating…" : "Generate full library"}
-                </button>
-              </div>
-              {generating && generateProgress && (
-                <div className="flex flex-col items-end gap-1 min-w-[220px]">
-                  <p className="text-xs text-[#64748b]">
-                    {generateProgress.current}/{generateProgress.total} — {generateProgress.label}
-                  </p>
-                  <div className="w-full h-1.5 bg-[#e2e8f0] rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] rounded-full transition-all duration-300"
-                      style={{ width: `${(generateProgress.current / generateProgress.total) * 100}%` }}
-                    />
+
+            {/* Admin-only: generate button */}
+            {adminMode && (
+              <div className="flex flex-col items-end gap-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-[#64748b] font-medium">Generate as:</span>
+                  <div className="flex rounded-lg border border-[#e2e8f0] overflow-hidden text-xs font-semibold">
+                    <button
+                      onClick={() => setGenerateAsFree(true)}
+                      className={`px-3 py-1.5 transition-colors ${generateAsFree ? "bg-emerald-500 text-white" : "bg-white text-[#64748b] hover:bg-[#f8fafc]"}`}
+                    >
+                      Free
+                    </button>
+                    <button
+                      onClick={() => setGenerateAsFree(false)}
+                      className={`px-3 py-1.5 transition-colors ${!generateAsFree ? "bg-[#4f46e5] text-white" : "bg-white text-[#64748b] hover:bg-[#f8fafc]"}`}
+                    >
+                      Pro
+                    </button>
                   </div>
+                  <button
+                    onClick={handleGenerate}
+                    disabled={generating}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity shadow-sm"
+                  >
+                    <Wand2 size={15} />
+                    {generating ? "Generating…" : "Generate full library"}
+                  </button>
                 </div>
-              )}
-              {generateError && (
-                <p className="text-xs text-[#e11d48]">{generateError}</p>
-              )}
-            </div>
+                {generating && generateProgress && (
+                  <div className="flex flex-col items-end gap-1 min-w-[220px]">
+                    <p className="text-xs text-[#64748b]">
+                      {generateProgress.current}/{generateProgress.total} — {generateProgress.label}
+                    </p>
+                    <div className="w-full h-1.5 bg-[#e2e8f0] rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] rounded-full transition-all duration-300"
+                        style={{ width: `${(generateProgress.current / generateProgress.total) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+                {generateError && (
+                  <p className="text-xs text-[#e11d48]">{generateError}</p>
+                )}
+              </div>
+            )}
           </div>
+
+          {/* Paywall banner — shown when free user is at or near limit */}
+          {!isPro && freeTestsUsed !== null && freeTestsUsed >= 3 && (
+            <div className={`animate-fade-up rounded-2xl border px-5 py-4 flex items-center justify-between gap-4 flex-wrap ${
+              freeTestsUsed >= 5
+                ? "border-rose-200 bg-rose-50"
+                : "border-amber-200 bg-amber-50"
+            }`}>
+              <div className="flex items-center gap-3">
+                <Lock size={16} className={freeTestsUsed >= 5 ? "text-rose-500" : "text-amber-500"} />
+                <div>
+                  <p className={`text-sm font-semibold ${freeTestsUsed >= 5 ? "text-rose-700" : "text-amber-700"}`}>
+                    {freeTestsUsed >= 5
+                      ? "You've used all 5 free tests"
+                      : `${5 - freeTestsUsed} free test${5 - freeTestsUsed !== 1 ? "s" : ""} remaining`}
+                  </p>
+                  <p className="text-xs text-[#64748b] mt-0.5">
+                    {freeTestsUsed >= 5
+                      ? "Upgrade to Pro for unlimited access to all tests — €4/month."
+                      : "Upgrade to Pro for unlimited access and AI-generated practice."}
+                  </p>
+                </div>
+              </div>
+              <Link
+                href="/pricing"
+                className="flex-shrink-0 px-4 py-2 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+              >
+                Upgrade to Pro
+              </Link>
+            </div>
+          )}
 
           {/* Filters */}
           <div className="animate-fade-up delay-100">

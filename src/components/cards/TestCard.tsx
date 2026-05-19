@@ -113,10 +113,13 @@ export function TestCard({ test, isLocked = false, onStart, className, showRecom
         </Link>
       )}
       {locked && (
-        <div className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-[#f1f5f9] text-[#94a3b8] text-sm font-semibold cursor-not-allowed">
+        <Link
+          href="/pricing"
+          className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-[#f1f5f9] text-[#64748b] text-sm font-semibold hover:bg-[#eef2ff] hover:text-[#4f46e5] transition-colors"
+        >
           <Lock size={14} />
-          Pro only
-        </div>
+          Unlock with Pro
+        </Link>
       )}
     </div>
   );

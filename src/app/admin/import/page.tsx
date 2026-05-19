@@ -136,7 +136,7 @@ export default function AdminImportPage() {
               <Zap size={13} className="text-white fill-white" />
             </div>
             <span className="font-display font-bold text-[#0D1B2E]">
-              Mortier <span className="gradient-text">Asses</span>
+              Ready to <span className="gradient-text">Ace</span>
             </span>
           </Link>
           <span className="text-xs font-semibold text-[#64748b] bg-[#f1f5f9] px-3 py-1 rounded-full">

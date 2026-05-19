@@ -5,9 +5,10 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import {
   ChevronLeft, ChevronRight, Clock, CheckCircle2, Flag,
-  Trophy, TrendingUp, AlertCircle, ChevronDown, ArrowRight, Lightbulb,
+  Trophy, TrendingUp, AlertCircle, ChevronDown, ArrowRight, Lightbulb, Lock,
 } from "lucide-react";
-import { getTestById, submitTest } from "@/lib/api";
+import { getTestById, submitTest, getCurrentUser } from "@/lib/api";
+import { isLoggedIn } from "@/lib/auth";
 import { TestQuestionCard } from "@/components/test/TestQuestionCard";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { cn, formatTime, ASSESSMENT_TYPE_LABELS, getScoreColor } from "@/lib/utils";
@@ -271,10 +272,16 @@ export default function TestPage() {
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<TestResult | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isPro, setIsPro] = useState(false);
+  const [freeTestsUsed, setFreeTestsUsed] = useState(0);
 
   useEffect(() => {
-    getTestById(id).then((t) => {
+    Promise.all([
+      getTestById(id),
+      isLoggedIn() ? getCurrentUser().catch(() => null) : Promise.resolve(null),
+    ]).then(([t, u]) => {
       setTest(t);
+      if (u) { setIsPro(u.subscription === "pro"); setFreeTestsUsed(u.freeTestsUsed); }
       setLoading(false);
     });
   }, [id]);
@@ -319,6 +326,55 @@ export default function TestPage() {
       <div className="min-h-screen bg-[#f8fafc] flex flex-col items-center justify-center gap-4 p-4">
         <p className="font-display font-semibold text-[#0D1B2E] text-xl">Test not available</p>
         <Link href="/tests" className="text-sm text-[#4f46e5] hover:underline">← Back to tests</Link>
+      </div>
+    );
+  }
+
+  // Paywall guard: Pro test for non-pro user, or free limit reached
+  const blocked = !isPro && (!test.isFree || freeTestsUsed >= 5);
+  if (blocked) {
+    return (
+      <div className="min-h-screen bg-[#f8fafc] flex flex-col">
+        <header className="bg-white border-b border-[#e2e8f0]">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
+            <Link href="/tests" className="text-[#64748b] hover:text-[#0D1B2E] transition-colors">
+              <ChevronLeft size={20} />
+            </Link>
+            <p className="text-sm font-semibold text-[#0D1B2E] truncate">{test.title}</p>
+          </div>
+        </header>
+        <div className="flex-1 flex items-center justify-center px-4 py-16">
+          <div className="max-w-md w-full text-center flex flex-col items-center gap-6">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center shadow-lg">
+              <Lock size={24} className="text-white" />
+            </div>
+            <div>
+              <h2 className="font-display font-bold text-2xl text-[#0D1B2E] mb-2">
+                {freeTestsUsed >= 5 ? "Free limit reached" : "Pro test"}
+              </h2>
+              <p className="text-[#64748b] text-sm leading-relaxed">
+                {freeTestsUsed >= 5
+                  ? "You've used all 5 free tests. Upgrade to Pro for unlimited access to every test — €4/month."
+                  : "This test is part of the Pro plan. Upgrade to access all AI-generated assessments."}
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 w-full justify-center">
+              <Link
+                href="/pricing"
+                className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white font-semibold text-sm hover:opacity-90 transition-opacity shadow-sm"
+              >
+                Upgrade to Pro — €4/mo
+              </Link>
+              <Link
+                href="/tests"
+                className="px-6 py-3 rounded-xl border border-[#e2e8f0] text-[#475569] font-semibold text-sm hover:border-[#4f46e5]/30 hover:text-[#4f46e5] transition-colors"
+              >
+                Back to tests
+              </Link>
+            </div>
+            <p className="text-xs text-[#94a3b8]">Cancel anytime · No credit card needed to start</p>
+          </div>
+        </div>
       </div>
     );
   }

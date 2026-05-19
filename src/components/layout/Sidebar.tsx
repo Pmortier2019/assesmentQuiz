@@ -15,7 +15,7 @@ interface SidebarProps {
   userName?: string;
 }
 
-export function Sidebar({ streak = 7, userName = "User" }: SidebarProps) {
+export function Sidebar({ streak = 7, userName = "Pierre" }: SidebarProps) {
   const pathname = usePathname();
   const { t } = useT();
 
