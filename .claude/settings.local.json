@@ -62,7 +62,8 @@
       "Bash(fly logs *)",
       "Bash(fly status *)",
       "Bash(xargs grep -A5 \"cors\\\\|CORS\\\\|allowedOrigins\")",
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Bash(mvn package *)"
     ]
   }
 }

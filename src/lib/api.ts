@@ -530,6 +530,21 @@ export async function getRecommendedTests(): Promise<Test[]> {
   return items.map(mapTestListItem);
 }
 
+// ─── Leaderboard ─────────────────────────────────────────────────────────────
+
+export interface LeaderboardEntry {
+  rank: number;
+  displayName: string;
+  score: number;
+  testTitle: string;
+  timeTakenSeconds: number;
+}
+
+export async function getLeaderboard(type?: string): Promise<LeaderboardEntry[]> {
+  const url = type ? `/api/leaderboard?type=${type.toUpperCase()}` : "/api/leaderboard";
+  return apiFetch<LeaderboardEntry[]>(url);
+}
+
 // ─── Results ─────────────────────────────────────────────────────────────────
 
 export async function submitTest(

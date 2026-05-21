@@ -35,6 +35,16 @@
   --radius-xl: 1.5rem;
 }
 
+/* ── Dark mode tokens ── */
+.dark {
+  --bg:         #0f1520;
+  --bg-subtle:  #151d2e;
+  --border:     #1e2d45;
+  --text:       #e2e8f0;
+  --text-muted: #94a3b8;
+  color-scheme: dark;
+}
+
 *, *::before, *::after { box-sizing: border-box; }
 
 html { scroll-behavior: smooth; }
@@ -46,6 +56,21 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode overrides for cards */
+.dark .card {
+  background: #1a2540;
+  border-color: #1e2d45;
+}
+.dark .card-interactive:hover {
+  background: #1e2d45;
+}
+.dark nav,
+.dark header {
+  background: #0f1520 !important;
+  border-color: #1e2d45 !important;
 }
 
 h1, h2, h3, h4, h5, h6 {

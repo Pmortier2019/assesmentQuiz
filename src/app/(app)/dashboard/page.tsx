@@ -18,6 +18,7 @@ import { ScoreRing } from "@/components/ui/ScoreRing";
 import { XPLevelBar } from "@/components/ui/XPLevelBar";
 import { AchievementBadges } from "@/components/ui/AchievementBadges";
 import { PageLoader } from "@/components/ui/PageLoader";
+import { LeaderboardCard } from "@/components/cards/LeaderboardCard";
 import {
   getCurrentUser, getTests, getUserResults,
   getPreparationPath, getRecommendedTests,
@@ -369,6 +370,13 @@ export default function DashboardPage() {
               </div>
             </div>
           )}
+
+          {/* Leaderboard + skill overview + recent results */}
+          <div className="grid lg:grid-cols-3 gap-6 animate-fade-up delay-500">
+            <div className="lg:col-span-1">
+              <LeaderboardCard />
+            </div>
+          </div>
 
           {/* Two-column: skill overview + recent results */}
           <div className="grid lg:grid-cols-2 gap-6 animate-fade-up delay-500">

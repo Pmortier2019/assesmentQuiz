@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useT } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
+import { DarkModeToggle } from "@/components/ui/DarkModeToggle";
 import { logout } from "@/lib/api";
 import { isLoggedIn } from "@/lib/auth";
 
@@ -56,6 +57,7 @@ export function Navbar({ transparent = false }: NavbarProps) {
               {t("nav_pricing")}
             </Link>
             <LanguageSwitcher />
+            <DarkModeToggle />
             {loggedIn ? (
               <>
                 <Link href="/dashboard" className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E] transition-colors">

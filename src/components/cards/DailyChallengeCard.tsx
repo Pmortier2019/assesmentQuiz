@@ -1,15 +1,45 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Zap, Clock, ChevronRight } from "lucide-react";
+import { Zap, Clock, ChevronRight, Timer } from "lucide-react";
 import type { Test } from "@/lib/types";
 import { ASSESSMENT_TYPE_LABELS, ASSESSMENT_TYPE_ICONS, formatDuration } from "@/lib/utils";
+
+function useCountdownToMidnight() {
+  const [timeLeft, setTimeLeft] = useState({ h: 0, m: 0, s: 0 });
+
+  useEffect(() => {
+    function calc() {
+      const now = new Date();
+      const midnight = new Date(now);
+      midnight.setHours(24, 0, 0, 0);
+      const diff = Math.max(0, Math.floor((midnight.getTime() - now.getTime()) / 1000));
+      setTimeLeft({
+        h: Math.floor(diff / 3600),
+        m: Math.floor((diff % 3600) / 60),
+        s: diff % 60,
+      });
+    }
+    calc();
+    const id = setInterval(calc, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return timeLeft;
+}
+
+function pad(n: number) {
+  return String(n).padStart(2, "0");
+}
 
 interface DailyChallengeCardProps {
   test: Test;
 }
 
 export function DailyChallengeCard({ test }: DailyChallengeCardProps) {
+  const { h, m, s } = useCountdownToMidnight();
+
   return (
     <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0D1B2E] to-[#1a2f4a] p-6 text-white">
       {/* bg decoration */}
@@ -17,10 +47,18 @@ export function DailyChallengeCard({ test }: DailyChallengeCardProps) {
       <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#7c3aed]/20 rounded-full translate-y-1/2 -translate-x-1/2 blur-2xl pointer-events-none" />
 
       <div className="relative">
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#4f46e5]/30 border border-[#4f46e5]/40">
             <Zap size={12} className="text-[#818cf8] fill-[#818cf8]" />
             <span className="text-xs font-semibold text-[#a5b4fc]">Daily Challenge</span>
+          </div>
+
+          {/* Countdown */}
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 border border-white/20">
+            <Timer size={11} className="text-white/60" />
+            <span className="text-xs font-mono font-semibold text-white/80 tabular-nums">
+              {pad(h)}:{pad(m)}:{pad(s)}
+            </span>
           </div>
         </div>
 
