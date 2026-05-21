@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Zap, Upload, CheckCircle2, AlertCircle, ArrowRight, RotateCcw, Shuffle } from "lucide-react";
 import { importTest } from "@/lib/api";
+import { AdminGuard } from "@/components/auth/AdminGuard";
 import type { Test } from "@/lib/types";
 
 type Status = "idle" | "loading" | "success" | "error";
@@ -127,6 +128,7 @@ export default function AdminImportPage() {
   }
 
   return (
+    <AdminGuard>
     <div className="min-h-screen bg-[#f8fafc]">
       {/* Header */}
       <header className="bg-white border-b border-[#e2e8f0]">
@@ -315,5 +317,6 @@ export default function AdminImportPage() {
         )}
       </main>
     </div>
+    </AdminGuard>
   );
 }

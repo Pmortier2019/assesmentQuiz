@@ -38,7 +38,7 @@ export function Navbar({ transparent = false }: NavbarProps) {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link href={loggedIn ? "/dashboard" : "/"} className="flex items-center gap-2 group">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
               <Zap size={16} className="text-white fill-white" />
             </div>
@@ -55,16 +55,33 @@ export function Navbar({ transparent = false }: NavbarProps) {
             <Link href="/pricing" className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E] transition-colors">
               {t("nav_pricing")}
             </Link>
-            <Link href="/login" className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E] transition-colors">
-              {t("nav_login")}
-            </Link>
             <LanguageSwitcher />
-            <Link
-              href="/onboarding"
-              className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity"
-            >
-              {t("nav_start")}
-            </Link>
+            {loggedIn ? (
+              <>
+                <Link href="/dashboard" className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E] transition-colors">
+                  Dashboard
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-1.5 text-sm font-medium text-[#94a3b8] hover:text-[#e11d48] transition-colors"
+                >
+                  <LogOut size={15} />
+                  Log out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/login" className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E] transition-colors">
+                  {t("nav_login")}
+                </Link>
+                <Link
+                  href="/onboarding"
+                  className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity"
+                >
+                  {t("nav_start")}
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile toggle */}

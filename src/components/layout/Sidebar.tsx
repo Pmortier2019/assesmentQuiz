@@ -37,7 +37,7 @@ export function Sidebar({ streak = 7, userName = "Pierre" }: SidebarProps) {
   return (
     <aside className="hidden lg:flex flex-col w-60 min-h-screen border-r border-[#e2e8f0] bg-[#fafafa] p-4 gap-2">
       {/* Logo */}
-      <Link href="/" className="flex items-center gap-2 px-2 py-3 mb-2">
+      <Link href="/dashboard" className="flex items-center gap-2 px-2 py-3 mb-2">
         <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
           <Zap size={14} className="text-white fill-white" />
         </div>

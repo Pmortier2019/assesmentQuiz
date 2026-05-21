@@ -8,6 +8,7 @@ import {
   ChevronDown, Briefcase, Target, X,
 } from "lucide-react";
 import { saveOnboarding } from "@/lib/api";
+import { isLoggedIn } from "@/lib/auth";
 import type { RoleCategory, IndustryCategory } from "@/lib/types";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
@@ -195,6 +196,10 @@ function SearchableSelect<T extends string>({
 export default function OnboardingPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    if (!isLoggedIn()) router.replace("/login?from=/onboarding");
+  }, [router]);
   const [role, setRole] = useState<RoleCategory | null>(null);
   const [industry, setIndustry] = useState<IndustryCategory | null>(null);
   const [company, setCompany] = useState("");
