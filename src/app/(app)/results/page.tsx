@@ -44,7 +44,7 @@ function ResultsContent() {
       );
       setLoading(false);
     };
-    load();
+    load().catch(() => setLoading(false));
   }, [resultId]);
 
   const test = result ? allTests.find((t) => t.id === result.testId) : null;

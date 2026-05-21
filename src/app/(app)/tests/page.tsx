@@ -52,7 +52,7 @@ export default function TestsPage() {
       setTests(result.data);
       setLoading(false);
     };
-    load();
+    load().catch(() => setLoading(false));
   }, [search, selectedType, selectedDifficulty, selectedTier]);
 
   // Client-side role/industry/sort filtering

@@ -5,6 +5,7 @@ import { SocialProofSection } from "@/components/sections/SocialProofSection";
 import { FeaturesSection } from "@/components/sections/FeaturesSection";
 import { PricingPreviewSection } from "@/components/sections/PricingPreviewSection";
 import { FinalCTASection } from "@/components/sections/FinalCTASection";
+import { FooterNav } from "@/components/layout/FooterNav";
 import Link from "next/link";
 import { Zap } from "lucide-react";
 
@@ -21,11 +22,7 @@ function Footer() {
               Ready to <span className="gradient-text">Ace</span>
             </span>
           </Link>
-          <div className="flex items-center gap-6 text-sm text-[#94a3b8]">
-            <Link href="/tests" className="hover:text-[#475569] transition-colors">Tests</Link>
-            <Link href="/pricing" className="hover:text-[#475569] transition-colors">Pricing</Link>
-            <Link href="/login" className="hover:text-[#475569] transition-colors">Login</Link>
-          </div>
+          <FooterNav />
           <p className="text-xs text-[#94a3b8]">© 2026 Ready to Ace. All rights reserved.</p>
         </div>
       </div>
