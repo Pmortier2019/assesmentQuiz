@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import {
   Flame, TrendingUp, BookOpen, Trophy, Sparkles, Lock, ChevronRight,
   Target, BarChart3, Clock, Star, Users, Zap, ArrowRight,
@@ -19,7 +22,7 @@ import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import {
   ASSESSMENT_TYPE_LABELS, ASSESSMENT_TYPE_ICONS, getScoreColor, formatTime,
 } from "@/lib/utils";
-import type { Test } from "@/lib/types";
+import type { Test, User, TestResult, PreparationPath } from "@/lib/types";
 
 const FREE_TESTS_LIMIT = 5;
 
@@ -71,22 +74,54 @@ function RecommendedTestCard({ test, badge }: { test: Test; badge?: string }) {
   );
 }
 
-export default async function DashboardPage() {
-  const [user, testsPage, results] = await Promise.all([
-    getCurrentUser(),
-    getTests(),
-    getUserResults(),
-  ]);
-  const tests = testsPage.data;
+export default function DashboardPage() {
+  const [user, setUser] = useState<User | null>(null);
+  const [tests, setTests] = useState<Test[]>([]);
+  const [results, setResults] = useState<TestResult[]>([]);
+  const [preparationPath, setPreparationPath] = useState<PreparationPath | null>(null);
+  const [recommendedTests, setRecommendedTests] = useState<Test[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const [u, testsPage, res] = await Promise.all([
+          getCurrentUser(),
+          getTests(),
+          getUserResults(),
+        ]);
+        setUser(u);
+        setTests(testsPage.data);
+        setResults(res);
+        if (u.targetRole || u.targetIndustry) {
+          const [path, recs] = await Promise.all([
+            getPreparationPath().catch(() => null),
+            getRecommendedTests().catch(() => [] as Test[]),
+          ]);
+          setPreparationPath(path);
+          setRecommendedTests(recs);
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
+
+  if (loading || !user) {
+    return (
+      <div className="flex min-h-screen bg-[#f8fafc] items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-2 border-[#4f46e5] border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-[#64748b]">Loading dashboard…</p>
+        </div>
+      </div>
+    );
+  }
+
   const dailyChallenge = tests[0];
   const isAtLimit = user.freeTestsUsed >= FREE_TESTS_LIMIT;
   const hasCareerTargets = !!(user.targetRole || user.targetIndustry);
-
-  // Career-aware data — only fetch if targets are set
-  const [preparationPath, recommendedTests] = await Promise.all([
-    hasCareerTargets ? getPreparationPath().catch(() => null) : Promise.resolve(null),
-    hasCareerTargets ? getRecommendedTests().catch(() => [] as Test[]) : Promise.resolve([] as Test[]),
-  ]);
 
   // Popular for role — tests whose targetRoles include user's role
   const popularForRole = user.targetRole
