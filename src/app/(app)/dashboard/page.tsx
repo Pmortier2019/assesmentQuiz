@@ -14,6 +14,7 @@ import { PreparationPathCard } from "@/components/cards/PreparationPathCard";
 import { CareerSetupBanner } from "@/components/cards/CareerSetupBanner";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { PaywallCard } from "@/components/ui/PaywallCard";
+import { ScoreRing } from "@/components/ui/ScoreRing";
 import {
   getCurrentUser, getTests, getUserResults,
   getPreparationPath, getRecommendedTests,
@@ -210,16 +211,29 @@ export default function DashboardPage() {
               iconBg="bg-[#eef2ff]"
               trend={{ value: 33, label: "this week" }}
             />
-            <DashboardCard
-              title="Avg. score"
-              value={results.length > 0
-                ? `${Math.round(results.reduce((s, r) => s + r.score, 0) / results.length)}%`
-                : "—"}
-              icon={Target}
-              iconColor="text-[#10b981]"
-              iconBg="bg-[#f0fdf4]"
-              trend={results.length > 0 ? { value: 12, label: "improvement" } : undefined}
-            />
+            {/* Avg score — score ring */}
+            <div className="card p-5 flex flex-col gap-3">
+              <p className="text-sm font-medium text-[#64748b]">Avg. score</p>
+              <div className="flex items-center gap-4">
+                {results.length > 0 ? (
+                  <ScoreRing
+                    score={Math.round(results.reduce((s, r) => s + r.score, 0) / results.length)}
+                    size={72}
+                    strokeWidth={7}
+                    color="#10b981"
+                    trackColor="#f0fdf4"
+                  />
+                ) : (
+                  <p className="font-display font-bold text-2xl text-[#0D1B2E]">—</p>
+                )}
+                {results.length > 0 && (
+                  <div>
+                    <p className="text-xs text-[#10b981] font-semibold">+12%</p>
+                    <p className="text-xs text-[#94a3b8]">improvement</p>
+                  </div>
+                )}
+              </div>
+            </div>
             <DashboardCard
               title="Day streak"
               value={user.streak}

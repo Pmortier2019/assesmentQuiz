@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, ChevronLeft, Sparkles, ClipboardList, CheckCircle, XCircle } from "lucide-react";
+import { ArrowRight, ChevronLeft, Sparkles, ClipboardList, CheckCircle, XCircle, Trophy } from "lucide-react";
 import { getResultById, getUserResults, getCurrentUser, getTests, getRecommendedTests } from "@/lib/api";
 import { ResultsSummary } from "@/components/test/ResultsSummary";
 import { FeedbackCard } from "@/components/cards/FeedbackCard";
@@ -25,6 +25,8 @@ function ResultsContent() {
   const [recommendedTests, setRecommendedTests] = useState<Test[]>([]);
   const [isProUser, setIsProUser] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isPersonalRecord, setIsPersonalRecord] = useState(false);
+  const confettiFired = useRef(false);
 
   useEffect(() => {
     const load = async () => {
@@ -42,10 +44,42 @@ function ResultsContent() {
       setRecommendedTests(
         recommended.filter((t) => t.id !== (r?.testId ?? "")).slice(0, 3)
       );
+
+      // Check for personal record
+      if (r) {
+        const prevBest = all
+          .filter((x) => x.id !== r.id && x.testId === r.testId)
+          .reduce((best, x) => Math.max(best, x.score), 0);
+        if (r.score > prevBest) setIsPersonalRecord(true);
+      }
+
       setLoading(false);
     };
     load().catch(() => setLoading(false));
   }, [resultId]);
+
+  // Confetti burst on personal record
+  useEffect(() => {
+    if (!isPersonalRecord || confettiFired.current) return;
+    confettiFired.current = true;
+    import("canvas-confetti").then(({ default: confetti }) => {
+      const burst = (angle: number, origin: { x: number; y: number }) =>
+        confetti({
+          angle,
+          spread: 55,
+          particleCount: 80,
+          origin,
+          colors: ["#4f46e5", "#7c3aed", "#10b981", "#f59e0b", "#f43f5e"],
+          scalar: 1.1,
+        });
+      burst(60,  { x: 0, y: 0.65 });
+      burst(120, { x: 1, y: 0.65 });
+      setTimeout(() => {
+        burst(75,  { x: 0.1, y: 0.5 });
+        burst(105, { x: 0.9, y: 0.5 });
+      }, 200);
+    });
+  }, [isPersonalRecord]);
 
   const test = result ? allTests.find((t) => t.id === result.testId) : null;
 
@@ -85,6 +119,12 @@ function ResultsContent() {
         <h1 className="font-display font-bold text-2xl text-[#0D1B2E]">
           {test?.title ?? "Test Results"}
         </h1>
+        {isPersonalRecord && (
+          <div className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 text-white text-sm font-semibold shadow-md animate-fade-up">
+            <Trophy size={16} className="fill-white" />
+            New personal record!
+          </div>
+        )}
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">

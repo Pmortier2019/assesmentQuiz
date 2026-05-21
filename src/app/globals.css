@@ -96,10 +96,34 @@ h1, h2, h3, h4, h5, h6 {
   0%, 100% { box-shadow: 0 0 8px rgba(245,158,11,0.4); }
   50%       { box-shadow: 0 0 20px rgba(245,158,11,0.7); }
 }
+@keyframes streakFlameHot {
+  0%, 100% { transform: scaleY(1) scaleX(1); filter: drop-shadow(0 0 3px rgba(245,158,11,0.6)); }
+  40%       { transform: scaleY(1.15) scaleX(0.92); filter: drop-shadow(0 0 6px rgba(245,158,11,0.9)); }
+  70%       { transform: scaleY(0.95) scaleX(1.05); }
+}
+@keyframes streakFlameBlue {
+  0%, 100% { transform: scaleY(1) scaleX(1); filter: drop-shadow(0 0 5px rgba(109,40,217,0.7)); }
+  35%       { transform: scaleY(1.2) scaleX(0.88); filter: drop-shadow(0 0 10px rgba(109,40,217,1)); }
+  65%       { transform: scaleY(0.9) scaleX(1.08); }
+}
+@keyframes streakBadgeBlue {
+  0%, 100% { box-shadow: 0 0 10px rgba(109,40,217,0.35); }
+  50%       { box-shadow: 0 0 22px rgba(109,40,217,0.65), 0 0 40px rgba(79,70,229,0.25); }
+}
+@keyframes streakBadgeHot {
+  0%, 100% { box-shadow: 0 0 6px rgba(245,158,11,0.3); }
+  50%       { box-shadow: 0 0 16px rgba(245,158,11,0.55); }
+}
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50%       { transform: translateY(-8px); }
 }
+
+.streak-flame-hot  { animation: streakFlameHot 1.4s ease-in-out infinite; color: #f59e0b; fill: #fcd34d; }
+.streak-flame-blue { animation: streakFlameBlue 1.2s ease-in-out infinite; color: #7c3aed; fill: #a78bfa; }
+.streak-badge-hot  { animation: streakBadgeHot 2s ease-in-out infinite; }
+.streak-badge-blue { animation: streakBadgeBlue 1.6s ease-in-out infinite; }
+.streak-flame-wrap { display: inline-flex; }
 
 .animate-fade-up      { animation: fadeUp 0.5s ease both; }
 .animate-fade-in      { animation: fadeIn 0.4s ease both; }
@@ -119,6 +143,62 @@ h1, h2, h3, h4, h5, h6 {
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: var(--radius);
+}
+
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Gradient mesh hero blobs ── */
+@keyframes meshBlob1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(60px, -40px) scale(1.15); }
+  66%       { transform: translate(-30px, 50px) scale(0.95); }
+}
+@keyframes meshBlob2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(-50px, 30px) scale(1.1); }
+  66%       { transform: translate(70px, -20px) scale(0.9); }
+}
+@keyframes meshBlob3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%       { transform: translate(40px, 60px) scale(1.2); }
+}
+@keyframes meshBlob4 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40%       { transform: translate(-60px, -30px) scale(1.05); }
+  80%       { transform: translate(20px, 40px) scale(0.88); }
+}
+
+.mesh-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  mix-blend-mode: multiply;
+  will-change: transform;
+}
+.mesh-blob-1 {
+  width: 600px; height: 600px;
+  top: -100px; left: -100px;
+  background: radial-gradient(circle, rgba(79,70,229,0.18) 0%, transparent 70%);
+  animation: meshBlob1 14s ease-in-out infinite;
+}
+.mesh-blob-2 {
+  width: 500px; height: 500px;
+  top: 0; right: -80px;
+  background: radial-gradient(circle, rgba(124,58,237,0.16) 0%, transparent 70%);
+  animation: meshBlob2 18s ease-in-out infinite;
+}
+.mesh-blob-3 {
+  width: 400px; height: 400px;
+  bottom: -50px; left: 30%;
+  background: radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 70%);
+  animation: meshBlob3 12s ease-in-out infinite;
+}
+.mesh-blob-4 {
+  width: 300px; height: 300px;
+  top: 50%; right: 20%;
+  background: radial-gradient(circle, rgba(16,185,129,0.10) 0%, transparent 70%);
+  animation: meshBlob4 20s ease-in-out infinite;
 }
 
 ::-webkit-scrollbar       { width: 6px; height: 6px; }

@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { ValueSection } from "@/components/sections/ValueSection";
+import { TestCarouselSection } from "@/components/sections/TestCarouselSection";
 import { SocialProofSection } from "@/components/sections/SocialProofSection";
 import { FeaturesSection } from "@/components/sections/FeaturesSection";
 import { PricingPreviewSection } from "@/components/sections/PricingPreviewSection";
@@ -37,6 +38,7 @@ export default function HomePage() {
       <main className="flex-1">
         <HeroSection />
         <ValueSection />
+        <TestCarouselSection />
         <SocialProofSection />
         <FeaturesSection />
         <PricingPreviewSection />

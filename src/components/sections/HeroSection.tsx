@@ -90,11 +90,20 @@ function HeroDashboardMockup() {
 export function HeroSection() {
   return (
     <section className="relative overflow-hidden bg-white pt-16 pb-24 lg:pt-24 lg:pb-32">
-      {/* Background */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120%] h-[500px] bg-gradient-to-b from-[#eef2ff]/60 to-transparent" />
-        <div className="absolute top-20 left-[10%] w-80 h-80 rounded-full bg-[#4f46e5]/6 blur-3xl" />
-        <div className="absolute top-40 right-[5%] w-64 h-64 rounded-full bg-[#7c3aed]/8 blur-3xl" />
+      {/* Animated gradient mesh background */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden>
+        {/* Base wash */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[140%] h-[600px] bg-gradient-to-b from-[#eef2ff]/70 to-transparent" />
+        {/* Animated blobs */}
+        <div className="mesh-blob mesh-blob-1" />
+        <div className="mesh-blob mesh-blob-2" />
+        <div className="mesh-blob mesh-blob-3" />
+        <div className="mesh-blob mesh-blob-4" />
+        {/* Noise overlay for texture */}
+        <div
+          className="absolute inset-0 opacity-[0.025]"
+          style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")", backgroundRepeat: "repeat", backgroundSize: "128px" }}
+        />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
