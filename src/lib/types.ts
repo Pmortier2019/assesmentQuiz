@@ -132,6 +132,7 @@ export interface User {
   subscription: SubscriptionTier;
   freeTestsUsed: number;
   streak: number;
+  xp?: number;
   joinedAt: string;
   preferredTestType?: AssessmentType;
   level?: "beginner" | "intermediate" | "advanced";

@@ -133,7 +133,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .delay-100 { animation-delay: 0.10s; }
 .delay-200 { animation-delay: 0.20s; }
+.delay-250 { animation-delay: 0.25s; }
 .delay-300 { animation-delay: 0.30s; }
+.delay-350 { animation-delay: 0.35s; }
 .delay-400 { animation-delay: 0.40s; }
 .delay-500 { animation-delay: 0.50s; }
 .delay-600 { animation-delay: 0.60s; }

@@ -41,6 +41,10 @@ public class User {
     @Builder.Default
     private int freeTestsUsed = 0;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private int xp = 0;
+
     // Career targeting — drives personalised recommendations
     private String targetRole;
     private String targetIndustry;

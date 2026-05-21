@@ -38,7 +38,31 @@
       "PowerShell($gh = \"C:\\\\Program Files\\\\GitHub CLI\\\\gh.exe\")",
       "PowerShell(& \"C:\\\\Users\\\\Piete\\\\.fly\\\\bin\\\\flyctl.exe\" postgres attach assesspro-db --app app-white-shadow-5362 2>&1)",
       "Bash(curl -s \"https://app-white-shadow-5362.fly.dev/api/tests\")",
-      "Bash(fly deploy *)"
+      "Bash(fly deploy *)",
+      "Bash(C:\\\\Program Files\\\\GitHub CLI\\\\gh.exe issue *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Piete\\\\assesmentQuiz\" -Recurse -Depth 2)",
+      "Bash(Select-Object -Property FullName)",
+      "PowerShell(head *)",
+      "Bash(curl *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Piete\\\\assesmentQuiz\\\\src\" -Recurse -File)",
+      "Bash(Select-Object FullName)",
+      "Bash(Sort-Object FullName)",
+      "Bash(Get-ChildItem *)",
+      "Bash(cp -r \"C:/Users/Piete/assesmentQuiz/src/app/dashboard\" \"C:/Users/Piete/assesmentQuiz/src/app/\\(app\\)/dashboard\")",
+      "Bash(cp -r \"C:/Users/Piete/assesmentQuiz/src/app/tests\" \"C:/Users/Piete/assesmentQuiz/src/app/\\(app\\)/tests\")",
+      "Bash(cp -r \"C:/Users/Piete/assesmentQuiz/src/app/results\" \"C:/Users/Piete/assesmentQuiz/src/app/\\(app\\)/results\")",
+      "Bash(cp -r \"C:/Users/Piete/assesmentQuiz/src/app/progress\" \"C:/Users/Piete/assesmentQuiz/src/app/\\(app\\)/progress\")",
+      "Bash(cp -r \"C:/Users/Piete/assesmentQuiz/src/app/pricing\" \"C:/Users/Piete/assesmentQuiz/src/app/\\(app\\)/pricing\")",
+      "Bash(./mvnw compile *)",
+      "Bash(New-Item -ItemType File -Path \"C:\\\\Users\\\\Piete\\\\assesmentQuiz\\\\src\\\\app\\\\forgot-password\\\\page.tsx\" -Force)",
+      "Bash(Out-Null)",
+      "Bash(New-Item -ItemType File -Path \"C:\\\\Users\\\\Piete\\\\assesmentQuiz\\\\src\\\\app\\\\reset-password\\\\page.tsx\" -Force)",
+      "Bash(xargs grep -l -i \"subscription\\\\|stripe\\\\|payment\\\\|checkout\")",
+      "Bash(fly secrets *)",
+      "Bash(fly logs *)",
+      "Bash(fly status *)",
+      "Bash(xargs grep -A5 \"cors\\\\|CORS\\\\|allowedOrigins\")",
+      "Bash(npm install *)"
     ]
   }
 }

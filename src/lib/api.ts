@@ -210,6 +210,7 @@ interface BackendUserResponse {
   preferredLanguage: string;
   freeTestsUsed: number;
   streak: number;
+  xp: number;
   isPro: boolean;
   createdAt: string;
   targetRole?: string;
@@ -369,6 +370,7 @@ function mapUser(u: BackendUserResponse): User {
     subscription: u.isPro ? "pro" : "free",
     freeTestsUsed: u.freeTestsUsed,
     streak: u.streak ?? 0,
+    xp: u.xp ?? 0,
     joinedAt: u.createdAt,
     targetRole: u.targetRole,
     targetIndustry: u.targetIndustry,

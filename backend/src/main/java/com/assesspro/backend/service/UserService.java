@@ -188,6 +188,7 @@ public class UserService {
                 .preferredLanguage(user.getPreferredLanguage())
                 .freeTestsUsed(user.getFreeTestsUsed())
                 .streak(calculateStreak(user.getId()))
+                .xp(user.getXp())
                 .isPro(isPro)
                 .isAdmin(user.getRole() == Role.ADMIN)
                 .createdAt(user.getCreatedAt())

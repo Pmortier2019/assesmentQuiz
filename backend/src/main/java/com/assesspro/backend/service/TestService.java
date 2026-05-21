@@ -134,11 +134,15 @@ public class TestService {
 
         resultRepository.save(result);
 
+        // Award XP: 10 base + 1 per % above 50 + 20 bonus for perfect
+        int xpGained = 10 + Math.max(0, score - 50) + (score == 100 ? 20 : 0);
+        user.setXp(user.getXp() + xpGained);
+
         // Increment free tests counter for non-pro users
         if (test.isFree()) {
             user.setFreeTestsUsed(user.getFreeTestsUsed() + 1);
-            userRepository.save(user);
         }
+        userRepository.save(user);
 
         return SubmitTestResponse.builder()
                 .resultId(result.getId())

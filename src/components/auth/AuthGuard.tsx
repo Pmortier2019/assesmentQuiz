@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { isLoggedIn } from "@/lib/auth";
+import { PageLoader } from "@/components/ui/PageLoader";
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -17,16 +18,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     }
   }, [router, pathname]);
 
-  if (!ready) {
-    return (
-      <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-2 border-[#4f46e5] border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-[#64748b]">Loading…</p>
-        </div>
-      </div>
-    );
-  }
+  if (!ready) return <PageLoader />;
 
   return <>{children}</>;
 }

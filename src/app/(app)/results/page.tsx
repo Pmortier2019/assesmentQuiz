@@ -14,6 +14,7 @@ import { ASSESSMENT_TYPE_LABELS, ASSESSMENT_TYPE_ICONS, getScoreColor, formatTim
 import { useT } from "@/lib/i18n";
 import type { TestResult, Test } from "@/lib/types";
 import { Suspense } from "react";
+import { InlineLoader } from "@/components/ui/PageLoader";
 
 function ResultsContent() {
   const searchParams = useSearchParams();
@@ -83,13 +84,7 @@ function ResultsContent() {
 
   const test = result ? allTests.find((t) => t.id === result.testId) : null;
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-24">
-        <div className="w-8 h-8 border-2 border-[#4f46e5] border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
+  if (loading) return <InlineLoader />;
 
   if (!result) {
     return (

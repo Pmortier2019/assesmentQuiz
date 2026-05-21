@@ -15,6 +15,9 @@ import { CareerSetupBanner } from "@/components/cards/CareerSetupBanner";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { PaywallCard } from "@/components/ui/PaywallCard";
 import { ScoreRing } from "@/components/ui/ScoreRing";
+import { XPLevelBar } from "@/components/ui/XPLevelBar";
+import { AchievementBadges } from "@/components/ui/AchievementBadges";
+import { PageLoader } from "@/components/ui/PageLoader";
 import {
   getCurrentUser, getTests, getUserResults,
   getPreparationPath, getRecommendedTests,
@@ -110,14 +113,7 @@ export default function DashboardPage() {
   }, []);
 
   if (loading || !user) {
-    return (
-      <div className="flex min-h-screen bg-[#f8fafc] items-center justify-center">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-2 border-[#4f46e5] border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-[#64748b]">Loading dashboard…</p>
-        </div>
-      </div>
-    );
+    return <PageLoader label="Loading dashboard…" />;
   }
 
   const dailyChallenge = tests[0];
@@ -251,6 +247,12 @@ export default function DashboardPage() {
             >
               <ProgressBar value={user.freeTestsUsed} max={FREE_TESTS_LIMIT} size="sm" variant="gradient" />
             </DashboardCard>
+          </div>
+
+          {/* XP level bar + achievements */}
+          <div className="grid sm:grid-cols-2 gap-4 animate-fade-up delay-250">
+            <XPLevelBar xp={user.xp ?? 0} />
+            <AchievementBadges results={results} streak={user.streak} />
           </div>
 
           {/* Preparation path + daily challenge */}

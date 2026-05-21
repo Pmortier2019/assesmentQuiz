@@ -8,6 +8,8 @@ import {
   Trophy, TrendingUp, AlertCircle, ChevronDown, ArrowRight, Lightbulb, Lock,
 } from "lucide-react";
 import { getTestById, submitTest, getCurrentUser } from "@/lib/api";
+import { PageLoader } from "@/components/ui/PageLoader";
+import { haptics } from "@/lib/haptics";
 import { isLoggedIn } from "@/lib/auth";
 import { TestQuestionCard } from "@/components/test/TestQuestionCard";
 import { ProgressBar } from "@/components/ui/ProgressBar";
@@ -295,6 +297,7 @@ export default function TestPage() {
   const handleSelect = useCallback((answerId: string) => {
     const question = test?.questions[currentIndex];
     if (!question) return;
+    haptics.tap();
     setAnswers((prev) => ({ ...prev, [question.id]: answerId }));
   }, [test, currentIndex]);
 
@@ -306,18 +309,14 @@ export default function TestPage() {
       selectedAnswerId,
     }));
     const r = await submitTest(test.id, payload, elapsed);
+    haptics.complete();
     setResult(r);
     setSubmitting(false);
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-2 border-[#4f46e5] border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-[#64748b]">Loading test...</p>
-        </div>
-      </div>
+      <PageLoader label="Loading test…" />
     );
   }
 
