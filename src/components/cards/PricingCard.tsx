@@ -3,6 +3,7 @@
 import { Check, Sparkles, Zap } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { UpgradeButton } from "@/components/ui/UpgradeButton";
 
 interface PricingCardProps {
   plan: "free" | "pro";
@@ -104,17 +105,18 @@ export function PricingCard({ plan, highlighted = false, className }: PricingCar
       </div>
 
       {/* CTA */}
-      <Link
-        href={data.href}
-        className={cn(
-          "w-full py-3 rounded-xl font-semibold text-sm text-center mb-8 transition-opacity",
-          highlighted
-            ? "bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white hover:opacity-90 shadow-lg"
-            : "bg-[#0D1B2E] text-white hover:bg-[#1a2f4a]"
-        )}
-      >
-        {data.cta}
-      </Link>
+      {highlighted ? (
+        <div className="mb-8">
+          <UpgradeButton label={data.cta} className="w-full justify-center py-3 rounded-xl text-sm" />
+        </div>
+      ) : (
+        <Link
+          href={data.href}
+          className="w-full py-3 rounded-xl font-semibold text-sm text-center mb-8 transition-opacity bg-[#0D1B2E] text-white hover:bg-[#1a2f4a] block"
+        >
+          {data.cta}
+        </Link>
+      )}
 
       {/* Features */}
       <div className="flex flex-col gap-3">
