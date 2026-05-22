@@ -33,6 +33,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 // Tests — public read access
                 .requestMatchers(HttpMethod.GET, "/api/tests", "/api/tests/**").permitAll()
+                // Leaderboard — public, anonymous
+                .requestMatchers(HttpMethod.GET, "/api/leaderboard").permitAll()
                 // Webhook — called by Lemon Squeezy, verified via HMAC signature
                 .requestMatchers("/api/webhooks/**").permitAll()
                 // Admin endpoints — ADMIN role only
