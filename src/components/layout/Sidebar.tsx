@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  LayoutDashboard, BookOpen, Trophy, TrendingUp, CreditCard, Zap, ChevronRight, BarChart2, LogOut,
+  LayoutDashboard, BookOpen, Trophy, TrendingUp, CreditCard, Zap, ChevronRight, BarChart2, LogOut, Calendar,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StreakBadge } from "@/components/ui/StreakBadge";
@@ -30,9 +30,10 @@ export function Sidebar({ streak = 7, userName = "Pierre" }: SidebarProps) {
   const NAV_ITEMS = [
     { href: "/dashboard", icon: LayoutDashboard, label: t("nav_dashboard") },
     { href: "/tests",     icon: BookOpen,        label: t("nav_tests") },
-    { href: "/results",   icon: Trophy,          label: t("nav_results") },
-    { href: "/progress",  icon: BarChart2,       label: t("nav_progress") },
-    { href: "/pricing",   icon: CreditCard,      label: t("nav_upgrade") },
+    { href: "/results",     icon: Trophy,          label: t("nav_results") },
+    { href: "/progress",    icon: BarChart2,       label: t("nav_progress") },
+    { href: "/study-plan",  icon: Calendar,        label: "Study Plan" },
+    { href: "/pricing",     icon: CreditCard,      label: t("nav_upgrade") },
   ];
 
   return (

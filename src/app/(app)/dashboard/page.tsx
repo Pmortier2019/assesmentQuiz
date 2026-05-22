@@ -19,6 +19,7 @@ import { XPLevelBar } from "@/components/ui/XPLevelBar";
 import { AchievementBadges } from "@/components/ui/AchievementBadges";
 import { PageLoader } from "@/components/ui/PageLoader";
 import { LeaderboardCard } from "@/components/cards/LeaderboardCard";
+import { WeakSpotCard } from "@/components/cards/WeakSpotCard";
 import {
   getCurrentUser, getTests, getUserResults,
   getPreparationPath, getRecommendedTests,
@@ -143,6 +144,21 @@ export default function DashboardPage() {
 
   const lockedTests = tests.filter((t) => !t.isFree).slice(0, 3);
 
+  // Adaptive difficulty: if user scored >80% at least 3 times on beginner tests,
+  // suggest intermediate tests of the same type they mastered
+  const beginnerMastery = new Map<string, number>();
+  for (const r of results) {
+    const t = tests.find((x) => x.id === r.testId);
+    if (t && t.difficulty === "beginner" && r.score > 80) {
+      beginnerMastery.set(t.type, (beginnerMastery.get(t.type) ?? 0) + 1);
+    }
+  }
+  const adaptiveSuggestions = tests.filter(
+    (t) =>
+      t.difficulty === "intermediate" &&
+      (beginnerMastery.get(t.type) ?? 0) >= 3
+  ).slice(0, 3);
+
   // Compute skill scores from real results data
   const skillScoreMap = new Map<string, { total: number; count: number }>();
   for (const result of results) {
@@ -250,10 +266,11 @@ export default function DashboardPage() {
             </DashboardCard>
           </div>
 
-          {/* XP level bar + achievements */}
-          <div className="grid sm:grid-cols-2 gap-4 animate-fade-up delay-250">
+          {/* XP level bar + achievements + weak spots */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 animate-fade-up delay-250">
             <XPLevelBar xp={user.xp ?? 0} />
             <AchievementBadges results={results} streak={user.streak} />
+            <WeakSpotCard results={results} tests={tests} />
           </div>
 
           {/* Preparation path + daily challenge */}
@@ -325,6 +342,24 @@ export default function DashboardPage() {
               ))}
             </div>
           </div>
+
+          {/* Adaptive difficulty upgrade suggestion */}
+          {adaptiveSuggestions.length > 0 && (
+            <div className="animate-fade-up delay-400">
+              <div className="flex items-center gap-2 mb-4">
+                <TrendingUp size={16} className="text-[#10b981]" />
+                <div>
+                  <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">Ready to level up?</h2>
+                  <p className="text-xs text-[#94a3b8] mt-0.5">You&apos;re consistently above 80% — try intermediate next</p>
+                </div>
+              </div>
+              <div className="grid sm:grid-cols-3 gap-4">
+                {adaptiveSuggestions.map((test) => (
+                  <RecommendedTestCard key={test.id} test={test} badge="Leveled up" />
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Popular for your role — only if role is set */}
           {popularForRole.length > 0 && (

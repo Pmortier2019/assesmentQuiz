@@ -1,5 +1,6 @@
 "use client";
 
+import { Lightbulb } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MediaRenderer } from "./MediaRenderer";
 import type { Question, AnswerOption } from "@/lib/types";
@@ -21,6 +22,12 @@ export function TestQuestionCard({
   showExplanation = false,
   onSelect,
 }: TestQuestionCardProps) {
+  // Determine if selected answer is wrong (mid-test feedback)
+  const selectedAnswer = selectedAnswerId
+    ? question.answers.find((a) => a.id === selectedAnswerId)
+    : null;
+  const showWrongFeedback = !showExplanation && selectedAnswer !== null && selectedAnswer !== undefined && !selectedAnswer.isCorrect;
+
   const getAnswerState = (answer: AnswerOption) => {
     if (!showExplanation) {
       return selectedAnswerId === answer.id ? "selected" : "default";
@@ -93,7 +100,22 @@ export function TestQuestionCard({
         })}
       </div>
 
-      {/* Explanation */}
+      {/* Live feedback — wrong answer hint */}
+      {showWrongFeedback && question.explanation && (
+        <div className="rounded-xl border border-[#fca5a5] bg-[#fff1f2] p-4 animate-fade-up">
+          <div className="flex items-start gap-3">
+            <div className="w-7 h-7 rounded-lg bg-[#fecdd3] flex items-center justify-center flex-shrink-0 mt-0.5">
+              <Lightbulb size={14} className="text-[#e11d48]" />
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-[#be123c] mb-1">Not quite — here&apos;s a hint</p>
+              <p className="text-sm text-[#9f1239] leading-relaxed">{question.explanation}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Explanation (post-submit) */}
       {showExplanation && (
         <div className="rounded-xl border border-[#c7d2fe] bg-[#eef2ff] p-4 animate-fade-in">
           <p className="text-xs font-semibold text-[#4f46e5] uppercase tracking-wide mb-2">Explanation</p>
