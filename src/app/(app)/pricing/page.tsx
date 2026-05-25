@@ -20,8 +20,8 @@ const FAQ = [
     a: "Yes — our tests are modelled on assessments used by top employers like McKinsey, Deloitte, Shell, and others.",
   },
   {
-    q: "How often are new AI-generated tests added?",
-    a: "New tests are generated weekly by our AI engine. Pro users always have fresh, unique content.",
+    q: "How often are new tests added?",
+    a: "New tests are added weekly. Pro users always have fresh, unique content.",
   },
   {
     q: "Is there a student discount?",
@@ -48,7 +48,7 @@ export default function PricingPage() {
               <br />No surprises.
             </h1>
             <p className="text-lg text-[#64748b] max-w-xl mx-auto">
-              Start with 5 free tests. Upgrade to Pro for unlimited AI-generated practice, detailed feedback, and daily preparation plans.
+              Start with 5 free tests. Upgrade to Pro for unlimited practice, detailed feedback, and daily preparation plans.
             </p>
           </div>
         </section>
@@ -89,10 +89,10 @@ export default function PricingPage() {
 
               {[
                 ["Practice tests",          "5",            "Unlimited"],
-                ["AI-generated tests",      "—",            "Weekly new"],
+                ["New tests weekly",         "—",            "✓"],
                 ["Assessment types",        "All 5",        "All 5"],
                 ["Basic results",           "✓",            "✓"],
-                ["Detailed AI feedback",    "—",            "✓"],
+                ["Detailed feedback",       "—",            "✓"],
                 ["Progress tracking",       "—",            "✓"],
                 ["Daily preparation plan",  "—",            "✓"],
                 ["Streak tracking",         "✓",            "✓"],

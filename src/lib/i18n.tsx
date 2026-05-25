@@ -69,7 +69,7 @@ const translations = {
 
     // Results page
     results_back:       "Back to tests",
-    results_ai_feedback:"AI Feedback",
+    results_ai_feedback:"Detailed Feedback",
     results_q_review:   "Question Review",
     results_recommended:"Recommended next",
     results_history:    "Your history",
@@ -162,7 +162,7 @@ const translations = {
 
     // Results page
     results_back:       "Terug naar tests",
-    results_ai_feedback:"AI Feedback",
+    results_ai_feedback:"Gedetailleerde feedback",
     results_q_review:   "Vraagbeoordeling",
     results_recommended:"Aanbevolen volgende",
     results_history:    "Jouw geschiedenis",

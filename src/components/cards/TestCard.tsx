@@ -35,12 +35,12 @@ export function TestCard({ test, isLocked = false, onStart, className, showRecom
         </div>
       )}
 
-      {/* AI badge */}
+      {/* New badge */}
       {test.isGeneratedByAI && (
         <div className={cn("absolute top-3", isRecommended ? "right-3" : "right-3")}>
           <Badge variant="ai" size="sm">
             <Sparkles size={10} />
-            AI
+            Nieuw
           </Badge>
         </div>
       )}

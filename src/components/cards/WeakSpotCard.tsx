@@ -59,7 +59,7 @@ export function WeakSpotCard({ results, tests }: WeakSpotCardProps) {
           <h3 className="font-display font-semibold text-[#0D1B2E] text-sm">Weak spot detected</h3>
           <p className="text-xs text-[#94a3b8] mt-0.5">Based on your last {results.length} test results</p>
         </div>
-        <span className="ml-auto text-[10px] font-semibold text-[#4f46e5] bg-[#eef2ff] px-2 py-0.5 rounded-full">AI</span>
+        <span className="ml-auto text-[10px] font-semibold text-[#4f46e5] bg-[#eef2ff] px-2 py-0.5 rounded-full">Smart</span>
       </div>
 
       <div className="flex flex-col gap-3 mb-4">

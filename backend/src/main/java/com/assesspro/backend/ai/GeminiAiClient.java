@@ -13,7 +13,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 
 @Slf4j
-@Component
+// @Component — disabled; ClaudeAiClient is used instead
 public class GeminiAiClient implements AiClient {
 
     private static final String ENDPOINT =

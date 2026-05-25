@@ -26,7 +26,7 @@ const PLANS = {
     ],
     unavailable: [
       "Unlimited tests",
-      "AI-generated tests",
+      "New tests added weekly",
       "Detailed feedback",
       "Progress tracking",
       "Daily preparation plan",
@@ -41,7 +41,7 @@ const PLANS = {
     description: "Everything you need to ace your assessment and get the job.",
     features: [
       "Unlimited practice tests",
-      "AI-generated new tests weekly",
+      "Fresh new tests added weekly",
       "Detailed feedback per question",
       "Progress tracking & analytics",
       "Daily preparation plan",

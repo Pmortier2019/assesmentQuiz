@@ -24,7 +24,7 @@ export function FeedbackCard({ feedback, isProUser = false, className }: Feedbac
             <Lock size={18} className="text-white" />
           </div>
           <p className="font-display font-semibold text-[#0D1B2E] text-center">
-            Detailed AI feedback is a Pro feature
+            Detailed feedback is a Pro feature
           </p>
           <Link
             href="/pricing"
@@ -43,7 +43,7 @@ export function FeedbackCard({ feedback, isProUser = false, className }: Feedbac
         <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
           <Sparkles size={14} className="text-white" />
         </div>
-        <span className="font-display font-semibold text-[#4f46e5] text-sm">AI Feedback</span>
+        <span className="font-display font-semibold text-[#4f46e5] text-sm">Detailed Feedback</span>
       </div>
       <p className="text-sm text-[#334155] leading-relaxed">
         {feedback ?? "No feedback available yet."}

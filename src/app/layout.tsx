@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     template: "%s | Ready to Ace",
   },
   description:
-    "Practice the tests companies use during hiring. Start with 5 free assessments, then unlock unlimited AI-generated practice for €4/month.",
+    "Practice the tests companies use during hiring. Start with 5 free assessments, then unlock unlimited practice for €4/month.",
   keywords: ["assessment", "job application", "practice tests", "numerical reasoning", "logical reasoning"],
   authors: [{ name: "Ready to Ace" }],
   openGraph: {

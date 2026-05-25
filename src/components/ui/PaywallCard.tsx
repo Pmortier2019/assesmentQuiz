@@ -14,7 +14,7 @@ interface PaywallCardProps {
 
 export function PaywallCard({
   title = "Unlock unlimited practice",
-  description = "You've used all 5 free tests. Upgrade to Pro for €4/month and get unlimited AI-generated assessments.",
+  description = "You've used all 5 free tests. Upgrade to Pro for €4/month and get unlimited fresh assessments.",
   compact = false,
   className,
 }: PaywallCardProps) {

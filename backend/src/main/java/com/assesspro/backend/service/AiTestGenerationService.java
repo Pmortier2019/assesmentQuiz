@@ -44,19 +44,28 @@ public class AiTestGenerationService {
         String prompt = buildPrompt(type, difficulty, numberOfQuestions, targetRole, targetIndustry);
         log.info("Generating AI test: type={} difficulty={} role={} industry={} isFree={}", type, difficulty, targetRole, targetIndustry, isFree);
 
-        String rawJson = aiClient.generateTest(prompt);
+        int maxAttempts = 3;
+        Exception lastError = null;
+        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                String rawJson = aiClient.generateTest(prompt);
+                AiTestJson.TestJson testJson = parseJson(rawJson);
+                validateTestJson(testJson);
 
-        AiTestJson.TestJson testJson = parseJson(rawJson);
-        validateTestJson(testJson);
+                AssessmentTest test = mapToEntity(testJson);
+                test.setType(type);
+                test.setGeneratedByAI(true);
+                test.setFree(isFree);
 
-        AssessmentTest test = mapToEntity(testJson);
-        test.setType(type);
-        test.setGeneratedByAI(true);
-        test.setFree(isFree);
-
-        AssessmentTest saved = testRepository.save(test);
-        log.info("AI-generated test saved with id={}", saved.getId());
-        return saved;
+                AssessmentTest saved = testRepository.save(test);
+                log.info("AI-generated test saved with id={} (attempt {})", saved.getId(), attempt);
+                return saved;
+            } catch (Exception e) {
+                lastError = e;
+                log.warn("Generation attempt {}/{} failed: {}", attempt, maxAttempts, e.getMessage());
+            }
+        }
+        throw new RuntimeException("Test generation failed after " + maxAttempts + " attempts: " + lastError.getMessage(), lastError);
     }
 
     @Transactional
@@ -79,7 +88,7 @@ public class AiTestGenerationService {
 
     @Transactional
     public AssessmentTest generateForUserOfType(com.assesspro.backend.entity.User user, TestType type, Difficulty difficulty, boolean isFree) {
-        int poolSize = 30;
+        int poolSize = 12;
         return generateAndSave(type, difficulty, poolSize, user.getTargetRole(), user.getTargetIndustry(), isFree);
     }
 
@@ -197,7 +206,8 @@ public class AiTestGenerationService {
                 3. Use realistic business data: revenue figures, percentages, ratios, org decisions.
                 4. Vary difficulty across questions even within the same level.
                 5. All %d questions must be unique — no repeated scenarios or question stems.
-                6. Return ONLY the JSON object — nothing else. Do not truncate.
+                6. Keep each explanation to max 2 sentences — be concise.
+                7. Return ONLY the JSON object — nothing else. Do not truncate.
                 """.formatted(
                 type.name(), typeFocus, role, industry,
                 difficulty.name(), count, displayCount,

@@ -164,7 +164,7 @@ export default function TestsPage() {
                 <span className="font-semibold text-[#10b981]">{freeTests.length} free</span>
                 {" · "}
                 <span className="font-semibold text-[#7c3aed]">{proTests.length} Pro</span>
-                {aiTests.length > 0 && ` · ${aiTests.length} AI-generated`}
+                {aiTests.length > 0 && ` · ${aiTests.length} nieuw`}
                 {recommendedTests.length > 0 && ` · ${recommendedTests.length} recommended for you`}
               </p>
             </div>
@@ -235,7 +235,7 @@ export default function TestsPage() {
                   <p className="text-xs text-[#64748b] mt-0.5">
                     {freeTestsUsed >= FREE_TEST_LIMIT
                       ? "Upgrade to Pro for unlimited access to all tests — €4/month."
-                      : "Upgrade to Pro for unlimited access and AI-generated practice."}
+                      : "Upgrade to Pro for unlimited access and fresh weekly tests."}
                   </p>
                 </div>
               </div>
@@ -283,7 +283,7 @@ export default function TestsPage() {
               <div>
                 <h3 className="font-display font-semibold text-[#0D1B2E] text-lg mb-1">No tests found</h3>
                 <p className="text-sm text-[#64748b] max-w-xs">
-                  Try adjusting your filters or search term. More AI-generated tests are coming soon.
+                  Try adjusting your filters or search term. More fresh tests are coming soon.
                 </p>
               </div>
               <button
@@ -365,7 +365,7 @@ export default function TestsPage() {
                     </span>
                     {proTests.some((t) => t.isGeneratedByAI) && (
                       <span className="text-xs font-semibold text-[#4f46e5] bg-[#eef2ff] px-2 py-0.5 rounded-full border border-[#c7d2fe] flex items-center gap-1">
-                        <Sparkles size={10} /> AI-generated
+                        <Sparkles size={10} /> Vers nieuw
                       </span>
                     )}
                   </div>
@@ -383,13 +383,13 @@ export default function TestsPage() {
                 </section>
               )}
 
-              {/* AI coming soon */}
+              {/* Coming soon */}
               <div className="rounded-2xl border border-dashed border-[#c7d2fe] bg-[#f8faff] p-8 text-center animate-fade-up delay-400">
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#4f46e5]/15 to-[#7c3aed]/15 flex items-center justify-center mx-auto mb-4">
                   <Sparkles size={22} className="text-[#4f46e5]" />
                 </div>
                 <h3 className="font-display font-semibold text-[#0D1B2E] mb-2">
-                  More AI-generated tests coming soon
+                  More fresh tests coming soon
                 </h3>
                 <p className="text-sm text-[#64748b] max-w-xs mx-auto">
                   New practice tests are generated weekly, modelled on real assessments from top employers.

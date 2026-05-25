@@ -504,7 +504,7 @@ export default function DashboardPage() {
                     <div className="flex items-center gap-1.5">
                       {test.isGeneratedByAI && (
                         <span className="text-xs font-semibold text-[#4f46e5] bg-[#eef2ff] px-2 py-0.5 rounded-full flex items-center gap-1">
-                          <Sparkles size={9} /> AI
+                          <Sparkles size={9} /> Nieuw
                         </span>
                       )}
                       <Lock size={12} className="text-[#94a3b8]" />
@@ -527,7 +527,7 @@ export default function DashboardPage() {
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <h3 className="font-display font-semibold text-[#0D1B2E]">AI-Powered Coaching</h3>
+                  <h3 className="font-display font-semibold text-[#0D1B2E]">Persoonlijke coaching</h3>
                   <span className="text-[10px] font-bold text-[#7c3aed] bg-[#f5f3ff] border border-[#ddd6fe] px-2 py-0.5 rounded-full uppercase tracking-wider">
                     Coming soon
                   </span>

@@ -11,7 +11,7 @@ const VALUES = [
   {
     icon: Zap,
     title: "€4/month Pro",
-    description: "Unlock unlimited tests, AI-generated content and detailed analytics for the price of a coffee.",
+    description: "Unlock unlimited tests, fresh new content and detailed analytics for the price of a coffee.",
     color: "text-[#7c3aed]",
     bg: "bg-[#f5f3ff]",
   },

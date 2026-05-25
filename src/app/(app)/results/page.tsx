@@ -218,7 +218,7 @@ function ResultsContent() {
           <div className="card p-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-display font-semibold text-sm text-[#0D1B2E]">{t("results_recommended")}</h3>
-              <span className="text-[10px] font-semibold text-[#4f46e5] bg-[#eef2ff] px-2 py-0.5 rounded-full">AI</span>
+              <span className="text-[10px] font-semibold text-[#4f46e5] bg-[#eef2ff] px-2 py-0.5 rounded-full">Voor jou</span>
             </div>
             {recommendedTests.length === 0 ? (
               <p className="text-xs text-[#94a3b8] text-center py-4">{t("results_no_recommendations")}</p>

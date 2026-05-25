@@ -37,6 +37,7 @@ export default function AdminPage() {
   const [genError, setGenError] = useState<string | null>(null);
   const [bulkGenerating, setBulkGenerating] = useState(false);
   const [bulkProgress, setBulkProgress] = useState<{ done: number; total: number; current: string } | null>(null);
+  const [perCombo, setPerCombo] = useState(5);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -87,30 +88,31 @@ export default function AdminPage() {
     }
   }
 
+  const countMap = tests.reduce((acc, t) => {
+    const key = `${t.type}__${t.difficulty}`;
+    acc[key] = (acc[key] ?? 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
   async function handleGenerateAll() {
-    const missing: { type: string; diff: string; label: string }[] = [];
+    const todo: { type: string; diff: string; label: string }[] = [];
     for (const { type, label } of ALL_GENERATE_TYPES) {
       for (const diff of ALL_DIFFICULTIES) {
-        if (!genStatus[type]?.includes(diff)) {
-          missing.push({ type, diff, label });
-        }
+        const have = countMap[`${type}__${diff}`] ?? 0;
+        const need = perCombo - have;
+        for (let n = 0; n < need; n++) todo.push({ type, diff, label });
       }
     }
-    if (missing.length === 0) return;
+    if (todo.length === 0) return;
     setBulkGenerating(true);
     setGenError(null);
-    setBulkProgress({ done: 0, total: missing.length, current: "" });
-    for (let i = 0; i < missing.length; i++) {
-      const { type, diff, label } = missing[i];
-      setBulkProgress({ done: i, total: missing.length, current: `${label} — ${diff}` });
+    setBulkProgress({ done: 0, total: todo.length, current: "" });
+    for (let i = 0; i < todo.length; i++) {
+      const { type, diff, label } = todo[i];
+      setBulkProgress({ done: i, total: todo.length, current: `${label} — ${diff}` });
       try {
         await generateTestOfType(type, diff, defaultFree);
-        setGenStatus((prev) => ({
-          ...prev,
-          [type]: [...(prev[type] ?? []), diff],
-        }));
-        // Brief pause between requests so Gemini doesn't rate-limit the next one
-        if (i < missing.length - 1) await new Promise((r) => setTimeout(r, 5000));
+        if (i < todo.length - 1) await new Promise((r) => setTimeout(r, 3000));
       } catch (e) {
         setGenError(`Failed at ${label} ${diff}: ${e instanceof Error ? e.message : "error"}`);
         setBulkGenerating(false);
@@ -211,14 +213,26 @@ export default function AdminPage() {
               <p className="text-xs text-[#94a3b8] mt-0.5">Click a missing cell to generate that test</p>
             </div>
             <div className="flex items-center gap-4">
-              <button
-                onClick={handleGenerateAll}
-                disabled={bulkGenerating || !!generating}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
-              >
-                {bulkGenerating ? <RefreshCw size={12} className="animate-spin" /> : <Sparkles size={12} />}
-                {bulkGenerating ? "Generating…" : "Generate All Missing"}
-              </button>
+              <div className="flex items-center gap-2">
+                <label className="text-xs text-[#64748b] font-medium whitespace-nowrap">Per combo:</label>
+                <input
+                  type="number"
+                  min={1}
+                  max={20}
+                  value={perCombo}
+                  onChange={(e) => setPerCombo(Math.max(1, Math.min(20, Number(e.target.value))))}
+                  disabled={bulkGenerating}
+                  className="w-14 px-2 py-1.5 rounded-lg border border-[#e2e8f0] text-sm text-center font-semibold text-[#0D1B2E] focus:outline-none focus:border-[#4f46e5]"
+                />
+                <button
+                  onClick={handleGenerateAll}
+                  disabled={bulkGenerating || !!generating}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+                >
+                  {bulkGenerating ? <RefreshCw size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                  {bulkGenerating ? "Generating…" : `Fill to ${perCombo}`}
+                </button>
+              </div>
               <div className="flex items-center gap-2 text-xs text-[#64748b]">
                 <span className="font-medium">New tests:</span>
                 <div className="flex rounded-lg border border-[#e2e8f0] overflow-hidden font-semibold">
@@ -287,29 +301,29 @@ export default function AdminPage() {
                       </div>
                     </td>
                     {ALL_DIFFICULTIES.map((diff) => {
-                      const exists = genStatus[type]?.includes(diff);
                       const key = `${type}__${diff}`;
+                      const count = countMap[key] ?? 0;
                       const isGenerating = generating === key;
                       return (
                         <td key={diff} className="py-2.5 text-center">
-                          {exists ? (
-                            <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-700">
-                              <CheckCircle2 size={11} /> Done
-                            </span>
-                          ) : (
-                            <button
-                              onClick={() => handleGenerate(type, diff)}
-                              disabled={!!generating}
-                              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#f8fafc] border border-[#e2e8f0] text-xs font-semibold text-[#64748b] hover:bg-[#eef2ff] hover:border-[#c7d2fe] hover:text-[#4f46e5] transition-colors disabled:opacity-50"
-                            >
-                              {isGenerating ? (
-                                <RefreshCw size={11} className="animate-spin" />
-                              ) : (
-                                <Plus size={11} />
-                              )}
-                              {isGenerating ? "…" : "Generate"}
-                            </button>
-                          )}
+                          <button
+                            onClick={() => handleGenerate(type, diff)}
+                            disabled={!!generating || bulkGenerating}
+                            className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors disabled:opacity-50 ${
+                              count > 0
+                                ? "bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100"
+                                : "bg-[#f8fafc] border border-[#e2e8f0] text-[#64748b] hover:bg-[#eef2ff] hover:border-[#c7d2fe] hover:text-[#4f46e5]"
+                            }`}
+                          >
+                            {isGenerating ? (
+                              <RefreshCw size={11} className="animate-spin" />
+                            ) : count > 0 ? (
+                              <CheckCircle2 size={11} />
+                            ) : (
+                              <Plus size={11} />
+                            )}
+                            {isGenerating ? "…" : count > 0 ? `${count}` : "Generate"}
+                          </button>
                         </td>
                       );
                     })}

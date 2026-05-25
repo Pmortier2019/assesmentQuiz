@@ -63,7 +63,19 @@
       "Bash(fly status *)",
       "Bash(xargs grep -A5 \"cors\\\\|CORS\\\\|allowedOrigins\")",
       "Bash(npm install *)",
-      "Bash(mvn package *)"
+      "Bash(mvn package *)",
+      "WebFetch(domain:www.ready-to-ace.com)",
+      "WebFetch(domain:app-white-shadow-5362.fly.dev)",
+      "Bash(fly ssh *)",
+      "Bash(fly postgres *)",
+      "Bash(Select-Object -First 30)",
+      "Bash(Format-Table FullName)",
+      "PowerShell(fly secrets *)",
+      "Bash(flyctl logs *)",
+      "Bash(Select-Object -Last 60)",
+      "Bash(flyctl auth *)",
+      "Bash(git checkout *)",
+      "Bash(git pull *)"
     ]
   }
 }
