@@ -89,6 +89,14 @@ public class SubscriptionService {
     }
 
     @Transactional
+    public void cancelSubscription(Long userId) {
+        Subscription sub = subscriptionRepository.findByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("No active subscription found for user: " + userId));
+        sub.setStatus(SubscriptionStatus.CANCELLED);
+        subscriptionRepository.save(sub);
+    }
+
+    @Transactional
     public SubscriptionResponse mockUpgrade(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));

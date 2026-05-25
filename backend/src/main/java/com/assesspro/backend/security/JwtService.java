@@ -18,7 +18,7 @@ public class JwtService {
 
     private static final long EXPIRY_MS = 30L * 24 * 60 * 60 * 1000; // 30 days
 
-    @Value("${JWT_SECRET:changeme-at-least-32-chars-long!!}")
+    @Value("${JWT_SECRET}")
     private String secret;
 
     private SecretKey key() {

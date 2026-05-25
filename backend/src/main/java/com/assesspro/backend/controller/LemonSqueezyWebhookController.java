@@ -70,8 +70,8 @@ public class LemonSqueezyWebhookController {
 
     private boolean verifySignature(String body, String receivedSignature) {
         if (webhookSecret == null || webhookSecret.isBlank()) {
-            log.warn("LEMON_SQUEEZY_WEBHOOK_SECRET not set — skipping signature check");
-            return true; // allow through in dev; in prod always set the secret
+            log.error("LEMON_SQUEEZY_WEBHOOK_SECRET is not configured — rejecting webhook");
+            return false;
         }
         try {
             Mac mac = Mac.getInstance("HmacSHA256");

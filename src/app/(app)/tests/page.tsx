@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Sparkles, PackageOpen, Star, Wand2, Lock } from "lucide-react";
+import { Sparkles, PackageOpen, Star, Wand2, Lock, CheckCircle2, Crown } from "lucide-react";
 import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { Sidebar } from "@/components/layout/Sidebar";
@@ -10,6 +10,7 @@ import { FilterBar } from "@/components/test/FilterBar";
 import type { SortOption } from "@/components/test/FilterBar";
 import { getTests, generateTestOfType, getGenerationStatus, getCurrentUser, ALL_GENERATE_TYPES, ALL_DIFFICULTIES } from "@/lib/api";
 import { isAdmin, isLoggedIn } from "@/lib/auth";
+import { FREE_TEST_LIMIT } from "@/lib/constants";
 import type { Test, AssessmentType, Difficulty, RoleCategory, IndustryCategory } from "@/lib/types";
 
 export default function TestsPage() {
@@ -158,9 +159,12 @@ export default function TestsPage() {
           {/* Header */}
           <div className="animate-fade-up flex items-start justify-between gap-4 flex-wrap">
             <div>
-              <h1 className="font-display font-bold text-2xl text-[#0D1B2E] mb-1">Test Library</h1>
+              <h1 className="font-display font-bold text-2xl text-[#0D1B2E] mb-1">📚 Test Library</h1>
               <p className="text-[#64748b] text-sm">
-                {filtered.length} tests available · {aiTests.length} AI-generated
+                <span className="font-semibold text-[#10b981]">{freeTests.length} free</span>
+                {" · "}
+                <span className="font-semibold text-[#7c3aed]">{proTests.length} Pro</span>
+                {aiTests.length > 0 && ` · ${aiTests.length} AI-generated`}
                 {recommendedTests.length > 0 && ` · ${recommendedTests.length} recommended for you`}
               </p>
             </div>
@@ -214,22 +218,22 @@ export default function TestsPage() {
           </div>
 
           {/* Paywall banner — shown when free user is at or near limit */}
-          {!isPro && freeTestsUsed !== null && freeTestsUsed >= 3 && (
+          {!isPro && freeTestsUsed !== null && freeTestsUsed >= FREE_TEST_LIMIT - 2 && (
             <div className={`animate-fade-up rounded-2xl border px-5 py-4 flex items-center justify-between gap-4 flex-wrap ${
-              freeTestsUsed >= 5
+              freeTestsUsed >= FREE_TEST_LIMIT
                 ? "border-rose-200 bg-rose-50"
                 : "border-amber-200 bg-amber-50"
             }`}>
               <div className="flex items-center gap-3">
-                <Lock size={16} className={freeTestsUsed >= 5 ? "text-rose-500" : "text-amber-500"} />
+                <Lock size={16} className={freeTestsUsed >= FREE_TEST_LIMIT ? "text-rose-500" : "text-amber-500"} />
                 <div>
-                  <p className={`text-sm font-semibold ${freeTestsUsed >= 5 ? "text-rose-700" : "text-amber-700"}`}>
-                    {freeTestsUsed >= 5
+                  <p className={`text-sm font-semibold ${freeTestsUsed >= FREE_TEST_LIMIT ? "text-rose-700" : "text-amber-700"}`}>
+                    {freeTestsUsed >= FREE_TEST_LIMIT
                       ? "You've used all 5 free tests"
-                      : `${5 - freeTestsUsed} free test${5 - freeTestsUsed !== 1 ? "s" : ""} remaining`}
+                      : `${FREE_TEST_LIMIT - freeTestsUsed} free test${FREE_TEST_LIMIT - freeTestsUsed !== 1 ? "s" : ""} remaining`}
                   </p>
                   <p className="text-xs text-[#64748b] mt-0.5">
-                    {freeTestsUsed >= 5
+                    {freeTestsUsed >= FREE_TEST_LIMIT
                       ? "Upgrade to Pro for unlimited access to all tests — €4/month."
                       : "Upgrade to Pro for unlimited access and AI-generated practice."}
                   </p>
@@ -331,9 +335,10 @@ export default function TestsPage() {
               {freeTests.length > 0 && (
                 <section className={sortBy === "best_match" && recommendedTests.length > 0 ? "" : "animate-fade-up delay-200"}>
                   <div className="flex items-center gap-2 mb-4">
+                    <CheckCircle2 size={17} className="text-[#10b981]" />
                     <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">Free Tests</h2>
                     <span className="text-xs font-semibold text-[#10b981] bg-[#f0fdf4] px-2 py-0.5 rounded-full border border-[#bbf7d0]">
-                      {freeTests.length} available
+                      {freeTests.length} available — no account needed
                     </span>
                   </div>
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -352,17 +357,19 @@ export default function TestsPage() {
               {/* Pro tests */}
               {proTests.length > 0 && (
                 <section className="animate-fade-up delay-300">
-                  <div className="flex items-center gap-2 mb-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Crown size={17} className="text-[#7c3aed]" />
                     <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">Pro Tests</h2>
-                    <span className="text-xs font-semibold text-[#4f46e5] bg-[#eef2ff] px-2 py-0.5 rounded-full border border-[#c7d2fe]">
-                      Pro
+                    <span className="text-xs font-semibold text-[#7c3aed] bg-[#f5f3ff] px-2 py-0.5 rounded-full border border-[#ddd6fe]">
+                      {proTests.length} tests · €4/mo
                     </span>
                     {proTests.some((t) => t.isGeneratedByAI) && (
-                      <span className="text-xs font-semibold text-[#7c3aed] bg-[#f5f3ff] px-2 py-0.5 rounded-full border border-[#ddd6fe] flex items-center gap-1">
+                      <span className="text-xs font-semibold text-[#4f46e5] bg-[#eef2ff] px-2 py-0.5 rounded-full border border-[#c7d2fe] flex items-center gap-1">
                         <Sparkles size={10} /> AI-generated
                       </span>
                     )}
                   </div>
+                  <p className="text-xs text-[#94a3b8] mb-4 ml-[1.625rem]">Upgrade to Pro to unlock all tests below</p>
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
                     {proTests.map((test) => (
                       <TestCard

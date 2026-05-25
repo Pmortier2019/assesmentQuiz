@@ -8,6 +8,7 @@ import com.assesspro.backend.entity.PasswordResetToken;
 import com.assesspro.backend.entity.User;
 import com.assesspro.backend.entity.enums.Language;
 import com.assesspro.backend.entity.enums.Role;
+import com.assesspro.backend.entity.enums.SubscriptionStatus;
 import com.assesspro.backend.repository.PasswordResetTokenRepository;
 import com.assesspro.backend.repository.UserRepository;
 import com.assesspro.backend.security.JwtService;
@@ -19,6 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -89,13 +92,13 @@ public class AuthController {
      * One-time bootstrap to create the first admin account.
      */
     @PostMapping("/admin-bootstrap")
+    @Transactional
     public ResponseEntity<?> adminBootstrap(@RequestBody LoginRequest req) {
-        boolean adminExists = userRepository.findAll().stream()
-                .anyMatch(u -> u.getRole() == Role.ADMIN);
+        boolean adminExists = userRepository.existsByRole(Role.ADMIN);
         if (adminExists) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("An admin already exists");
         }
-        User user = userRepository.findByEmail(req.getEmail()).orElse(null);
+        User user = userRepository.findByEmailWithSubscription(req.getEmail()).orElse(null);
         if (user == null || user.getPasswordHash() == null
                 || !passwordEncoder.matches(req.getPassword(), user.getPasswordHash())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
@@ -119,9 +122,9 @@ public class AuthController {
             if (resendApiKey != null && !resendApiKey.isBlank()) {
                 String resetLink = frontendUrl + "/reset-password?token=" + resetToken;
                 String body = "{\"from\":\"Ready to Ace <noreply@ready-to-ace.com>\","
-                        + "\"to\":[\"" + user.getEmail() + "\"],"
+                        + "\"to\":[\"" + escapeHtml(user.getEmail()) + "\"],"
                         + "\"subject\":\"Reset je wachtwoord\","
-                        + "\"html\":\"<p>Hoi " + user.getName() + ",</p>"
+                        + "\"html\":\"<p>Hoi " + escapeHtml(user.getName()) + ",</p>"
                         + "<p>Klik op de link om je wachtwoord te resetten (geldig 1 uur):</p>"
                         + "<p><a href=\\\"" + resetLink + "\\\">Wachtwoord resetten</a></p>"
                         + "<p>Als je dit niet hebt aangevraagd, kun je deze e-mail negeren.</p>\"}";
@@ -154,8 +157,17 @@ public class AuthController {
         return ResponseEntity.ok(Map.of("message", "Wachtwoord succesvol gewijzigd"));
     }
 
+    private static String escapeHtml(String text) {
+        if (text == null) return "";
+        return text.replace("&", "&amp;")
+                   .replace("<", "&lt;")
+                   .replace(">", "&gt;")
+                   .replace("\"", "&quot;");
+    }
+
     private AuthResponse buildResponse(String token, User user) {
-        boolean isPro = user.getSubscription() != null;
+        boolean isPro = user.getSubscription() != null
+                && user.getSubscription().getStatus() == SubscriptionStatus.ACTIVE;
         return AuthResponse.builder()
                 .token(token)
                 .user(UserResponse.builder()
