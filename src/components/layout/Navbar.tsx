@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, Zap, LogOut } from "lucide-react";
+import { Menu, X, Zap, LogOut, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useT } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 import { DarkModeToggle } from "@/components/ui/DarkModeToggle";
 import { logout } from "@/lib/api";
-import { isLoggedIn } from "@/lib/auth";
+import { isLoggedIn, isAdmin } from "@/lib/auth";
 
 interface NavbarProps {
   transparent?: boolean;
@@ -20,6 +20,7 @@ export function Navbar({ transparent = false }: NavbarProps) {
   const router = useRouter();
   const { t } = useT();
   const loggedIn = typeof window !== "undefined" ? isLoggedIn() : false;
+  const userIsAdmin = typeof window !== "undefined" ? isAdmin() : false;
 
   const handleLogout = () => {
     logout();
@@ -47,6 +48,15 @@ export function Navbar({ transparent = false }: NavbarProps) {
               Ready to <span className="gradient-text">Ace</span>
             </span>
           </Link>
+          {userIsAdmin && (
+            <Link
+              href="/admin"
+              className="flex items-center gap-1 px-2 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-700 text-xs font-bold hover:bg-amber-200 transition-colors"
+            >
+              <ShieldCheck size={12} />
+              ADMIN
+            </Link>
+          )}
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-6">
