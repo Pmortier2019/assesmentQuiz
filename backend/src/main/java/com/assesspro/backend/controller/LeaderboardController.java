@@ -7,6 +7,7 @@ import com.assesspro.backend.repository.TestResultRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -25,6 +26,7 @@ public class LeaderboardController {
      * Returns top 10 results this week, anonymised.
      */
     @GetMapping
+    @Transactional(readOnly = true)
     public ResponseEntity<List<LeaderboardEntry>> getLeaderboard(
             @RequestParam(required = false) String type
     ) {

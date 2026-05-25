@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X, Zap, LogOut, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -17,10 +17,15 @@ interface NavbarProps {
 
 export function Navbar({ transparent = false }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [userIsAdmin, setUserIsAdmin] = useState(false);
   const router = useRouter();
   const { t } = useT();
-  const loggedIn = typeof window !== "undefined" ? isLoggedIn() : false;
-  const userIsAdmin = typeof window !== "undefined" ? isAdmin() : false;
+
+  useEffect(() => {
+    setLoggedIn(isLoggedIn());
+    setUserIsAdmin(isAdmin());
+  }, []);
 
   const handleLogout = () => {
     logout();
