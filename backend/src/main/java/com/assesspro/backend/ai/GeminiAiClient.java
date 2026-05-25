@@ -28,12 +28,34 @@ public class GeminiAiClient implements AiClient {
             .connectTimeout(Duration.ofSeconds(30))
             .build();
 
+    private static final int MAX_RETRIES = 4;
+    private static final long INITIAL_BACKOFF_MS = 15_000;
+
     @Override
     public String generateTest(String prompt) {
         if (apiKey == null || apiKey.isBlank()) {
             throw new RuntimeException("GEMINI_API_KEY is not configured. Add it as an environment variable.");
         }
 
+        long backoffMs = INITIAL_BACKOFF_MS;
+        for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+            try {
+                String result = callGemini(prompt);
+                if (attempt > 1) log.info("Gemini succeeded on attempt {}", attempt);
+                return result;
+            } catch (RateLimitException e) {
+                if (attempt == MAX_RETRIES) {
+                    throw new RuntimeException("Gemini rate limit persists after " + MAX_RETRIES + " retries", e);
+                }
+                log.warn("Gemini 429 on attempt {}, retrying in {}s…", attempt, backoffMs / 1000);
+                try { Thread.sleep(backoffMs); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); throw new RuntimeException("Interrupted during backoff", ie); }
+                backoffMs *= 2;
+            }
+        }
+        throw new RuntimeException("Unreachable");
+    }
+
+    private String callGemini(String prompt) {
         try {
             String escapedPrompt = objectMapper.writeValueAsString(prompt);
             String requestBody = """
@@ -51,6 +73,10 @@ public class GeminiAiClient implements AiClient {
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
+            if (response.statusCode() == 429) {
+                log.warn("Gemini rate limit (429): {}", response.body());
+                throw new RateLimitException("429");
+            }
             if (response.statusCode() != 200) {
                 log.error("Gemini API error {}: {}", response.statusCode(), response.body());
                 throw new RuntimeException("Gemini API returned status " + response.statusCode());
@@ -61,14 +87,19 @@ public class GeminiAiClient implements AiClient {
                     .path("content").path("parts").get(0)
                     .path("text").asText();
 
-            // Strip markdown fences in case Gemini wraps the JSON
             return text.replaceAll("(?s)^```json\\s*", "").replaceAll("(?s)\\s*```$", "").trim();
 
+        } catch (RateLimitException e) {
+            throw e;
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
             log.error("Gemini API call failed", e);
             throw new RuntimeException("AI generation failed: " + e.getMessage(), e);
         }
+    }
+
+    private static class RateLimitException extends RuntimeException {
+        RateLimitException(String msg) { super(msg); }
     }
 }

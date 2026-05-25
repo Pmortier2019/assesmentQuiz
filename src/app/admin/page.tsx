@@ -109,6 +109,8 @@ export default function AdminPage() {
           ...prev,
           [type]: [...(prev[type] ?? []), diff],
         }));
+        // Brief pause between requests so Gemini doesn't rate-limit the next one
+        if (i < missing.length - 1) await new Promise((r) => setTimeout(r, 5000));
       } catch (e) {
         setGenError(`Failed at ${label} ${diff}: ${e instanceof Error ? e.message : "error"}`);
         setBulkGenerating(false);
