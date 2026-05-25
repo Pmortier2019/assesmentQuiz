@@ -286,7 +286,7 @@ export default function TestPage() {
     async function load() {
       // Load user data first so we can pre-check before hitting the backend
       const u = isLoggedIn() ? await getCurrentUser().catch(() => null) : null;
-      const userIsPro = u?.subscription === "pro" ?? false;
+      const userIsPro = u?.subscription === "pro";
       const userIsAdmin = u?.isAdmin ?? false;
       const userFreeUsed = u?.freeTestsUsed ?? 0;
       if (u) {
@@ -382,7 +382,7 @@ export default function TestPage() {
               <p className="text-[#64748b] text-sm leading-relaxed">
                 {paywallReason === "free_limit"
                   ? "You've used all 5 free tests. Upgrade to Pro for unlimited access to every test — €4/month."
-                  : "This test is part of the Pro plan. Upgrade to access all AI-generated assessments."}
+                  : "This test is part of the Pro plan. Upgrade to access all premium assessments."}
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 w-full justify-center">
