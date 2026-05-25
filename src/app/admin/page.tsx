@@ -35,6 +35,8 @@ export default function AdminPage() {
   const [deleting, setDeleting] = useState<string | null>(null);
   const [togglingFree, setTogglingFree] = useState<string | null>(null);
   const [genError, setGenError] = useState<string | null>(null);
+  const [bulkGenerating, setBulkGenerating] = useState(false);
+  const [bulkProgress, setBulkProgress] = useState<{ done: number; total: number; current: string } | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -83,6 +85,40 @@ export default function AdminPage() {
     } finally {
       setDeleting(null);
     }
+  }
+
+  async function handleGenerateAll() {
+    const missing: { type: string; diff: string; label: string }[] = [];
+    for (const { type, label } of ALL_GENERATE_TYPES) {
+      for (const diff of ALL_DIFFICULTIES) {
+        if (!genStatus[type]?.includes(diff)) {
+          missing.push({ type, diff, label });
+        }
+      }
+    }
+    if (missing.length === 0) return;
+    setBulkGenerating(true);
+    setGenError(null);
+    setBulkProgress({ done: 0, total: missing.length, current: "" });
+    for (let i = 0; i < missing.length; i++) {
+      const { type, diff, label } = missing[i];
+      setBulkProgress({ done: i, total: missing.length, current: `${label} — ${diff}` });
+      try {
+        await generateTestOfType(type, diff, defaultFree);
+        setGenStatus((prev) => ({
+          ...prev,
+          [type]: [...(prev[type] ?? []), diff],
+        }));
+      } catch (e) {
+        setGenError(`Failed at ${label} ${diff}: ${e instanceof Error ? e.message : "error"}`);
+        setBulkGenerating(false);
+        setBulkProgress(null);
+        return;
+      }
+    }
+    setBulkGenerating(false);
+    setBulkProgress(null);
+    await refresh();
   }
 
   async function handleToggleFree(id: string, currentFree: boolean) {
@@ -173,6 +209,14 @@ export default function AdminPage() {
               <p className="text-xs text-[#94a3b8] mt-0.5">Click a missing cell to generate that test</p>
             </div>
             <div className="flex items-center gap-4">
+              <button
+                onClick={handleGenerateAll}
+                disabled={bulkGenerating || !!generating}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+              >
+                {bulkGenerating ? <RefreshCw size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                {bulkGenerating ? "Generating…" : "Generate All Missing"}
+              </button>
               <div className="flex items-center gap-2 text-xs text-[#64748b]">
                 <span className="font-medium">New tests:</span>
                 <div className="flex rounded-lg border border-[#e2e8f0] overflow-hidden font-semibold">
@@ -196,6 +240,23 @@ export default function AdminPage() {
               </div>
             </div>
           </div>
+
+          {bulkProgress && (
+            <div className="mb-4 rounded-lg bg-[#eef2ff] border border-[#c7d2fe] px-4 py-3">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-semibold text-[#4f46e5]">
+                  Generating {bulkProgress.done + 1} / {bulkProgress.total}
+                </span>
+                <span className="text-xs text-[#64748b]">{bulkProgress.current}</span>
+              </div>
+              <div className="w-full h-2 bg-[#c7d2fe] rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-[#4f46e5] rounded-full transition-all duration-300"
+                  style={{ width: `${(bulkProgress.done / bulkProgress.total) * 100}%` }}
+                />
+              </div>
+            </div>
+          )}
 
           {genError && (
             <div className="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-3 flex items-center gap-2 text-sm text-red-700">
