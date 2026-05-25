@@ -45,28 +45,18 @@ export function TestCard({ test, isLocked = false, onStart, className, showRecom
         </div>
       )}
 
-      {/* Lock overlay */}
-      {locked && (
-        <div className="absolute inset-0 bg-white/40 backdrop-blur-[1px] rounded-2xl z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-          <Link
-            href="/pricing"
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold shadow-lg"
-          >
-            <Lock size={14} />
-            Unlock Pro
-          </Link>
-        </div>
-      )}
-
       {/* Icon + type */}
       <div className="flex items-start justify-between gap-2">
         <div className="w-10 h-10 rounded-xl bg-[#f8fafc] border border-[#e2e8f0] flex items-center justify-center text-xl">
           {ASSESSMENT_TYPE_ICONS[test.type]}
         </div>
         {locked ? (
-          <Lock size={16} className="text-[#94a3b8] mt-1" />
+          <span className="flex items-center gap-1 text-[10px] font-bold text-[#7c3aed] bg-[#f5f3ff] border border-[#ddd6fe] px-2 py-0.5 rounded-full">
+            <Lock size={9} />
+            Pro
+          </span>
         ) : (
-          <Badge variant="free" size="sm">Free</Badge>
+          <Badge variant="free" size="sm">✓ Free</Badge>
         )}
       </div>
 
@@ -97,7 +87,7 @@ export function TestCard({ test, isLocked = false, onStart, className, showRecom
           </span>
         </div>
         <span className="text-xs text-[#94a3b8]">
-          {test.questions.length} q
+          {test.questions.length} vragen
         </span>
       </div>
 
@@ -115,10 +105,10 @@ export function TestCard({ test, isLocked = false, onStart, className, showRecom
       {locked && (
         <Link
           href="/pricing"
-          className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-[#f1f5f9] text-[#64748b] text-sm font-semibold hover:bg-[#eef2ff] hover:text-[#4f46e5] transition-colors"
+          className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
         >
-          <Lock size={14} />
-          Unlock with Pro
+          <Lock size={13} />
+          Unlock — Pro plan
         </Link>
       )}
     </div>

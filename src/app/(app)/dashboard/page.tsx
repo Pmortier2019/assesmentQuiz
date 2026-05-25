@@ -29,8 +29,9 @@ import {
   ASSESSMENT_TYPE_LABELS, ASSESSMENT_TYPE_ICONS, getScoreColor, formatTime,
 } from "@/lib/utils";
 import type { Test, User, TestResult, PreparationPath } from "@/lib/types";
+import { FREE_TEST_LIMIT } from "@/lib/constants";
 
-const FREE_TESTS_LIMIT = 5;
+const FREE_TESTS_LIMIT = FREE_TEST_LIMIT;
 
 const DAILY_EXERCISES = [
   { label: "5-minute logic drill",      icon: "🧩", duration: "5 min",  type: "logical_reasoning" },

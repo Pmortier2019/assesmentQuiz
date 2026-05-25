@@ -56,7 +56,9 @@ public class TestService {
                 .orElseThrow(() -> new ResourceNotFoundException("Test not found: " + testId));
 
         if (!test.isFree()) {
-            checkProAccess(userId, test);
+            checkProAccess(userId);
+        } else {
+            checkFreeLimit(userId);
         }
 
         List<Question> allQuestions = questionRepository.findByAssessmentTestIdOrderByOrderIndex(testId);
@@ -72,7 +74,9 @@ public class TestService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + request.getUserId()));
 
         if (!test.isFree()) {
-            checkProAccess(user.getId(), test);
+            checkProAccess(user.getId());
+        } else {
+            checkFreeLimit(user.getId());
         }
 
         List<Question> questions = questionRepository.findByAssessmentTestIdOrderByOrderIndex(testId);
@@ -159,18 +163,31 @@ public class TestService {
                 .build();
     }
 
-    private void checkProAccess(Long userId, AssessmentTest test) {
+    private void checkProAccess(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
+
+        if (user.getRole() == com.assesspro.backend.entity.enums.Role.ADMIN) return;
 
         boolean isPro = user.getSubscription() != null
                 && user.getSubscription().getStatus() == SubscriptionStatus.ACTIVE;
 
         if (!isPro) {
-            if (user.getFreeTestsUsed() >= FREE_TEST_LIMIT) {
-                throw new AccessDeniedException(
-                        "Free test limit reached. Upgrade to Pro to access more tests.");
-            }
+            throw new AccessDeniedException("Pro subscription required to access this test.");
+        }
+    }
+
+    private void checkFreeLimit(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
+
+        if (user.getRole() == com.assesspro.backend.entity.enums.Role.ADMIN) return;
+
+        boolean isPro = user.getSubscription() != null
+                && user.getSubscription().getStatus() == SubscriptionStatus.ACTIVE;
+
+        if (!isPro && user.getFreeTestsUsed() >= FREE_TEST_LIMIT) {
+            throw new AccessDeniedException("Free test limit reached. Upgrade to Pro to access more tests.");
         }
     }
 

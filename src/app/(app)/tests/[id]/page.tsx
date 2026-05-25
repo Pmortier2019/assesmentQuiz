@@ -7,10 +7,11 @@ import {
   ChevronLeft, ChevronRight, Clock, CheckCircle2, Flag,
   Trophy, TrendingUp, AlertCircle, ChevronDown, ArrowRight, Lightbulb, Lock,
 } from "lucide-react";
-import { getTestById, submitTest, getCurrentUser } from "@/lib/api";
+import { getTestById, submitTest, getCurrentUser, ApiError } from "@/lib/api";
 import { PageLoader } from "@/components/ui/PageLoader";
 import { haptics } from "@/lib/haptics";
 import { isLoggedIn } from "@/lib/auth";
+import { FREE_TEST_LIMIT } from "@/lib/constants";
 import { TestQuestionCard } from "@/components/test/TestQuestionCard";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { cn, formatTime, ASSESSMENT_TYPE_LABELS, getScoreColor } from "@/lib/utils";
@@ -81,13 +82,13 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
 
           <div>
             <div className={cn(
-              "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-bold mb-2",
+              "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-bold mb-2",
               passed
-                ? "bg-emerald-100 text-emerald-700"
-                : "bg-amber-100 text-amber-700"
+                ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
+                : "bg-amber-100 text-amber-700 border border-amber-200"
             )}>
               {passed ? <CheckCircle2 size={14} /> : <AlertCircle size={14} />}
-              {passed ? "Passed" : "Not passed yet"}
+              {passed ? "🎉 Passed!" : "Not passed yet — keep practising!"}
             </div>
             <p className="text-[#64748b] text-sm">
               Pass mark: {PASS_THRESHOLD}% &nbsp;·&nbsp; {correct} of {total} correct
@@ -207,7 +208,7 @@ function QuestionReviewCard({
         className="w-full flex items-center gap-3 p-4 text-left hover:bg-[#f8fafc] transition-colors"
       >
         <div className={cn(
-          "w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold text-white",
+          "w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold text-white flex-shrink-0",
           qr.isCorrect ? "bg-emerald-500" : "bg-rose-400"
         )}>
           {qr.isCorrect ? "✓" : "✗"}
@@ -215,10 +216,12 @@ function QuestionReviewCard({
         <p className="flex-1 text-sm font-medium text-[#0D1B2E] line-clamp-1">{qr.questionText}</p>
         <div className="flex items-center gap-2 flex-shrink-0">
           <span className={cn(
-            "text-xs font-semibold",
-            qr.isCorrect ? "text-emerald-600" : "text-rose-500"
+            "text-xs font-semibold px-2 py-0.5 rounded-full",
+            qr.isCorrect
+              ? "text-emerald-700 bg-emerald-50 border border-emerald-200"
+              : "text-rose-600 bg-rose-50 border border-rose-200"
           )}>
-            {qr.isCorrect ? "Correct" : "Incorrect"}
+            {qr.isCorrect ? "✓ Correct" : "✗ Incorrect"}
           </span>
           <ChevronDown size={14} className={cn("text-[#94a3b8] transition-transform", open && "rotate-180")} />
         </div>
@@ -275,17 +278,48 @@ export default function TestPage() {
   const [result, setResult] = useState<TestResult | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isPro, setIsPro] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [freeTestsUsed, setFreeTestsUsed] = useState(0);
+  const [accessDenied, setAccessDenied] = useState(false);
 
   useEffect(() => {
-    Promise.all([
-      getTestById(id),
-      isLoggedIn() ? getCurrentUser().catch(() => null) : Promise.resolve(null),
-    ]).then(([t, u]) => {
-      setTest(t);
-      if (u) { setIsPro(u.subscription === "pro"); setFreeTestsUsed(u.freeTestsUsed); }
+    async function load() {
+      // Load user data first so we can pre-check before hitting the backend
+      const u = isLoggedIn() ? await getCurrentUser().catch(() => null) : null;
+      const userIsPro = u?.subscription === "pro" ?? false;
+      const userIsAdmin = u?.isAdmin ?? false;
+      const userFreeUsed = u?.freeTestsUsed ?? 0;
+      if (u) {
+        setIsPro(userIsPro);
+        setIsAdmin(userIsAdmin);
+        setFreeTestsUsed(userFreeUsed);
+      }
+
+      // Admins bypass all access checks
+      if (userIsAdmin) {
+        const t = await getTestById(id).catch(() => null);
+        setTest(t);
+        setLoading(false);
+        return;
+      }
+
+      // Pre-check: free limit reached → every test is blocked, skip network call
+      if (!userIsPro && userFreeUsed >= FREE_TEST_LIMIT) {
+        setAccessDenied(true);
+        setLoading(false);
+        return;
+      }
+
+      // Load the full test; catch 403 (pro-only or limit enforced by backend)
+      try {
+        const t = await getTestById(id);
+        setTest(t);
+      } catch (err) {
+        if (err instanceof ApiError && err.status === 403) setAccessDenied(true);
+      }
       setLoading(false);
-    });
+    }
+    load();
   }, [id]);
 
   useEffect(() => {
@@ -320,18 +354,12 @@ export default function TestPage() {
     );
   }
 
-  if (!test || test.questions.length === 0) {
-    return (
-      <div className="min-h-screen bg-[#f8fafc] flex flex-col items-center justify-center gap-4 p-4">
-        <p className="font-display font-semibold text-[#0D1B2E] text-xl">Test not available</p>
-        <Link href="/tests" className="text-sm text-[#4f46e5] hover:underline">← Back to tests</Link>
-      </div>
-    );
-  }
+  // Paywall guard: Pro test for non-pro user, free limit reached, or backend 403
+  // Must come before the !test check so 403 shows paywall instead of "not available"
+  const blocked = !isAdmin && !isPro && test != null && (!test.isFree || freeTestsUsed >= FREE_TEST_LIMIT);
+  if (blocked || accessDenied) {
+    const paywallReason = freeTestsUsed >= FREE_TEST_LIMIT ? "free_limit" : "pro_test";
 
-  // Paywall guard: Pro test for non-pro user, or free limit reached
-  const blocked = !isPro && (!test.isFree || freeTestsUsed >= 5);
-  if (blocked) {
     return (
       <div className="min-h-screen bg-[#f8fafc] flex flex-col">
         <header className="bg-white border-b border-[#e2e8f0]">
@@ -339,7 +367,7 @@ export default function TestPage() {
             <Link href="/tests" className="text-[#64748b] hover:text-[#0D1B2E] transition-colors">
               <ChevronLeft size={20} />
             </Link>
-            <p className="text-sm font-semibold text-[#0D1B2E] truncate">{test.title}</p>
+            {test && <p className="text-sm font-semibold text-[#0D1B2E] truncate">{test.title}</p>}
           </div>
         </header>
         <div className="flex-1 flex items-center justify-center px-4 py-16">
@@ -349,10 +377,10 @@ export default function TestPage() {
             </div>
             <div>
               <h2 className="font-display font-bold text-2xl text-[#0D1B2E] mb-2">
-                {freeTestsUsed >= 5 ? "Free limit reached" : "Pro test"}
+                {paywallReason === "free_limit" ? "Free limit reached" : "Pro test"}
               </h2>
               <p className="text-[#64748b] text-sm leading-relaxed">
-                {freeTestsUsed >= 5
+                {paywallReason === "free_limit"
                   ? "You've used all 5 free tests. Upgrade to Pro for unlimited access to every test — €4/month."
                   : "This test is part of the Pro plan. Upgrade to access all AI-generated assessments."}
               </p>
@@ -374,6 +402,15 @@ export default function TestPage() {
             <p className="text-xs text-[#94a3b8]">Cancel anytime · No credit card needed to start</p>
           </div>
         </div>
+      </div>
+    );
+  }
+
+  if (!test || test.questions.length === 0) {
+    return (
+      <div className="min-h-screen bg-[#f8fafc] flex flex-col items-center justify-center gap-4 p-4">
+        <p className="font-display font-semibold text-[#0D1B2E] text-xl">Test not available</p>
+        <Link href="/tests" className="text-sm text-[#4f46e5] hover:underline">← Back to tests</Link>
       </div>
     );
   }
@@ -452,6 +489,7 @@ export default function TestPage() {
                 <button
                   key={q.id}
                   onClick={() => setCurrentIndex(i)}
+                  title={answers[q.id] ? `Q${i + 1} — answered` : `Q${i + 1} — not yet answered`}
                   className={cn(
                     "w-7 h-7 rounded-md text-xs font-bold transition-all",
                     i === currentIndex
@@ -506,14 +544,16 @@ export default function TestPage() {
         {/* Desktop sidebar */}
         <aside className="hidden lg:flex flex-col w-56 flex-shrink-0">
           <div className="card p-4 sticky top-24">
-            <h3 className="font-semibold text-[#0D1B2E] text-sm mb-3">
-              Questions ({answered}/{total} answered)
+            <h3 className="font-semibold text-[#0D1B2E] text-sm mb-1">
+              Questions
             </h3>
+            <p className="text-xs text-[#94a3b8] mb-3">{answered} of {total} answered</p>
             <div className="grid grid-cols-4 gap-2">
               {test.questions.map((q, i) => (
                 <button
                   key={q.id}
                   onClick={() => setCurrentIndex(i)}
+                  title={answers[q.id] ? `Question ${i + 1} — answered` : `Question ${i + 1} — not yet answered`}
                   className={cn(
                     "w-full aspect-square rounded-lg text-xs font-bold transition-all",
                     i === currentIndex
@@ -527,14 +567,32 @@ export default function TestPage() {
                 </button>
               ))}
             </div>
+            {/* Legend */}
+            <div className="mt-3 flex flex-col gap-1.5 text-[10px] text-[#94a3b8]">
+              <span className="flex items-center gap-1.5">
+                <span className="w-3 h-3 rounded bg-[#4f46e5] inline-block" /> Answered
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-3 h-3 rounded bg-[#0D1B2E] inline-block" /> Current
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-3 h-3 rounded bg-[#e2e8f0] inline-block" /> Not yet answered
+              </span>
+            </div>
             {allAnswered && (
               <button
                 onClick={handleSubmit}
                 disabled={submitting}
-                className="mt-4 w-full py-2.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+                className="mt-4 w-full py-2.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
               >
+                <CheckCircle2 size={15} />
                 {submitting ? "Submitting..." : "Finish test"}
               </button>
+            )}
+            {!allAnswered && (
+              <p className="mt-3 text-[10px] text-[#94a3b8] text-center">
+                {total - answered} question{total - answered !== 1 ? "s" : ""} left
+              </p>
             )}
           </div>
         </aside>

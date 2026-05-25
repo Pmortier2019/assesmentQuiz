@@ -130,6 +130,7 @@ export interface User {
   email: string;
   name: string;
   subscription: SubscriptionTier;
+  isAdmin: boolean;
   freeTestsUsed: number;
   streak: number;
   xp?: number;

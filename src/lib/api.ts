@@ -212,6 +212,7 @@ interface BackendUserResponse {
   streak: number;
   xp: number;
   isPro: boolean;
+  isAdmin: boolean;
   createdAt: string;
   targetRole?: string;
   targetIndustry?: string;
@@ -368,6 +369,7 @@ function mapUser(u: BackendUserResponse): User {
     email: u.email,
     name: u.name,
     subscription: u.isPro ? "pro" : "free",
+    isAdmin: u.isAdmin ?? false,
     freeTestsUsed: u.freeTestsUsed,
     streak: u.streak ?? 0,
     xp: u.xp ?? 0,
@@ -468,7 +470,8 @@ export async function getTestById(id: string): Promise<Test | null> {
       `/api/tests/${id}?userId=${currentUserId()}`
     );
     return mapTestDetail(detail);
-  } catch {
+  } catch (err) {
+    if (err instanceof ApiError && err.status === 403) throw err;
     return null;
   }
 }
@@ -588,7 +591,7 @@ export async function startCheckout(): Promise<{ checkoutUrl: string }> {
 }
 
 export async function cancelSubscription(): Promise<void> {
-  // TODO: DELETE /api/users/{id}/subscription once backend supports it
+  await apiFetch(`/api/users/${currentUserId()}/subscription`, { method: "DELETE" });
 }
 
 // ─── AI generation ───────────────────────────────────────────────────────────
