@@ -22,6 +22,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -142,6 +143,7 @@ public class AdminController {
      * Platform-wide counts for the admin dashboard.
      */
     @GetMapping("/stats")
+    @Transactional(readOnly = true)
     public ResponseEntity<Map<String, Object>> stats() {
         long totalTests   = testRepository.count();
         long totalUsers   = userRepository.count();
@@ -163,6 +165,7 @@ public class AdminController {
      * All users with result count and average score.
      */
     @GetMapping("/users")
+    @Transactional(readOnly = true)
     public ResponseEntity<List<Map<String, Object>>> adminUsers() {
         List<User> users = userRepository.findAll();
         List<Map<String, Object>> result = users.stream().map(u -> {
@@ -186,6 +189,7 @@ public class AdminController {
      * All tests with question count for the admin test library table.
      */
     @GetMapping("/tests")
+    @Transactional(readOnly = true)
     public ResponseEntity<List<TestResponse>> adminTests() {
         return ResponseEntity.ok(
             testRepository.findAll().stream()
