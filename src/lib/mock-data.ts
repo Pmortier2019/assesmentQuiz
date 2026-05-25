@@ -7,6 +7,7 @@ export const MOCK_USER: User = {
   email: "demo@ready-to-ace.com",
   name: "Demo User",
   subscription: "free",
+  isAdmin: false,
   freeTestsUsed: 3,
   streak: 7,
   joinedAt: "2026-04-01",
