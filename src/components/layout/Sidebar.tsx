@@ -3,21 +3,24 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  LayoutDashboard, BookOpen, Trophy, TrendingUp, CreditCard, Zap, ChevronRight, BarChart2, LogOut, Calendar,
+  LayoutDashboard, BookOpen, Trophy, TrendingUp, CreditCard, Zap, ChevronRight, BarChart2, LogOut, Calendar, ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StreakBadge } from "@/components/ui/StreakBadge";
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 import { DarkModeToggle } from "@/components/ui/DarkModeToggle";
 import { useT } from "@/lib/i18n";
+import { isAdmin as getIsAdmin } from "@/lib/auth";
 import { logout } from "@/lib/api";
 
 interface SidebarProps {
   streak?: number;
   userName?: string;
+  isAdmin?: boolean;
 }
 
-export function Sidebar({ streak = 7, userName = "Pierre" }: SidebarProps) {
+export function Sidebar({ streak = 7, userName = "Pierre", isAdmin: isAdminProp }: SidebarProps) {
+  const isAdmin = isAdminProp ?? (typeof window !== "undefined" ? getIsAdmin() : false);
   const pathname = usePathname();
   const router = useRouter();
   const { t } = useT();
@@ -30,10 +33,11 @@ export function Sidebar({ streak = 7, userName = "Pierre" }: SidebarProps) {
   const NAV_ITEMS = [
     { href: "/dashboard", icon: LayoutDashboard, label: t("nav_dashboard") },
     { href: "/tests",     icon: BookOpen,        label: t("nav_tests") },
-    { href: "/results",     icon: Trophy,          label: t("nav_results") },
-    { href: "/progress",    icon: BarChart2,       label: t("nav_progress") },
-    { href: "/study-plan",  icon: Calendar,        label: "Study Plan" },
-    { href: "/pricing",     icon: CreditCard,      label: t("nav_upgrade") },
+    { href: "/results",   icon: Trophy,          label: t("nav_results") },
+    { href: "/progress",  icon: BarChart2,       label: t("nav_progress") },
+    { href: "/study-plan",icon: Calendar,        label: "Study Plan" },
+    { href: "/pricing",   icon: CreditCard,      label: t("nav_upgrade") },
+    ...(isAdmin ? [{ href: "/admin", icon: ShieldCheck, label: "Admin" }] : []),
   ];
 
   return (
@@ -83,12 +87,24 @@ export function Sidebar({ streak = 7, userName = "Pierre" }: SidebarProps) {
           <DarkModeToggle />
         </div>
         <div className="flex items-center gap-3 px-2">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center text-white text-xs font-bold">
-            {userName.charAt(0).toUpperCase()}
+          <div className={cn(
+            "w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold",
+            isAdmin
+              ? "bg-gradient-to-br from-amber-400 to-orange-500"
+              : "bg-gradient-to-br from-[#4f46e5] to-[#7c3aed]"
+          )}>
+            {isAdmin ? <ShieldCheck size={14} /> : userName.charAt(0).toUpperCase()}
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-[#0D1B2E] truncate">{userName}</p>
-            <p className="text-xs text-[#94a3b8]">{t("dash_free_plan")}</p>
+            {isAdmin ? (
+              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded-full">
+                <ShieldCheck size={9} />
+                ADMIN
+              </span>
+            ) : (
+              <p className="text-xs text-[#94a3b8]">{t("dash_free_plan")}</p>
+            )}
           </div>
           <TrendingUp size={14} className="text-[#94a3b8]" />
         </div>
