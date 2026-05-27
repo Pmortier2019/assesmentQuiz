@@ -31,9 +31,63 @@ function Footer() {
   );
 }
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.ready-to-ace.com/#app",
+      "name": "Ready to Ace",
+      "url": "https://www.ready-to-ace.com",
+      "description": "Practice job assessment tests used by top employers. Numerical reasoning, logical reasoning, verbal reasoning, situational judgement and more.",
+      "applicationCategory": "EducationApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR",
+        "description": "5 free assessments, then €4/month for unlimited access",
+      },
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What types of assessment tests can I practice?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ready to Ace offers practice tests for numerical reasoning, logical reasoning, verbal reasoning, situational judgement, critical reasoning, data interpretation, work style, leadership and more — the same types used by top employers and assessment providers like SHL, Korn Ferry and cut-e.",
+          },
+        },
+        {
+          "@type": "Question",
+          "name": "Is Ready to Ace free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. You can start with 5 free assessment tests. Unlimited access is available for €4 per month.",
+          },
+        },
+        {
+          "@type": "Question",
+          "name": "Which companies use these types of assessments?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most large employers in finance, consulting, technology, government and healthcare use psychometric assessments during hiring. This includes banks, consulting firms, tech companies and graduate employers worldwide.",
+          },
+        },
+      ],
+    },
+  ],
+};
+
 export default function HomePage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Navbar />
       <main className="flex-1">
         <HeroSection />
