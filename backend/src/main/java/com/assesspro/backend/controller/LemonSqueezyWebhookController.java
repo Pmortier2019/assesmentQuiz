@@ -58,8 +58,9 @@ public class LemonSqueezyWebhookController {
             Long userId = Long.parseLong(userIdStr);
             String lsSubscriptionId = root.path("data").path("id").asText(null);
             String lsCustomerId = attributes.path("customer_id").asText(null);
+            String renewsAt = attributes.path("renews_at").asText(null);
 
-            subscriptionService.handleWebhookEvent(eventName, lsSubscriptionId, lsCustomerId, userId);
+            subscriptionService.handleWebhookEvent(eventName, lsSubscriptionId, lsCustomerId, userId, renewsAt);
             return ResponseEntity.ok("ok");
 
         } catch (Exception e) {
