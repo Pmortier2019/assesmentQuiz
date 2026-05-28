@@ -738,13 +738,27 @@ export async function login(email: string, password: string): Promise<User> {
   return mapUser(res.user);
 }
 
-export async function register(name: string, email: string, password: string): Promise<User> {
-  const res = await apiFetch<AuthResponse>("/api/auth/register", {
+export async function register(name: string, email: string, password: string): Promise<void> {
+  await apiFetch<{ message: string }>("/api/auth/register", {
     method: "POST",
     body: JSON.stringify({ name, email, password }),
   });
+}
+
+export async function verifyEmail(token: string): Promise<User> {
+  const res = await apiFetch<AuthResponse>("/api/auth/verify-email", {
+    method: "POST",
+    body: JSON.stringify({ token }),
+  });
   saveAuth(res.token, res.user);
   return mapUser(res.user);
+}
+
+export async function resendVerification(email: string): Promise<void> {
+  await apiFetch<{ message: string }>("/api/auth/resend-verification", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
 }
 
 export async function adminBootstrap(email: string, password: string): Promise<User> {

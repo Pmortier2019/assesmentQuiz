@@ -75,7 +75,15 @@
       "Bash(Select-Object -Last 60)",
       "Bash(flyctl auth *)",
       "Bash(git checkout *)",
-      "Bash(git pull *)"
+      "Bash(git pull *)",
+      "Bash(fly apps *)",
+      "Bash(mvn clean *)",
+      "Bash(git -C \"C:\\\\Users\\\\Piete\\\\assesmentQuiz\\\\backend\" add src/main/java/com/assesspro/backend/controller/LemonSqueezyWebhookController.java src/main/java/com/assesspro/backend/entity/enums/SubscriptionStatus.java src/main/java/com/assesspro/backend/service/SubscriptionService.java)",
+      "Bash(git -C 'C:\\\\Users\\\\Piete\\\\assesmentQuiz\\\\backend' commit -m ' *)",
+      "Bash(flyctl deploy *)",
+      "Bash(git -C \"C:\\\\Users\\\\Piete\\\\assesmentQuiz\\\\backend\" add src/main/java/com/assesspro/backend/entity/User.java src/main/java/com/assesspro/backend/entity/EmailVerificationToken.java src/main/java/com/assesspro/backend/repository/EmailVerificationTokenRepository.java src/main/java/com/assesspro/backend/controller/AuthController.java)",
+      "Bash(git -C \"C:\\\\Users\\\\Piete\\\\assesmentQuiz\\\\backend\" add -A)",
+      "Bash(git -C \"C:\\\\Users\\\\Piete\\\\assesmentQuiz\\\\backend\" status)"
     ]
   }
 }

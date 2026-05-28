@@ -4,7 +4,7 @@ import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff, Zap, ArrowRight } from "lucide-react";
-import { login, register, ApiError } from "@/lib/api";
+import { login, register, resendVerification, ApiError } from "@/lib/api";
 
 type Mode = "login" | "register";
 
@@ -20,11 +20,14 @@ function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isServiceDown, setIsServiceDown] = useState(false);
+  const [isUnverified, setIsUnverified] = useState(false);
+  const [resendEmail, setResendEmail] = useState("");
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
     setError("");
     setIsServiceDown(false);
+    setIsUnverified(false);
     setLoading(true);
     try {
       if (mode === "login") {
@@ -34,24 +37,28 @@ function LoginForm() {
         else router.push("/dashboard");
       } else {
         await register(name, email, password);
-        router.push("/onboarding");
+        router.push(`/check-email?email=${encodeURIComponent(email)}`);
       }
     } catch (err) {
       if (err instanceof ApiError) {
         if (err.status === 0 || err.status === 502 || err.status === 503) {
           setIsServiceDown(true);
-          setError("Service is tijdelijk niet bereikbaar. Probeer het over 30 seconden opnieuw.");
-        } else if (err.status === 401 || err.status === 403) {
-          setError("Onjuist e-mailadres of wachtwoord.");
+          setError("Service temporarily unavailable. Please try again in 30 seconds.");
+        } else if (err.status === 403) {
+          setIsUnverified(true);
+          setResendEmail(email);
+          setError("Please verify your email before logging in.");
+        } else if (err.status === 401) {
+          setError("Invalid email or password.");
         } else if (err.status === 409) {
-          setError("Dit e-mailadres is al in gebruik.");
+          setError("This email address is already in use.");
         } else if (err.status === 400) {
-          setError("Controleer je gegevens en probeer het opnieuw.");
+          setError("Please check your details and try again.");
         } else {
-          setError("Er is iets misgegaan. Probeer het opnieuw.");
+          setError("Something went wrong. Please try again.");
         }
       } else {
-        setError("Geen verbinding met de server. Controleer je internet.");
+        setError("Could not connect to the server. Check your internet connection.");
       }
     } finally {
       setLoading(false);
@@ -170,7 +177,20 @@ function LoginForm() {
                       onClick={() => handleSubmit()}
                       className="flex-shrink-0 text-xs font-semibold text-[#4f46e5] hover:underline whitespace-nowrap"
                     >
-                      Opnieuw proberen
+                      Try again
+                    </button>
+                  )}
+                  {isUnverified && (
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        await resendVerification(resendEmail);
+                        setError("Verification email resent. Check your inbox.");
+                        setIsUnverified(false);
+                      }}
+                      className="flex-shrink-0 text-xs font-semibold text-[#4f46e5] hover:underline whitespace-nowrap"
+                    >
+                      Resend email
                     </button>
                   )}
                 </div>
