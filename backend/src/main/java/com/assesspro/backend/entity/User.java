@@ -51,6 +51,10 @@ public class User {
     private String targetCompany;
     private String level; // beginner / intermediate / advanced
 
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    @Builder.Default
+    private boolean emailVerified = false;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Subscription subscription;
 
