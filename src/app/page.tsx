@@ -1,4 +1,9 @@
+import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 import { HeroSection } from "@/components/sections/HeroSection";
 import { ValueSection } from "@/components/sections/ValueSection";
 import { TestCarouselSection } from "@/components/sections/TestCarouselSection";

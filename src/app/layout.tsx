@@ -26,7 +26,6 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Ready to Ace" }],
   metadataBase: new URL("https://www.ready-to-ace.com"),
-  alternates: { canonical: "/" },
   openGraph: {
     title: "Ready to Ace — Free Job Assessment Practice Tests",
     description:
