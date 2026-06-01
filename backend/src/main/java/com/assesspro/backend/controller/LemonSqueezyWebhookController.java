@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.HexFormat;
 
 @Slf4j
@@ -79,7 +80,11 @@ public class LemonSqueezyWebhookController {
             mac.init(new SecretKeySpec(webhookSecret.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
             byte[] hash = mac.doFinal(body.getBytes(StandardCharsets.UTF_8));
             String expected = HexFormat.of().formatHex(hash);
-            return expected.equalsIgnoreCase(receivedSignature);
+            if (receivedSignature == null) return false;
+            // Constant-time comparison to avoid leaking the signature via timing.
+            return MessageDigest.isEqual(
+                    expected.getBytes(StandardCharsets.UTF_8),
+                    receivedSignature.toLowerCase().getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
             log.error("Signature verification error: {}", e.getMessage());
             return false;

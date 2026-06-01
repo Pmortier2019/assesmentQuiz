@@ -1,6 +1,7 @@
 package com.assesspro.backend.config;
 
 import com.assesspro.backend.security.JwtAuthFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,8 +32,10 @@ public class SecurityConfig {
                 .requestMatchers("/api/health").permitAll()
                 // Auth endpoints — always public
                 .requestMatchers("/api/auth/**").permitAll()
-                // Tests — public read access
-                .requestMatchers(HttpMethod.GET, "/api/tests", "/api/tests/**").permitAll()
+                // Tests — only the public catalogue listing is anonymous.
+                // Test detail (/api/tests/{id}) and per-user routes (recommended)
+                // require a valid JWT so access control uses the authenticated user.
+                .requestMatchers(HttpMethod.GET, "/api/tests").permitAll()
                 // Leaderboard — public, anonymous
                 .requestMatchers(HttpMethod.GET, "/api/leaderboard").permitAll()
                 // Webhook — called by Lemon Squeezy, verified via HMAC signature
@@ -42,6 +45,10 @@ public class SecurityConfig {
                 // Everything else requires a valid JWT
                 .anyRequest().authenticated()
             )
+            // Unauthenticated (missing/expired/invalid token) → 401 so the client can
+            // refresh; authenticated-but-forbidden still surfaces as 403.
+            .exceptionHandling(e -> e.authenticationEntryPoint(
+                    (request, response, ex) -> response.setStatus(HttpServletResponse.SC_UNAUTHORIZED)))
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

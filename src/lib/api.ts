@@ -389,7 +389,39 @@ export class ApiError extends Error {
   }
 }
 
-async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
+// De-duplicates concurrent refreshes so a burst of 401s triggers one refresh.
+let refreshPromise: Promise<boolean> | null = null;
+
+async function performRefresh(): Promise<boolean> {
+  try {
+    const res = await fetch(`${BASE_URL}/api/auth/refresh`, {
+      method: "POST",
+      credentials: "include", // send the httpOnly refresh cookie
+      cache: "no-store",
+    });
+    if (!res.ok) return false;
+    const data = (await res.json()) as AuthResponse;
+    saveAuth(data.token, data.user);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function tryRefresh(): Promise<boolean> {
+  if (!refreshPromise) {
+    refreshPromise = performRefresh().finally(() => {
+      refreshPromise = null;
+    });
+  }
+  return refreshPromise;
+}
+
+async function apiFetch<T>(
+  path: string,
+  options?: RequestInit,
+  retried = false
+): Promise<T> {
   const token = getToken();
   let res: Response;
   try {
@@ -400,14 +432,24 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...options?.headers,
       },
+      credentials: "include", // allow the refresh cookie to be set/sent
       cache: "no-store",
     });
   } catch {
     // Network error (no internet, backend unreachable)
     throw new ApiError(0, "Network error");
   }
+
+  // Access token expired on a protected endpoint → try a one-off refresh, then retry.
+  if (res.status === 401 && !path.startsWith("/api/auth/") && !retried) {
+    const refreshed = await tryRefresh();
+    if (refreshed) return apiFetch<T>(path, options, true);
+    clearAuth();
+    if (typeof window !== "undefined") window.location.href = "/login";
+    throw new ApiError(401, "Session expired");
+  }
+
   if (!res.ok) {
-    // Expired/invalid token on protected endpoints → auto-logout
     if (res.status === 401 && !path.startsWith("/api/auth/")) {
       clearAuth();
       if (typeof window !== "undefined") window.location.href = "/login";
@@ -466,9 +508,7 @@ export async function getTests(
 
 export async function getTestById(id: string): Promise<Test | null> {
   try {
-    const detail = await apiFetch<BackendTestDetail>(
-      `/api/tests/${id}?userId=${currentUserId()}`
-    );
+    const detail = await apiFetch<BackendTestDetail>(`/api/tests/${id}`);
     return mapTestDetail(detail);
   } catch (err) {
     if (err instanceof ApiError && err.status === 403) throw err;
@@ -528,7 +568,7 @@ export async function getPreparationPath(): Promise<PreparationPath> {
 
 export async function getRecommendedTests(): Promise<Test[]> {
   const items = await apiFetch<BackendTestListItem[]>(
-    `/api/tests/recommended/${currentUserId()}`
+    `/api/tests/recommended/me`
   );
   return items.map(mapTestListItem);
 }
@@ -556,7 +596,6 @@ export async function submitTest(
   timeTakenSeconds: number
 ): Promise<TestResult> {
   const body = {
-    userId: currentUserId(),
     timeTakenSeconds,
     answers: answers.map((a) => ({
       questionId: Number(a.questionId),
@@ -771,6 +810,16 @@ export async function adminBootstrap(email: string, password: string): Promise<U
 }
 
 export async function logout(): Promise<void> {
+  // Best-effort: clear the httpOnly refresh cookie server-side, then local state.
+  try {
+    await fetch(`${BASE_URL}/api/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+      cache: "no-store",
+    });
+  } catch {
+    // ignore — we clear local state regardless
+  }
   clearAuth();
 }
 

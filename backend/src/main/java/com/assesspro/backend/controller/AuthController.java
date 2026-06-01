@@ -15,11 +15,15 @@ import com.assesspro.backend.repository.PasswordResetTokenRepository;
 import com.assesspro.backend.repository.UserRepository;
 import com.assesspro.backend.security.JwtService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +34,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
@@ -52,20 +57,49 @@ public class AuthController {
     @Value("${FRONTEND_URL:https://ready-to-ace.vercel.app}")
     private String frontendUrl;
 
+    // ── Refresh-cookie configuration ─────────────────────────────────────────
+    // Frontend (Vercel) and backend (Fly) are different sites, so the cookie
+    // must be SameSite=None; Secure to be sent cross-site. Override in dev.
+    @Value("${app.auth.cookie-secure:true}")
+    private boolean cookieSecure;
+
+    @Value("${app.auth.cookie-same-site:None}")
+    private String cookieSameSite;
+
+    @Value("${app.auth.refresh-token-ttl-days:30}")
+    private long refreshTtlDays;
+
+    private static final String REFRESH_COOKIE = "refresh_token";
+    private static final String REFRESH_PATH = "/api/auth";
+
     @Data
     static class ForgotPasswordRequest { private String email; }
 
     @Data
-    static class ResetPasswordRequest { private String token; private String newPassword; }
+    static class ResetPasswordRequest {
+        @NotBlank
+        private String token;
+        @NotBlank
+        @Size(min = 8, message = "Password must be at least 8 characters")
+        private String newPassword;
+    }
 
     @Data
     static class VerifyEmailRequest { private String token; }
 
+    private static final String SIGNUP_MESSAGE =
+            "Account created. Please check your email to verify your account.";
+
     @PostMapping("/register")
     @Transactional
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest req) {
+        // Don't reveal whether the email is already registered (enumeration).
+        // Return the same response either way; notify the existing owner by email.
         if (userRepository.existsByEmail(req.getEmail())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already in use");
+            userRepository.findByEmail(req.getEmail())
+                    .ifPresent(this::sendAlreadyRegisteredEmail);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(Map.of("message", SIGNUP_MESSAGE));
         }
 
         User user = User.builder()
@@ -88,7 +122,7 @@ public class AuthController {
         sendVerificationEmail(user, verifyToken);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Map.of("message", "Account created. Please check your email to verify your account."));
+                .body(Map.of("message", SIGNUP_MESSAGE));
     }
 
     @PostMapping("/verify-email")
@@ -104,8 +138,7 @@ public class AuthController {
         evt.setUsed(true);
         emailVerificationTokenRepository.save(evt);
 
-        String token = jwtService.generateToken(user.getId(), user.getEmail(), user.getRole());
-        return ResponseEntity.ok(buildResponse(token, user));
+        return issueTokens(user);
     }
 
     @PostMapping("/resend-verification")
@@ -140,8 +173,7 @@ public class AuthController {
                     .body(Map.of("error", "EMAIL_NOT_VERIFIED", "message", "Please verify your email before logging in."));
         }
 
-        String token = jwtService.generateToken(user.getId(), user.getEmail(), user.getRole());
-        return ResponseEntity.ok(buildResponse(token, user));
+        return issueTokens(user);
     }
 
     /**
@@ -164,8 +196,7 @@ public class AuthController {
         }
         user.setRole(Role.ADMIN);
         userRepository.save(user);
-        String token = jwtService.generateToken(user.getId(), user.getEmail(), user.getRole());
-        return ResponseEntity.ok(buildResponse(token, user));
+        return issueTokens(user);
     }
 
     @PostMapping("/forgot-password")
@@ -203,17 +234,96 @@ public class AuthController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest req) {
+    @Transactional
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest req) {
         PasswordResetToken prt = passwordResetTokenRepository.findByToken(req.getToken()).orElse(null);
         if (prt == null || prt.isUsed() || prt.getExpiresAt().isBefore(LocalDateTime.now())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Link expired or already used.");
         }
         User user = prt.getUser();
         user.setPasswordHash(passwordEncoder.encode(req.getNewPassword()));
+        // Invalidate every JWT issued before now — a reset logs out all sessions.
+        user.setPasswordChangedAt(LocalDateTime.now());
         userRepository.save(user);
         prt.setUsed(true);
         passwordResetTokenRepository.save(prt);
         return ResponseEntity.ok(Map.of("message", "Password changed successfully."));
+    }
+
+    /**
+     * POST /api/auth/refresh
+     *
+     * Reads the httpOnly refresh cookie, and if valid issues a fresh short-lived
+     * access token (and rotates the refresh cookie). No Authorization header needed.
+     */
+    @PostMapping("/refresh")
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> refresh(
+            @CookieValue(name = REFRESH_COOKIE, required = false) String refreshToken) {
+        if (refreshToken == null
+                || !jwtService.isValid(refreshToken)
+                || !jwtService.isRefreshToken(refreshToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .header(HttpHeaders.SET_COOKIE, clearRefreshCookie().toString())
+                    .body(Map.of("message", "Session expired. Please log in again."));
+        }
+        Long userId = jwtService.extractUserId(refreshToken);
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .header(HttpHeaders.SET_COOKIE, clearRefreshCookie().toString())
+                    .body(Map.of("message", "Session expired. Please log in again."));
+        }
+        // Honour the password-change cutoff: a reset invalidates refresh tokens too.
+        if (user.getPasswordChangedAt() != null
+                && jwtService.extractIssuedAt(refreshToken).toInstant()
+                    .isBefore(user.getPasswordChangedAt()
+                            .atZone(java.time.ZoneId.systemDefault()).toInstant())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .header(HttpHeaders.SET_COOKIE, clearRefreshCookie().toString())
+                    .body(Map.of("message", "Session expired. Please log in again."));
+        }
+        return issueTokens(user);
+    }
+
+    /**
+     * POST /api/auth/logout
+     * Clears the refresh cookie. The short-lived access token expires on its own.
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, clearRefreshCookie().toString())
+                .body(Map.of("message", "Logged out."));
+    }
+
+    /** Builds the access token + refresh cookie response used by every login path. */
+    private ResponseEntity<AuthResponse> issueTokens(User user) {
+        String access = jwtService.generateAccessToken(user.getId(), user.getEmail(), user.getRole());
+        String refresh = jwtService.generateRefreshToken(user.getId());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, buildRefreshCookie(refresh).toString())
+                .body(buildResponse(access, user));
+    }
+
+    private ResponseCookie buildRefreshCookie(String token) {
+        return ResponseCookie.from(REFRESH_COOKIE, token)
+                .httpOnly(true)
+                .secure(cookieSecure)
+                .sameSite(cookieSameSite)
+                .path(REFRESH_PATH)
+                .maxAge(Duration.ofDays(refreshTtlDays))
+                .build();
+    }
+
+    private ResponseCookie clearRefreshCookie() {
+        return ResponseCookie.from(REFRESH_COOKIE, "")
+                .httpOnly(true)
+                .secure(cookieSecure)
+                .sameSite(cookieSameSite)
+                .path(REFRESH_PATH)
+                .maxAge(0)
+                .build();
     }
 
     private void sendVerificationEmail(User user, String verifyToken) {
@@ -242,6 +352,33 @@ public class AuthController {
             log.info("Verification email sent to {} — status {}", user.getEmail(), response.statusCode());
         } catch (Exception e) {
             log.error("Failed to send verification email to {}: {}", user.getEmail(), e.getMessage());
+        }
+    }
+
+    /** Sent when someone tries to register with an email that already exists. */
+    private void sendAlreadyRegisteredEmail(User user) {
+        if (resendApiKey == null || resendApiKey.isBlank()) return;
+        String loginLink = frontendUrl + "/login";
+        String body = "{\"from\":\"Ready to Ace <noreply@ready-to-ace.com>\","
+                + "\"to\":[\"" + escapeHtml(user.getEmail()) + "\"],"
+                + "\"subject\":\"You already have a Ready to Ace account\","
+                + "\"html\":\"<p>Hi " + escapeHtml(user.getName()) + ",</p>"
+                + "<p>Someone (hopefully you) just tried to sign up with this email address, "
+                + "but you already have an account.</p>"
+                + "<p>You can <a href=\\\"" + loginLink + "\\\">log in here</a>, "
+                + "or reset your password if you've forgotten it.</p>"
+                + "<p>If this wasn't you, you can safely ignore this email.</p>\"}";
+        try {
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://api.resend.com/emails"))
+                    .header("Authorization", "Bearer " + resendApiKey)
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(body))
+                    .build();
+            client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (Exception e) {
+            log.error("Failed to send already-registered email to {}: {}", user.getEmail(), e.getMessage());
         }
     }
 

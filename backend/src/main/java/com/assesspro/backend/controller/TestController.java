@@ -9,6 +9,7 @@ import com.assesspro.backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,33 +37,39 @@ public class TestController {
 
     /**
      * GET /api/tests/{id}
-     * Pass userId as query param for access control until auth is implemented.
+     * Access control (Pro / free-limit) is resolved against the authenticated
+     * user from the JWT — never a client-supplied id.
      */
     @GetMapping("/{id}")
     public ResponseEntity<TestDetailResponse> getTest(
             @PathVariable Long id,
-            @RequestParam(required = false) Long userId
+            Authentication auth
     ) {
+        Long userId = (Long) auth.getPrincipal();
         return ResponseEntity.ok(testService.getTestDetail(id, userId));
     }
 
     /**
      * POST /api/tests/{id}/submit
+     * The result is always recorded for the authenticated user.
      */
     @PostMapping("/{id}/submit")
     public ResponseEntity<SubmitTestResponse> submitTest(
             @PathVariable Long id,
-            @Valid @RequestBody SubmitTestRequest request
+            @Valid @RequestBody SubmitTestRequest request,
+            Authentication auth
     ) {
-        return ResponseEntity.ok(testService.submitTest(id, request));
+        Long userId = (Long) auth.getPrincipal();
+        return ResponseEntity.ok(testService.submitTest(id, userId, request));
     }
 
     /**
-     * GET /api/tests/recommended/{userId}
-     * Returns tests scored by relevance to the user's career targets.
+     * GET /api/tests/recommended/me
+     * Returns tests scored by relevance to the authenticated user's career targets.
      */
-    @GetMapping("/recommended/{userId}")
-    public ResponseEntity<List<TestResponse>> getRecommended(@PathVariable Long userId) {
+    @GetMapping("/recommended/me")
+    public ResponseEntity<List<TestResponse>> getRecommended(Authentication auth) {
+        Long userId = (Long) auth.getPrincipal();
         return ResponseEntity.ok(userService.getRecommendedTests(userId));
     }
 }
