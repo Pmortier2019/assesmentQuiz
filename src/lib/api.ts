@@ -810,7 +810,9 @@ export async function adminBootstrap(email: string, password: string): Promise<U
 }
 
 export async function logout(): Promise<void> {
-  // Best-effort: clear the httpOnly refresh cookie server-side, then local state.
+  // Clear local auth first so the UI reflects logout immediately, then clear the
+  // httpOnly refresh cookie server-side (best-effort, in the background).
+  clearAuth();
   try {
     await fetch(`${BASE_URL}/api/auth/logout`, {
       method: "POST",
@@ -818,9 +820,8 @@ export async function logout(): Promise<void> {
       cache: "no-store",
     });
   } catch {
-    // ignore — we clear local state regardless
+    // ignore — local state is already cleared
   }
-  clearAuth();
 }
 
 export async function forgotPassword(email: string): Promise<void> {

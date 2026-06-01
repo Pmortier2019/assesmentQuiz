@@ -29,7 +29,9 @@ export function Navbar({ transparent = false }: NavbarProps) {
   const handleLogout = () => {
     logout();
     setMobileOpen(false);
-    router.push("/");
+    setLoggedIn(false);
+    setUserIsAdmin(false);
+    router.replace("/login");
   };
 
   return (

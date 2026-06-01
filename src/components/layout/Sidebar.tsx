@@ -26,7 +26,7 @@ export function Sidebar({ streak = 7, userName = "Pierre", isAdmin: isAdminProp 
 
   const handleLogout = () => {
     logout();
-    router.push("/");
+    router.replace("/login");
   };
 
   const NAV_ITEMS = [
