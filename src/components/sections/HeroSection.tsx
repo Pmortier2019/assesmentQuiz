@@ -41,8 +41,7 @@ export function HeroSection() {
 
             {/* Subtext */}
             <p className="text-lg text-[#475569] leading-relaxed max-w-lg">
-              Practice tests built around your profession and the companies you want to join. Start with 5 free assessments, then unlock unlimited practice for{" "}
-              <span className="font-semibold text-[#0D1B2E]">€4/month</span>.
+              Practice hundreds of real assessment tests built around your profession — and walk into your job application ready to pass.
             </p>
 
             {/* CTAs */}
