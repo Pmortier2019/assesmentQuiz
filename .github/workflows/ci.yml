@@ -1,0 +1,63 @@
+name: CI
+
+# Draait bij elke Pull Request en bij elke push naar main.
+# Zolang deze checks niet groen zijn, mag een PR niet mergen (zie branch protection).
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Annuleer oudere runs op dezelfde branch/PR — bespaart tijd en CI-minuten.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontend:
+    name: Frontend (Next.js)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type-check
+        run: npx tsc --noEmit
+
+      - name: Build
+        run: npm run build
+        env:
+          # Placeholder zodat de build niet faalt op een ontbrekende env-var.
+          NEXT_PUBLIC_API_URL: https://app-white-shadow-5362.fly.dev
+
+  backend:
+    name: Backend (Spring Boot)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
+
+      - name: Make mvnw executable
+        run: chmod +x mvnw
+
+      - name: Build & test
+        run: ./mvnw -B verify
