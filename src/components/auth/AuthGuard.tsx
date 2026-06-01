@@ -1,24 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { isLoggedIn } from "@/lib/auth";
 import { PageLoader } from "@/components/ui/PageLoader";
+import { useClientValue } from "@/lib/useClientValue";
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [ready, setReady] = useState(false);
+  const loggedIn = useClientValue(() => isLoggedIn(), false);
 
   useEffect(() => {
-    if (!isLoggedIn()) {
+    if (!loggedIn) {
       router.replace(`/login?from=${encodeURIComponent(pathname)}`);
-    } else {
-      setReady(true);
     }
-  }, [router, pathname]);
+  }, [loggedIn, router, pathname]);
 
-  if (!ready) return <PageLoader />;
+  if (!loggedIn) return <PageLoader />;
 
   return <>{children}</>;
 }

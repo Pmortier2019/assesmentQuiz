@@ -60,7 +60,11 @@ export default function AdminPage() {
     setLoading(false);
   }, []);
 
-  useEffect(() => { refresh(); }, [refresh]);
+  useEffect(() => {
+    void (async () => {
+      await refresh();
+    })();
+  }, [refresh]);
 
   async function handleGenerate(type: string, difficulty: string, isFree = defaultFree) {
     const key = `${type}__${difficulty}`;

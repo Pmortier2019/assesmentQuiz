@@ -10,6 +10,7 @@ import { FilterBar } from "@/components/test/FilterBar";
 import type { SortOption } from "@/components/test/FilterBar";
 import { getTests, generateTestOfType, getGenerationStatus, getCurrentUser, ALL_GENERATE_TYPES, ALL_DIFFICULTIES } from "@/lib/api";
 import { isAdmin, isLoggedIn } from "@/lib/auth";
+import { useClientValue } from "@/lib/useClientValue";
 import { FREE_TEST_LIMIT } from "@/lib/constants";
 import type { Test, AssessmentType, Difficulty, RoleCategory, IndustryCategory } from "@/lib/types";
 
@@ -20,7 +21,7 @@ export default function TestsPage() {
   const [generateProgress, setGenerateProgress] = useState<{ current: number; total: number; label: string } | null>(null);
   const [generateError, setGenerateError] = useState("");
   const [generateAsFree, setGenerateAsFree] = useState(true);
-  const [adminMode, setAdminMode] = useState(false);
+  const adminMode = useClientValue(() => isAdmin(), false);
   const [freeTestsUsed, setFreeTestsUsed] = useState<number | null>(null);
   const [isPro, setIsPro] = useState(false);
   const [search, setSearch] = useState("");
@@ -32,7 +33,6 @@ export default function TestsPage() {
   const [sortBy, setSortBy] = useState<SortOption>("default");
 
   useEffect(() => {
-    setAdminMode(isAdmin());
     if (isLoggedIn()) {
       getCurrentUser().then((u) => {
         setFreeTestsUsed(u.freeTestsUsed);

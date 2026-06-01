@@ -1,25 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { isLoggedIn, isAdmin } from "@/lib/auth";
 import { PageLoader } from "@/components/ui/PageLoader";
+import { useClientValue } from "@/lib/useClientValue";
 
 export function AdminGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const [ready, setReady] = useState(false);
+  const loggedIn = useClientValue(() => isLoggedIn(), false);
+  const admin = useClientValue(() => isAdmin(), false);
 
   useEffect(() => {
-    if (!isLoggedIn()) {
+    if (!loggedIn) {
       router.replace("/login");
-    } else if (!isAdmin()) {
+    } else if (!admin) {
       router.replace("/dashboard");
-    } else {
-      setReady(true);
     }
-  }, [router]);
+  }, [loggedIn, admin, router]);
 
-  if (!ready) return <PageLoader />;
+  if (!loggedIn || !admin) return <PageLoader />;
 
   return <>{children}</>;
 }
