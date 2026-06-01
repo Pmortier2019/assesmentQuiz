@@ -37,15 +37,8 @@ public class LeaderboardController {
         if (testType != null) {
             results = resultRepository.findTopByTypeAndDateRange(testType, since, PageRequest.of(0, 10));
         } else {
-            // All types: sort by score desc, take top 10
-            results = resultRepository.findAll().stream()
-                    .filter(r -> r.getCreatedAt().isAfter(since))
-                    .sorted((a, b) -> {
-                        int scoreCmp = Integer.compare(b.getScore(), a.getScore());
-                        return scoreCmp != 0 ? scoreCmp : Integer.compare(a.getTimeTakenSeconds(), b.getTimeTakenSeconds());
-                    })
-                    .limit(10)
-                    .toList();
+            // All types: top 10 by score (tie-break: fastest), computed in the DB.
+            results = resultRepository.findTopByDateRange(since, PageRequest.of(0, 10));
         }
 
         List<LeaderboardEntry> entries = new ArrayList<>();

@@ -8,8 +8,8 @@ import java.util.List;
 @Data
 public class SubmitTestRequest {
 
-    @NotNull
-    private Long userId;
+    // NOTE: the user is always derived from the authenticated JWT, never from
+    // the request body, so there is intentionally no userId field here.
 
     @NotEmpty
     private List<AnswerSubmission> answers;

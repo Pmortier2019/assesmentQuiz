@@ -67,11 +67,11 @@ public class TestService {
     }
 
     @Transactional
-    public SubmitTestResponse submitTest(Long testId, SubmitTestRequest request) {
+    public SubmitTestResponse submitTest(Long testId, Long userId, SubmitTestRequest request) {
         AssessmentTest test = testRepository.findById(testId)
                 .orElseThrow(() -> new ResourceNotFoundException("Test not found: " + testId));
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + request.getUserId()));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
 
         if (!test.isFree()) {
             checkProAccess(user.getId());

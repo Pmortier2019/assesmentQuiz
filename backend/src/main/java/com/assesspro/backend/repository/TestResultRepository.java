@@ -28,4 +28,14 @@ public interface TestResultRepository extends JpaRepository<TestResult, Long> {
         @Param("since") LocalDateTime since,
         org.springframework.data.domain.Pageable pageable
     );
+
+    @Query("""
+        SELECT r FROM TestResult r
+        WHERE r.createdAt >= :since
+        ORDER BY r.score DESC, r.timeTakenSeconds ASC
+        """)
+    List<TestResult> findTopByDateRange(
+        @Param("since") LocalDateTime since,
+        org.springframework.data.domain.Pageable pageable
+    );
 }

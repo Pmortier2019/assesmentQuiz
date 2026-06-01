@@ -61,4 +61,11 @@ public class User {
     @Column(nullable = false, updatable = false)
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    /**
+     * Set whenever the password changes. Any JWT issued before this moment is
+     * rejected by {@code JwtAuthFilter}, so a password reset invalidates all
+     * existing sessions. Null means "no cutoff" (legacy tokens stay valid).
+     */
+    private LocalDateTime passwordChangedAt;
 }
