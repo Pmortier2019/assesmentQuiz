@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Menu, X, Zap, LogOut, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -9,6 +9,7 @@ import { useT } from "@/lib/i18n";
 import { DarkModeToggle } from "@/components/ui/DarkModeToggle";
 import { logout } from "@/lib/api";
 import { isLoggedIn, isAdmin } from "@/lib/auth";
+import { useClientValue } from "@/lib/useClientValue";
 
 interface NavbarProps {
   transparent?: boolean;
@@ -16,21 +17,14 @@ interface NavbarProps {
 
 export function Navbar({ transparent = false }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [userIsAdmin, setUserIsAdmin] = useState(false);
+  const loggedIn = useClientValue(() => isLoggedIn(), false);
+  const userIsAdmin = useClientValue(() => isAdmin(), false);
   const router = useRouter();
   const { t } = useT();
-
-  useEffect(() => {
-    setLoggedIn(isLoggedIn());
-    setUserIsAdmin(isAdmin());
-  }, []);
 
   const handleLogout = () => {
     logout();
     setMobileOpen(false);
-    setLoggedIn(false);
-    setUserIsAdmin(false);
     router.replace("/login");
   };
 

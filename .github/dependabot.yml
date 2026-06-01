@@ -1,0 +1,27 @@
+version: 2
+
+# Dependabot opent automatisch PR's om verouderde/kwetsbare dependencies bij te werken.
+updates:
+  # Frontend (npm, root)
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # Bundel kleine updates in één PR i.p.v. tientallen losse.
+      npm-minor-and-patch:
+        update-types: [minor, patch]
+
+  # Backend (Maven)
+  - package-ecosystem: maven
+    directory: "/backend"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+
+  # De GitHub Actions in deze workflows zelf
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly

@@ -1,0 +1,33 @@
+name: Security
+
+# Twee extra beschermlagen:
+#  1. Secret-scan: vindt per ongeluk gecommitte wachtwoorden/API-keys.
+#  2. Dependency review: blokkeert PR's die een library met een bekend lek toevoegen.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  secret-scan:
+    name: Secret scan (Gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # volledige history nodig om alle commits te scannen
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  dependency-review:
+    name: Dependency review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high

@@ -1,0 +1,32 @@
+name: Deploy backend to staging
+
+# Handmatige staging-deploy: test een backend-wijziging op een aparte omgeving
+# vóórdat je naar productie gaat. Start via GitHub > Actions > "Run workflow".
+#
+# Let op: de staging-app moet bestaan. Eenmalig aanmaken:
+#   cd backend
+#   flyctl apps create ready-to-ace-staging
+#   flyctl secrets set ... --app ready-to-ace-staging   (DB, JWT, enz.)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-staging:
+    name: Deploy to staging
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://ready-to-ace-staging.fly.dev
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy to Fly.io (staging)
+        run: flyctl deploy --remote-only --config fly.staging.toml
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

@@ -12,15 +12,13 @@ function VerifyEmailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token") ?? "";
-  const [status, setStatus] = useState<Status>("verifying");
-  const [errorMsg, setErrorMsg] = useState("");
+  const [status, setStatus] = useState<Status>(token ? "verifying" : "error");
+  const [errorMsg, setErrorMsg] = useState(
+    token ? "" : "No verification token found in the link."
+  );
 
   useEffect(() => {
-    if (!token) {
-      setStatus("error");
-      setErrorMsg("No verification token found in the link.");
-      return;
-    }
+    if (!token) return;
     verifyEmail(token)
       .then(() => {
         setStatus("success");

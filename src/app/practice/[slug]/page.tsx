@@ -89,7 +89,7 @@ export default async function PracticePage({ params }: Props) {
         <section className="py-16 px-4 bg-white">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-2xl font-bold text-[#0D1B2E] mb-8 text-center">
-              What's included in our {page.title.replace(" Practice", "")} practice
+              What&apos;s included in our {page.title.replace(" Practice", "")} practice
             </h2>
             <ul className="grid sm:grid-cols-2 gap-4">
               {page.bullets.map((bullet) => (

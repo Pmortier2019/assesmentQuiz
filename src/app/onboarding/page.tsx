@@ -256,7 +256,7 @@ export default function OnboardingPage() {
                   What role are you applying for?
                 </h1>
                 <p className="text-[#64748b]">
-                  We'll personalise your assessment plan based on what employers actually test.
+                  We&apos;ll personalise your assessment plan based on what employers actually test.
                 </p>
               </div>
 
@@ -319,7 +319,7 @@ export default function OnboardingPage() {
                   Which industry are you targeting?
                 </h1>
                 <p className="text-[#64748b]">
-                  Different sectors test different skills. We'll match you to the right preparation.
+                  Different sectors test different skills. We&apos;ll match you to the right preparation.
                 </p>
               </div>
 
@@ -385,7 +385,7 @@ export default function OnboardingPage() {
                   Any specific company?
                 </h1>
                 <p className="text-[#64748b]">
-                  We'll prioritise tests used by that company and show you what others applying there practised.
+                  We&apos;ll prioritise tests used by that company and show you what others applying there practised.
                 </p>
               </div>
 
@@ -457,7 +457,7 @@ export default function OnboardingPage() {
                   Where are you right now?
                 </h1>
                 <p className="text-[#64748b]">
-                  We'll set you up at the right difficulty level from day one.
+                  We&apos;ll set you up at the right difficulty level from day one.
                 </p>
               </div>
 

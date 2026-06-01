@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useSyncExternalStore, ReactNode } from "react";
 
 export type Locale = "en" | "nl";
 
@@ -212,20 +212,25 @@ const I18nContext = createContext<I18nContextValue>({
 
 const STORAGE_KEY = "assesspro_locale";
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("en");
+const localeListeners = new Set<() => void>();
 
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY) as Locale | null;
-    if (stored === "en" || stored === "nl") {
-      setLocaleState(stored);
-    }
-  }, []);
+function subscribeLocale(callback: () => void) {
+  localeListeners.add(callback);
+  return () => localeListeners.delete(callback);
+}
+
+function readStoredLocale(): Locale {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  return stored === "en" || stored === "nl" ? stored : "en";
+}
+
+export function LanguageProvider({ children }: { children: ReactNode }) {
+  const locale = useSyncExternalStore<Locale>(subscribeLocale, readStoredLocale, () => "en");
 
   function setLocale(l: Locale) {
-    setLocaleState(l);
     localStorage.setItem(STORAGE_KEY, l);
     document.documentElement.lang = l;
+    localeListeners.forEach((fn) => fn());
   }
 
   function t(key: TranslationKey, vars?: Record<string, string | number>): string {

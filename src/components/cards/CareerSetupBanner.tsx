@@ -13,7 +13,7 @@ export function CareerSetupBanner() {
             Unlock personalised recommendations
           </h3>
           <p className="text-sm text-[#475569] mb-4 leading-relaxed">
-            Tell us the role and industry you're targeting. We'll build a preparation plan that matches what employers actually test.
+            Tell us the role and industry you&apos;re targeting. We&apos;ll build a preparation plan that matches what employers actually test.
           </p>
           <Link
             href="/onboarding"
