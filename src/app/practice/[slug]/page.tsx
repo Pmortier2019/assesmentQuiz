@@ -7,7 +7,7 @@ import { FooterNav } from "@/components/layout/FooterNav";
 import { PRACTICE_PAGES } from "./config";
 
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
@@ -15,23 +15,25 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const page = PRACTICE_PAGES[params.slug];
+  const { slug } = await params;
+  const page = PRACTICE_PAGES[slug];
   if (!page) return {};
   return {
     title: page.title,
     description: page.metaDescription,
     keywords: page.keywords,
-    alternates: { canonical: `/practice/${params.slug}` },
+    alternates: { canonical: `/practice/${slug}` },
     openGraph: {
       title: `${page.title} | Ready to Ace`,
       description: page.metaDescription,
-      url: `https://www.ready-to-ace.com/practice/${params.slug}`,
+      url: `https://www.ready-to-ace.com/practice/${slug}`,
     },
   };
 }
 
-export default function PracticePage({ params }: Props) {
-  const page = PRACTICE_PAGES[params.slug];
+export default async function PracticePage({ params }: Props) {
+  const { slug } = await params;
+  const page = PRACTICE_PAGES[slug];
   if (!page) notFound();
 
   const jsonLd = {

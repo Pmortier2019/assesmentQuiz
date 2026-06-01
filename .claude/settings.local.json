@@ -83,7 +83,18 @@
       "Bash(flyctl deploy *)",
       "Bash(git -C \"C:\\\\Users\\\\Piete\\\\assesmentQuiz\\\\backend\" add src/main/java/com/assesspro/backend/entity/User.java src/main/java/com/assesspro/backend/entity/EmailVerificationToken.java src/main/java/com/assesspro/backend/repository/EmailVerificationTokenRepository.java src/main/java/com/assesspro/backend/controller/AuthController.java)",
       "Bash(git -C \"C:\\\\Users\\\\Piete\\\\assesmentQuiz\\\\backend\" add -A)",
-      "Bash(git -C \"C:\\\\Users\\\\Piete\\\\assesmentQuiz\\\\backend\" status)"
+      "Bash(git -C \"C:\\\\Users\\\\Piete\\\\assesmentQuiz\\\\backend\" status)",
+      "Bash(git -C \"C:\\\\Users\\\\Piete\\\\assesmentQuiz\\\\backend\" add src/main/resources/db/migration/V3__email_verification.sql)",
+      "Bash(git -C \"C:\\\\Users\\\\Piete\\\\assesmentQuiz\\\\backend\" push origin main)",
+      "Bash(grep -r \"RESEND\" fly.toml ../fly.toml)",
+      "Bash(ls *.toml)",
+      "Bash(ls ../*.toml)",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__new_page",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__click",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_screenshot",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__wait_for",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__fill",
+      "Bash(cd C:UsersPieteassesmentQuiz *)"
     ]
   }
 }
