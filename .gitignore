@@ -49,3 +49,6 @@ backend/.mvn/wrapper/maven-wrapper.jar
 *.iml
 
 .vercel
+
+# Sentry Config File
+.env.sentry-build-plugin
