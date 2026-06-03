@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     template: "%s | Ready to Ace",
   },
   description:
-    "Practice hundreds of real job assessment tests — numerical, logical, verbal reasoning, situational judgement and more. Get ready for your job application. Start free.",
+    "Practice the real numerical, logical & verbal reasoning tests employers use — and walk into your assessment confident. Hundreds of questions, free to start.",
   keywords: [
     "job assessment practice",
     "numerical reasoning test",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Ready to Ace — Free Job Assessment Practice Tests",
     description:
-      "Practice hundreds of real job assessment tests — numerical, logical, verbal reasoning, situational judgement and more. Get ready for your job application. Start free.",
+      "Practice the real numerical, logical & verbal reasoning tests employers use — and walk into your assessment confident. Hundreds of questions, free to start.",
     type: "website",
     url: "https://www.ready-to-ace.com",
     siteName: "Ready to Ace",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Ready to Ace — Free Job Assessment Practice Tests",
-    description: "Practice hundreds of real job assessment tests — numerical, logical, verbal, situational judgement and more. Get ready for your job application.",
+    description: "Practice the real numerical, logical & verbal reasoning tests employers use — and walk into your assessment confident. Hundreds of questions, free to start.",
   },
 };
 
