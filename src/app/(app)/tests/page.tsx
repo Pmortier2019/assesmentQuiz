@@ -12,9 +12,11 @@ import { getTests, generateTestOfType, getGenerationStatus, getCurrentUser, ALL_
 import { isAdmin, isLoggedIn } from "@/lib/auth";
 import { useClientValue } from "@/lib/useClientValue";
 import { FREE_TEST_LIMIT } from "@/lib/constants";
+import { useT } from "@/lib/i18n";
 import type { Test, AssessmentType, Difficulty, RoleCategory, IndustryCategory } from "@/lib/types";
 
 export default function TestsPage() {
+  const { t, plural } = useT();
   const [tests, setTests] = useState<Test[]>([]);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
@@ -125,7 +127,7 @@ export default function TestsPage() {
     let failed = 0;
     for (let i = 0; i < todo.length; i++) {
       const { type, label, difficulty } = todo[i];
-      const diffLabel = difficulty === "EASY" ? "Beginner" : difficulty === "MEDIUM" ? "Intermediate" : "Advanced";
+      const diffLabel = difficulty === "EASY" ? t("diff_beginner") : difficulty === "MEDIUM" ? t("diff_intermediate") : t("diff_advanced");
       setGenerateProgress({ current: i + 1, total: todo.length, label: `${label} — ${diffLabel}` });
       try {
         await generateTestOfType(type, difficulty, generateAsFree);
@@ -138,9 +140,11 @@ export default function TestsPage() {
     setGenerateProgress(null);
 
     if (failed === todo.length) {
-      setGenerateError("Generation failed — try again in a moment.");
+      setGenerateError(t("tests_gen_failed_all"));
     } else {
-      if (failed > 0) setGenerateError(`${failed} combinatie(s) mislukt — de rest is gegenereerd.`);
+      if (failed > 0) {
+        setGenerateError(plural(failed, { one: "tests_gen_failed_some_one", other: "tests_gen_failed_some_other" }));
+      }
       const result = await getTests({});
       setTests(result.data);
     }
@@ -159,13 +163,13 @@ export default function TestsPage() {
           {/* Header */}
           <div className="animate-fade-up flex items-start justify-between gap-4 flex-wrap">
             <div>
-              <h1 className="font-display font-bold text-2xl text-[#0D1B2E] mb-1">📚 Test Library</h1>
+              <h1 className="font-display font-bold text-2xl text-[#0D1B2E] mb-1">📚 {t("tests_library_title")}</h1>
               <p className="text-[#64748b] text-sm">
-                <span className="font-semibold text-[#10b981]">{freeTests.length} free</span>
+                <span className="font-semibold text-[#10b981]">{t("tests_n_free", { n: freeTests.length })}</span>
                 {" · "}
-                <span className="font-semibold text-[#7c3aed]">{proTests.length} Pro</span>
-                {aiTests.length > 0 && ` · ${aiTests.length} nieuw`}
-                {recommendedTests.length > 0 && ` · ${recommendedTests.length} recommended for you`}
+                <span className="font-semibold text-[#7c3aed]">{t("tests_n_pro", { n: proTests.length })}</span>
+                {aiTests.length > 0 && ` · ${t("tests_n_new", { n: aiTests.length })}`}
+                {recommendedTests.length > 0 && ` · ${t("tests_n_recommended", { n: recommendedTests.length })}`}
               </p>
             </div>
 
@@ -173,19 +177,19 @@ export default function TestsPage() {
             {adminMode && (
               <div className="flex flex-col items-end gap-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-[#64748b] font-medium">Generate as:</span>
+                  <span className="text-xs text-[#64748b] font-medium">{t("tests_generate_as")}</span>
                   <div className="flex rounded-lg border border-[#e2e8f0] overflow-hidden text-xs font-semibold">
                     <button
                       onClick={() => setGenerateAsFree(true)}
                       className={`px-3 py-1.5 transition-colors ${generateAsFree ? "bg-emerald-500 text-white" : "bg-white text-[#64748b] hover:bg-[#f8fafc]"}`}
                     >
-                      Free
+                      {t("free")}
                     </button>
                     <button
                       onClick={() => setGenerateAsFree(false)}
                       className={`px-3 py-1.5 transition-colors ${!generateAsFree ? "bg-[#4f46e5] text-white" : "bg-white text-[#64748b] hover:bg-[#f8fafc]"}`}
                     >
-                      Pro
+                      {t("pro")}
                     </button>
                   </div>
                   <button
@@ -194,7 +198,7 @@ export default function TestsPage() {
                     className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity shadow-sm"
                   >
                     <Wand2 size={15} />
-                    {generating ? "Generating…" : "Generate full library"}
+                    {generating ? t("tests_generating") : t("tests_generate_full")}
                   </button>
                 </div>
                 {generating && generateProgress && (
@@ -229,13 +233,13 @@ export default function TestsPage() {
                 <div>
                   <p className={`text-sm font-semibold ${freeTestsUsed >= FREE_TEST_LIMIT ? "text-rose-700" : "text-amber-700"}`}>
                     {freeTestsUsed >= FREE_TEST_LIMIT
-                      ? "You've used all 5 free tests"
-                      : `${FREE_TEST_LIMIT - freeTestsUsed} free test${FREE_TEST_LIMIT - freeTestsUsed !== 1 ? "s" : ""} remaining`}
+                      ? t("tests_paywall_all_title", { limit: FREE_TEST_LIMIT })
+                      : plural(FREE_TEST_LIMIT - freeTestsUsed, { one: "tests_free_remaining_one", other: "tests_free_remaining_other" })}
                   </p>
                   <p className="text-xs text-[#64748b] mt-0.5">
                     {freeTestsUsed >= FREE_TEST_LIMIT
-                      ? "Upgrade to Pro for unlimited access to all tests — €4/month."
-                      : "Upgrade to Pro for unlimited access and fresh weekly tests."}
+                      ? t("tests_paywall_all_desc")
+                      : t("tests_paywall_near_desc")}
                   </p>
                 </div>
               </div>
@@ -243,7 +247,7 @@ export default function TestsPage() {
                 href="/pricing"
                 className="flex-shrink-0 px-4 py-2 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
               >
-                Upgrade to Pro
+                {t("upgrade_cta")}
               </Link>
             </div>
           )}
@@ -281,9 +285,9 @@ export default function TestsPage() {
                 <PackageOpen size={28} className="text-[#94a3b8]" />
               </div>
               <div>
-                <h3 className="font-display font-semibold text-[#0D1B2E] text-lg mb-1">No tests found</h3>
+                <h3 className="font-display font-semibold text-[#0D1B2E] text-lg mb-1">{t("tests_none_found")}</h3>
                 <p className="text-sm text-[#64748b] max-w-xs">
-                  Try adjusting your filters or search term. More fresh tests are coming soon.
+                  {t("tests_none_found_desc")}
                 </p>
               </div>
               <button
@@ -298,7 +302,7 @@ export default function TestsPage() {
                 }}
                 className="text-sm text-[#4f46e5] font-semibold hover:underline"
               >
-                Clear all filters
+                {t("tests_clear_filters")}
               </button>
             </div>
           ) : (
@@ -309,9 +313,9 @@ export default function TestsPage() {
                 <section className="animate-fade-up">
                   <div className="flex items-center gap-2 mb-4">
                     <Star size={16} className="text-[#f59e0b]" />
-                    <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">Best Matches</h2>
+                    <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">{t("tests_best_matches")}</h2>
                     <span className="text-xs font-semibold text-[#4f46e5] bg-[#eef2ff] px-2 py-0.5 rounded-full border border-[#c7d2fe]">
-                      {recommendedTests.length} for you
+                      {t("tests_n_for_you", { n: recommendedTests.length })}
                     </span>
                   </div>
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -326,8 +330,8 @@ export default function TestsPage() {
               {hasCareerFilters && selectedRole !== "all" && (
                 <div className="rounded-xl border border-[#c7d2fe] bg-[#eef2ff] px-4 py-3 flex items-center gap-3 text-sm text-[#4f46e5] font-medium">
                   <Star size={14} />
-                  Showing tests aligned with <strong>{selectedRole}</strong>
-                  {selectedIndustry !== "all" && <> in <strong>{selectedIndustry}</strong></>}
+                  {t("tests_showing_aligned")} <strong>{selectedRole}</strong>
+                  {selectedIndustry !== "all" && <> {t("dash_in")} <strong>{selectedIndustry}</strong></>}
                 </div>
               )}
 
@@ -336,9 +340,9 @@ export default function TestsPage() {
                 <section className={sortBy === "best_match" && recommendedTests.length > 0 ? "" : "animate-fade-up delay-200"}>
                   <div className="flex items-center gap-2 mb-4">
                     <CheckCircle2 size={17} className="text-[#10b981]" />
-                    <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">Free Tests</h2>
+                    <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">{t("tests_free_heading")}</h2>
                     <span className="text-xs font-semibold text-[#10b981] bg-[#f0fdf4] px-2 py-0.5 rounded-full border border-[#bbf7d0]">
-                      {freeTests.length} available — no account needed
+                      {t("tests_free_available", { n: freeTests.length })}
                     </span>
                   </div>
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -359,17 +363,17 @@ export default function TestsPage() {
                 <section className="animate-fade-up delay-300">
                   <div className="flex items-center gap-2 mb-2">
                     <Crown size={17} className="text-[#7c3aed]" />
-                    <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">Pro Tests</h2>
+                    <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">{t("tests_pro_heading")}</h2>
                     <span className="text-xs font-semibold text-[#7c3aed] bg-[#f5f3ff] px-2 py-0.5 rounded-full border border-[#ddd6fe]">
-                      {proTests.length} tests · €4/mo
+                      {plural(proTests.length, { one: "tests_pro_count_one", other: "tests_pro_count_other" })}
                     </span>
-                    {proTests.some((t) => t.isGeneratedByAI) && (
+                    {proTests.some((pt) => pt.isGeneratedByAI) && (
                       <span className="text-xs font-semibold text-[#4f46e5] bg-[#eef2ff] px-2 py-0.5 rounded-full border border-[#c7d2fe] flex items-center gap-1">
-                        <Sparkles size={10} /> Vers nieuw
+                        <Sparkles size={10} /> {t("tests_fresh")}
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-[#94a3b8] mb-4 ml-[1.625rem]">Upgrade to Pro to unlock all tests below</p>
+                  <p className="text-xs text-[#94a3b8] mb-4 ml-[1.625rem]">{t("tests_pro_unlock")}</p>
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
                     {proTests.map((test) => (
                       <TestCard
@@ -389,10 +393,10 @@ export default function TestsPage() {
                   <Sparkles size={22} className="text-[#4f46e5]" />
                 </div>
                 <h3 className="font-display font-semibold text-[#0D1B2E] mb-2">
-                  More fresh tests coming soon
+                  {t("tests_coming_soon_title")}
                 </h3>
                 <p className="text-sm text-[#64748b] max-w-xs mx-auto">
-                  New practice tests are generated weekly, modelled on real assessments from top employers.
+                  {t("tests_coming_soon_desc")}
                 </p>
               </div>
             </div>
