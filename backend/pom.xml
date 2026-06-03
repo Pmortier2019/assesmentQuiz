@@ -88,6 +88,14 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- Sentry — backend error monitoring. Stays disabled unless SENTRY_DSN
+             is set (production only), so dev and tests are unaffected. -->
+        <dependency>
+            <groupId>io.sentry</groupId>
+            <artifactId>sentry-spring-boot-starter-jakarta</artifactId>
+            <version>8.16.0</version>
+        </dependency>
+
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>

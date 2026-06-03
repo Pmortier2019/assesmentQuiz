@@ -12,6 +12,7 @@ import { PageLoader } from "@/components/ui/PageLoader";
 import { haptics } from "@/lib/haptics";
 import { isLoggedIn } from "@/lib/auth";
 import { FREE_TEST_LIMIT } from "@/lib/constants";
+import { loadProgress, saveProgress, clearProgress } from "@/lib/testProgress";
 import { TestQuestionCard } from "@/components/test/TestQuestionCard";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { cn, formatTime, ASSESSMENT_TYPE_LABELS, getScoreColor } from "@/lib/utils";
@@ -273,6 +274,7 @@ export default function TestPage() {
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [startedAt, setStartedAt] = useState<number | null>(null);
   const [elapsed, setElapsed] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<TestResult | null>(null);
@@ -295,11 +297,26 @@ export default function TestPage() {
         setFreeTestsUsed(userFreeUsed);
       }
 
+      // Show the test and resume any saved attempt for this testId, or start fresh.
+      function startTest(t: Test | null) {
+        setTest(t);
+        if (t && t.questions.length > 0) {
+          const saved = loadProgress(id);
+          if (saved) {
+            setAnswers(saved.answers);
+            setCurrentIndex(Math.min(saved.currentIndex, t.questions.length - 1));
+            setStartedAt(saved.startedAt);
+          } else {
+            setStartedAt(Date.now());
+          }
+        }
+        setLoading(false);
+      }
+
       // Admins bypass all access checks
       if (userIsAdmin) {
         const t = await getTestById(id).catch(() => null);
-        setTest(t);
-        setLoading(false);
+        startTest(t);
         return;
       }
 
@@ -313,20 +330,29 @@ export default function TestPage() {
       // Load the full test; catch 403 (pro-only or limit enforced by backend)
       try {
         const t = await getTestById(id);
-        setTest(t);
+        startTest(t);
       } catch (err) {
         if (err instanceof ApiError && err.status === 403) setAccessDenied(true);
+        setLoading(false);
       }
-      setLoading(false);
     }
     load();
   }, [id]);
 
+  // Timer is derived from the absolute start time so it stays correct across a refresh.
   useEffect(() => {
-    if (result) return; // stop timer after submit
-    const interval = setInterval(() => setElapsed((e) => e + 1), 1000);
+    if (result || startedAt == null) return; // stop timer after submit
+    const tick = () => setElapsed(Math.floor((Date.now() - startedAt) / 1000));
+    tick();
+    const interval = setInterval(tick, 1000);
     return () => clearInterval(interval);
-  }, [result]);
+  }, [result, startedAt]);
+
+  // Persist progress so a refresh / crash mid-test doesn't lose answers.
+  useEffect(() => {
+    if (!test || result || startedAt == null) return;
+    saveProgress(id, { answers, currentIndex, startedAt });
+  }, [id, test, result, answers, currentIndex, startedAt]);
 
   const handleSelect = useCallback((answerId: string) => {
     const question = test?.questions[currentIndex];
@@ -342,7 +368,9 @@ export default function TestPage() {
       questionId,
       selectedAnswerId,
     }));
-    const r = await submitTest(test.id, payload, elapsed);
+    const timeTaken = startedAt ? Math.floor((Date.now() - startedAt) / 1000) : elapsed;
+    const r = await submitTest(test.id, payload, timeTaken);
+    clearProgress(test.id);
     haptics.complete();
     setResult(r);
     setSubmitting(false);
