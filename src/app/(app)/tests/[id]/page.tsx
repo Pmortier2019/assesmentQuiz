@@ -13,6 +13,7 @@ import { haptics } from "@/lib/haptics";
 import { isLoggedIn } from "@/lib/auth";
 import { FREE_TEST_LIMIT } from "@/lib/constants";
 import { loadProgress, saveProgress, clearProgress } from "@/lib/testProgress";
+import { useT } from "@/lib/i18n";
 import { TestQuestionCard } from "@/components/test/TestQuestionCard";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { cn, formatTime, ASSESSMENT_TYPE_LABELS, getScoreColor } from "@/lib/utils";
@@ -23,6 +24,7 @@ const PASS_THRESHOLD = 70;
 // ─── Results view ─────────────────────────────────────────────────────────────
 
 function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
+  const { t } = useT();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const passed = result.score >= PASS_THRESHOLD;
   const correct = result.answers.filter((a) => a.isCorrect).length;
@@ -43,7 +45,7 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
             href="/results"
             className="text-xs text-[#4f46e5] font-semibold hover:underline flex items-center gap-1"
           >
-            All results <ArrowRight size={12} />
+            {t("tt_all_results")} <ArrowRight size={12} />
           </Link>
         </div>
       </header>
@@ -89,10 +91,10 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
                 : "bg-amber-100 text-amber-700 border border-amber-200"
             )}>
               {passed ? <CheckCircle2 size={14} /> : <AlertCircle size={14} />}
-              {passed ? "🎉 Passed!" : "Not passed yet — keep practising!"}
+              {passed ? t("tt_passed") : t("tt_not_passed")}
             </div>
             <p className="text-[#64748b] text-sm">
-              Pass mark: {PASS_THRESHOLD}% &nbsp;·&nbsp; {correct} of {total} correct
+              {t("tt_pass_mark", { mark: PASS_THRESHOLD, correct, total })}
             </p>
           </div>
         </div>
@@ -104,7 +106,7 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
               <Trophy size={18} className="text-[#4f46e5]" />
             </div>
             <p className="font-display font-bold text-lg text-[#0D1B2E]">{result.score}%</p>
-            <p className="text-xs text-[#94a3b8]">Your score</p>
+            <p className="text-xs text-[#94a3b8]">{t("tt_your_score")}</p>
           </div>
 
           <div className="card p-4 flex flex-col items-center gap-1.5 text-center">
@@ -114,8 +116,8 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
             <p className="font-display font-bold text-lg text-[#0D1B2E]">{formatTime(result.timeTaken)}</p>
             <p className={cn("text-xs font-medium", timeDelta >= 0 ? "text-emerald-600" : "text-rose-500")}>
               {timeDelta >= 0
-                ? `${formatTime(timeDelta)} under target`
-                : `${formatTime(Math.abs(timeDelta))} over target`}
+                ? t("tt_under_target", { time: formatTime(timeDelta) })
+                : t("tt_over_target", { time: formatTime(Math.abs(timeDelta)) })}
             </p>
           </div>
 
@@ -124,14 +126,14 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
               <TrendingUp size={18} className="text-emerald-500" />
             </div>
             <p className="font-display font-bold text-lg text-[#0D1B2E]">{correct}/{total}</p>
-            <p className="text-xs text-[#94a3b8]">Correct</p>
+            <p className="text-xs text-[#94a3b8]">{t("tt_correct")}</p>
           </div>
         </div>
 
         {/* Feedback */}
         {result.aiFeedback && (
           <div className="card p-4 border-l-4 border-[#4f46e5] animate-fade-up delay-200">
-            <p className="text-sm font-semibold text-[#0D1B2E] mb-1">Feedback</p>
+            <p className="text-sm font-semibold text-[#0D1B2E] mb-1">{t("tt_feedback")}</p>
             <p className="text-sm text-[#475569]">{result.aiFeedback}</p>
           </div>
         )}
@@ -143,7 +145,7 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
               <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center">
                 <Lightbulb size={16} className="text-amber-500" />
               </div>
-              <h2 className="font-display font-semibold text-base text-[#0D1B2E]">Tips to improve</h2>
+              <h2 className="font-display font-semibold text-base text-[#0D1B2E]">{t("tt_tips")}</h2>
             </div>
             <ul className="flex flex-col gap-3">
               {result.tips.map((tip, i) => (
@@ -161,7 +163,7 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
         {/* Per-question breakdown */}
         {result.questionResults && result.questionResults.length > 0 && (
           <div className="flex flex-col gap-3 animate-fade-up delay-300">
-            <h2 className="font-display font-semibold text-base text-[#0D1B2E]">Question review</h2>
+            <h2 className="font-display font-semibold text-base text-[#0D1B2E]">{t("results_q_review")}</h2>
             {result.questionResults.map((qr, i) => (
               <QuestionReviewCard
                 key={qr.questionId}
@@ -180,13 +182,13 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
             href="/tests"
             className="flex-1 py-3 rounded-xl border border-[#e2e8f0] text-sm font-semibold text-[#475569] hover:bg-[#f8fafc] transition-colors text-center"
           >
-            Back to tests
+            {t("results_back")}
           </Link>
           <Link
             href={`/tests/${test.id}`}
             className="flex-1 py-3 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 transition-opacity text-center"
           >
-            Try again
+            {t("tt_try_again")}
           </Link>
         </div>
       </div>
@@ -199,6 +201,7 @@ function QuestionReviewCard({
 }: {
   qr: QuestionResult; index: number; open: boolean; onToggle: () => void;
 }) {
+  const { t } = useT();
   return (
     <div className={cn(
       "rounded-xl border overflow-hidden transition-colors",
@@ -222,7 +225,7 @@ function QuestionReviewCard({
               ? "text-emerald-700 bg-emerald-50 border border-emerald-200"
               : "text-rose-600 bg-rose-50 border border-rose-200"
           )}>
-            {qr.isCorrect ? "✓ Correct" : "✗ Incorrect"}
+            {qr.isCorrect ? `✓ ${t("tt_correct")}` : `✗ ${t("tt_incorrect")}`}
           </span>
           <ChevronDown size={14} className={cn("text-[#94a3b8] transition-transform", open && "rotate-180")} />
         </div>
@@ -256,7 +259,7 @@ function QuestionReviewCard({
             })}
           </div>
           <div className="rounded-lg bg-[#f8fafc] border border-[#e2e8f0] px-3 py-2">
-            <p className="text-xs font-semibold text-[#0D1B2E] mb-0.5">Explanation</p>
+            <p className="text-xs font-semibold text-[#0D1B2E] mb-0.5">{t("results_explanation")}</p>
             <p className="text-xs text-[#475569]">{qr.explanation}</p>
           </div>
         </div>
@@ -269,6 +272,7 @@ function QuestionReviewCard({
 
 export default function TestPage() {
   const { id } = useParams<{ id: string }>();
+  const { t, plural } = useT();
 
   const [test, setTest] = useState<Test | null>(null);
   const [loading, setLoading] = useState(true);
@@ -378,7 +382,7 @@ export default function TestPage() {
 
   if (loading) {
     return (
-      <PageLoader label="Loading test…" />
+      <PageLoader label={t("tt_loading")} />
     );
   }
 
@@ -405,12 +409,12 @@ export default function TestPage() {
             </div>
             <div>
               <h2 className="font-display font-bold text-2xl text-[#0D1B2E] mb-2">
-                {paywallReason === "free_limit" ? "Free limit reached" : "Pro test"}
+                {paywallReason === "free_limit" ? t("tt_free_limit_title") : t("tt_pro_test_title")}
               </h2>
               <p className="text-[#64748b] text-sm leading-relaxed">
                 {paywallReason === "free_limit"
-                  ? "You've used all 5 free tests. Upgrade to Pro for unlimited access to every test — €4/month."
-                  : "This test is part of the Pro plan. Upgrade to access all premium assessments."}
+                  ? t("tt_free_limit_desc", { limit: FREE_TEST_LIMIT })
+                  : t("tt_pro_test_desc")}
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 w-full justify-center">
@@ -418,16 +422,16 @@ export default function TestPage() {
                 href="/pricing"
                 className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white font-semibold text-sm hover:opacity-90 transition-opacity shadow-sm"
               >
-                Upgrade to Pro — €4/mo
+                {t("tt_upgrade_price")}
               </Link>
               <Link
                 href="/tests"
                 className="px-6 py-3 rounded-xl border border-[#e2e8f0] text-[#475569] font-semibold text-sm hover:border-[#4f46e5]/30 hover:text-[#4f46e5] transition-colors"
               >
-                Back to tests
+                {t("results_back")}
               </Link>
             </div>
-            <p className="text-xs text-[#94a3b8]">Cancel anytime · No credit card needed to start</p>
+            <p className="text-xs text-[#94a3b8]">{t("tt_cancel_anytime")}</p>
           </div>
         </div>
       </div>
@@ -437,8 +441,8 @@ export default function TestPage() {
   if (!test || test.questions.length === 0) {
     return (
       <div className="min-h-screen bg-[#f8fafc] flex flex-col items-center justify-center gap-4 p-4">
-        <p className="font-display font-semibold text-[#0D1B2E] text-xl">Test not available</p>
-        <Link href="/tests" className="text-sm text-[#4f46e5] hover:underline">← Back to tests</Link>
+        <p className="font-display font-semibold text-[#0D1B2E] text-xl">{t("tt_test_not_available")}</p>
+        <Link href="/tests" className="text-sm text-[#4f46e5] hover:underline">← {t("results_back")}</Link>
       </div>
     );
   }
@@ -481,7 +485,7 @@ export default function TestPage() {
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#f1f5f9] text-xs font-semibold text-[#475569] hover:bg-[#e2e8f0] transition-colors lg:hidden"
             >
               <Flag size={12} />
-              Questions
+              {t("tt_questions")}
             </button>
           </div>
         </div>
@@ -509,7 +513,7 @@ export default function TestPage() {
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#e2e8f0] text-sm font-semibold text-[#475569] hover:bg-[#f8fafc] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
             >
               <ChevronLeft size={16} />
-              Previous
+              {t("tt_previous")}
             </button>
 
             <div className="hidden sm:flex items-center gap-1">
@@ -517,7 +521,7 @@ export default function TestPage() {
                 <button
                   key={q.id}
                   onClick={() => setCurrentIndex(i)}
-                  title={answers[q.id] ? `Q${i + 1} — answered` : `Q${i + 1} — not yet answered`}
+                  title={t("tt_q_title", { n: i + 1, state: answers[q.id] ? t("tt_legend_answered") : t("tt_legend_not_answered") })}
                   className={cn(
                     "w-7 h-7 rounded-md text-xs font-bold transition-all",
                     i === currentIndex
@@ -539,14 +543,14 @@ export default function TestPage() {
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-all shadow-md"
               >
                 <CheckCircle2 size={16} />
-                {submitting ? "Submitting..." : "Finish test"}
+                {submitting ? t("tt_submitting") : t("tt_finish")}
               </button>
             ) : (
               <button
                 onClick={() => setCurrentIndex((i) => Math.min(total - 1, i + 1))}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0D1B2E] text-white text-sm font-semibold hover:bg-[#1a2f4a] transition-colors"
               >
-                Next
+                {t("tt_next")}
                 <ChevronRight size={16} />
               </button>
             )}
@@ -556,14 +560,14 @@ export default function TestPage() {
             <div className="p-4 rounded-xl border border-[#bbf7d0] bg-[#f0fdf4] flex items-center justify-between animate-fade-in">
               <div className="flex items-center gap-2">
                 <CheckCircle2 size={16} className="text-[#16a34a]" />
-                <span className="text-sm font-medium text-[#166534]">All questions answered</span>
+                <span className="text-sm font-medium text-[#166534]">{t("tt_all_answered")}</span>
               </div>
               <button
                 onClick={handleSubmit}
                 disabled={submitting}
                 className="px-4 py-2 rounded-lg bg-[#16a34a] text-white text-sm font-semibold hover:bg-[#15803d] transition-colors"
               >
-                Submit test
+                {t("tt_submit")}
               </button>
             </div>
           )}
@@ -573,15 +577,15 @@ export default function TestPage() {
         <aside className="hidden lg:flex flex-col w-56 flex-shrink-0">
           <div className="card p-4 sticky top-24">
             <h3 className="font-semibold text-[#0D1B2E] text-sm mb-1">
-              Questions
+              {t("tt_questions")}
             </h3>
-            <p className="text-xs text-[#94a3b8] mb-3">{answered} of {total} answered</p>
+            <p className="text-xs text-[#94a3b8] mb-3">{t("tt_answered_of", { a: answered, t: total })}</p>
             <div className="grid grid-cols-4 gap-2">
               {test.questions.map((q, i) => (
                 <button
                   key={q.id}
                   onClick={() => setCurrentIndex(i)}
-                  title={answers[q.id] ? `Question ${i + 1} — answered` : `Question ${i + 1} — not yet answered`}
+                  title={t("tt_question_title", { n: i + 1, state: answers[q.id] ? t("tt_legend_answered") : t("tt_legend_not_answered") })}
                   className={cn(
                     "w-full aspect-square rounded-lg text-xs font-bold transition-all",
                     i === currentIndex
@@ -598,13 +602,13 @@ export default function TestPage() {
             {/* Legend */}
             <div className="mt-3 flex flex-col gap-1.5 text-[10px] text-[#94a3b8]">
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded bg-[#4f46e5] inline-block" /> Answered
+                <span className="w-3 h-3 rounded bg-[#4f46e5] inline-block" /> {t("tt_legend_answered")}
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded bg-[#0D1B2E] inline-block" /> Current
+                <span className="w-3 h-3 rounded bg-[#0D1B2E] inline-block" /> {t("tt_legend_current")}
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded bg-[#e2e8f0] inline-block" /> Not yet answered
+                <span className="w-3 h-3 rounded bg-[#e2e8f0] inline-block" /> {t("tt_legend_not_answered")}
               </span>
             </div>
             {allAnswered && (
@@ -614,12 +618,12 @@ export default function TestPage() {
                 className="mt-4 w-full py-2.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
               >
                 <CheckCircle2 size={15} />
-                {submitting ? "Submitting..." : "Finish test"}
+                {submitting ? t("tt_submitting") : t("tt_finish")}
               </button>
             )}
             {!allAnswered && (
               <p className="mt-3 text-[10px] text-[#94a3b8] text-center">
-                {total - answered} question{total - answered !== 1 ? "s" : ""} left
+                {plural(total - answered, { one: "tt_questions_left_one", other: "tt_questions_left_other" })}
               </p>
             )}
           </div>

@@ -31,16 +31,18 @@ import {
 import type { Test, User, TestResult, PreparationPath } from "@/lib/types";
 import { FREE_TEST_LIMIT } from "@/lib/constants";
 import { testsCompletedThisWeek, scoreImprovement } from "@/lib/dashboardStats";
+import { useT, type TranslationKey } from "@/lib/i18n";
 
 const FREE_TESTS_LIMIT = FREE_TEST_LIMIT;
 
-const DAILY_EXERCISES = [
-  { label: "5-minute logic drill",      icon: "🧩", duration: "5 min",  type: "logical_reasoning" },
-  { label: "Quick numerical warm-up",   icon: "📊", duration: "8 min",  type: "numerical_reasoning" },
-  { label: "Verbal inference practice", icon: "📝", duration: "6 min",  type: "verbal_reasoning" },
+const DAILY_EXERCISES: { labelKey: TranslationKey; icon: string; duration: string; type: string }[] = [
+  { labelKey: "dash_ex_logic",     icon: "🧩", duration: "5 min",  type: "logical_reasoning" },
+  { labelKey: "dash_ex_numerical", icon: "📊", duration: "8 min",  type: "numerical_reasoning" },
+  { labelKey: "dash_ex_verbal",    icon: "📝", duration: "6 min",  type: "verbal_reasoning" },
 ];
 
 function RecommendedTestCard({ test, badge }: { test: Test; badge?: string }) {
+  const { t } = useT();
   return (
     <Link
       href={`/tests/${test.id}`}
@@ -55,7 +57,7 @@ function RecommendedTestCard({ test, badge }: { test: Test; badge?: string }) {
             </span>
           )}
           {test.isFree ? (
-            <span className="text-[10px] font-semibold text-[#10b981] bg-[#f0fdf4] px-2 py-0.5 rounded-full">Free</span>
+            <span className="text-[10px] font-semibold text-[#10b981] bg-[#f0fdf4] px-2 py-0.5 rounded-full">{t("free")}</span>
           ) : (
             <Lock size={11} className="text-[#94a3b8] mt-0.5" />
           )}
@@ -66,7 +68,7 @@ function RecommendedTestCard({ test, badge }: { test: Test; badge?: string }) {
           {test.title}
         </p>
         <p className="text-xs text-[#94a3b8] mt-1">
-          {test.estimatedTime} min · {test.questionCount ?? test.questions.length} questions
+          {test.estimatedTime} {t("minutes")} · {test.questionCount ?? test.questions.length} {t("questions")}
         </p>
       </div>
       {test.skillsMeasured && test.skillsMeasured.length > 0 && (
@@ -83,6 +85,7 @@ function RecommendedTestCard({ test, badge }: { test: Test; badge?: string }) {
 }
 
 export default function DashboardPage() {
+  const { t } = useT();
   const [user, setUser] = useState<User | null>(null);
   const [tests, setTests] = useState<Test[]>([]);
   const [results, setResults] = useState<TestResult[]>([]);
@@ -117,7 +120,7 @@ export default function DashboardPage() {
   }, []);
 
   if (loading || !user) {
-    return <PageLoader label="Loading dashboard…" />;
+    return <PageLoader label={t("dash_loading")} />;
   }
 
   const dailyChallenge = tests[0];
@@ -223,16 +226,16 @@ export default function DashboardPage() {
           {/* Stats row */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-up delay-200">
             <DashboardCard
-              title="Tests completed"
+              title={t("dash_tests_completed")}
               value={results.length}
               icon={BookOpen}
               iconColor="text-[#4f46e5]"
               iconBg="bg-[#eef2ff]"
-              trend={testsThisWeek > 0 ? { value: testsThisWeek, label: "this week", unit: "" } : undefined}
+              trend={testsThisWeek > 0 ? { value: testsThisWeek, label: t("dash_this_week_count"), unit: "" } : undefined}
             />
             {/* Avg score — score ring */}
             <div className="card p-5 flex flex-col gap-3">
-              <p className="text-sm font-medium text-[#64748b]">Avg. score</p>
+              <p className="text-sm font-medium text-[#64748b]">{t("dash_avg_score")}</p>
               <div className="flex items-center gap-4">
                 {results.length > 0 ? (
                   <ScoreRing
@@ -250,21 +253,21 @@ export default function DashboardPage() {
                     <p className={`text-xs font-semibold ${improvement >= 0 ? "text-[#10b981]" : "text-[#f43f5e]"}`}>
                       {improvement >= 0 ? "+" : ""}{improvement}%
                     </p>
-                    <p className="text-xs text-[#94a3b8]">improvement</p>
+                    <p className="text-xs text-[#94a3b8]">{t("dash_improvement")}</p>
                   </div>
                 )}
               </div>
             </div>
             <DashboardCard
-              title="Day streak"
+              title={t("dash_day_streak")}
               value={user.streak}
               icon={Flame}
               iconColor="text-amber-500"
               iconBg="bg-amber-50"
-              subtitle="Keep it up!"
+              subtitle={t("dash_keep_it_up")}
             />
             <DashboardCard
-              title="Free tests"
+              title={t("dash_free_tests")}
               value={`${user.freeTestsUsed}/${FREE_TESTS_LIMIT}`}
               icon={Trophy}
               iconColor="text-[#f59e0b]"
@@ -286,13 +289,13 @@ export default function DashboardPage() {
             <div className="grid lg:grid-cols-2 gap-6 animate-fade-up delay-300">
               <PreparationPathCard path={preparationPath} />
               <div>
-                <h2 className="font-display font-semibold text-lg text-[#0D1B2E] mb-4">Daily Challenge</h2>
+                <h2 className="font-display font-semibold text-lg text-[#0D1B2E] mb-4">{t("dash_daily_challenge")}</h2>
                 <DailyChallengeCard test={dailyChallenge} />
               </div>
             </div>
           ) : (
             <div className="animate-fade-up delay-300">
-              <h2 className="font-display font-semibold text-lg text-[#0D1B2E] mb-4">Daily Challenge</h2>
+              <h2 className="font-display font-semibold text-lg text-[#0D1B2E] mb-4">{t("dash_daily_challenge")}</h2>
               <DailyChallengeCard test={dailyChallenge} />
             </div>
           )}
@@ -300,13 +303,13 @@ export default function DashboardPage() {
           {/* Suggested daily exercises */}
           <div className="animate-fade-up delay-350">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">Suggested Daily Exercises</h2>
-              <span className="text-xs text-[#94a3b8]">Short & focused</span>
+              <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">{t("dash_daily_exercises")}</h2>
+              <span className="text-xs text-[#94a3b8]">{t("dash_short_focused")}</span>
             </div>
             <div className="grid sm:grid-cols-3 gap-4">
               {DAILY_EXERCISES.map((ex) => (
                 <Link
-                  key={ex.label}
+                  key={ex.labelKey}
                   href={`/tests?type=${ex.type}`}
                   className="card card-interactive p-4 flex items-center gap-4"
                 >
@@ -314,7 +317,7 @@ export default function DashboardPage() {
                     {ex.icon}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[#0D1B2E] leading-snug">{ex.label}</p>
+                    <p className="text-sm font-semibold text-[#0D1B2E] leading-snug">{t(ex.labelKey)}</p>
                     <p className="text-xs text-[#94a3b8] flex items-center gap-1 mt-0.5">
                       <Clock size={10} /> {ex.duration}
                     </p>
@@ -330,14 +333,16 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">
-                  {hasCareerTargets ? `Recommended for ${user.targetRole ?? "you"}` : "Recommended for you"}
+                  {hasCareerTargets && user.targetRole
+                    ? t("dash_recommended_for", { role: user.targetRole })
+                    : t("dash_recommended")}
                 </h2>
                 {hasCareerTargets && (
-                  <p className="text-xs text-[#94a3b8] mt-0.5">Based on your role and industry</p>
+                  <p className="text-xs text-[#94a3b8] mt-0.5">{t("dash_based_on_role")}</p>
                 )}
               </div>
               <Link href="/tests?sort=recommended" className="text-xs text-[#4f46e5] font-semibold hover:underline flex items-center gap-1">
-                Browse all <ChevronRight size={12} />
+                {t("dash_browse_all")} <ChevronRight size={12} />
               </Link>
             </div>
             <div className="grid sm:grid-cols-3 gap-4">
@@ -345,7 +350,7 @@ export default function DashboardPage() {
                 <RecommendedTestCard
                   key={test.id}
                   test={test}
-                  badge={test.isRecommended ? "Best match" : undefined}
+                  badge={test.isRecommended ? t("dash_badge_best_match") : undefined}
                 />
               ))}
             </div>
@@ -357,13 +362,13 @@ export default function DashboardPage() {
               <div className="flex items-center gap-2 mb-4">
                 <TrendingUp size={16} className="text-[#10b981]" />
                 <div>
-                  <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">Ready to level up?</h2>
-                  <p className="text-xs text-[#94a3b8] mt-0.5">You&apos;re consistently above 80% — try intermediate next</p>
+                  <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">{t("dash_ready_level_up")}</h2>
+                  <p className="text-xs text-[#94a3b8] mt-0.5">{t("dash_level_up_sub")}</p>
                 </div>
               </div>
               <div className="grid sm:grid-cols-3 gap-4">
                 {adaptiveSuggestions.map((test) => (
-                  <RecommendedTestCard key={test.id} test={test} badge="Leveled up" />
+                  <RecommendedTestCard key={test.id} test={test} badge={t("dash_badge_leveled_up")} />
                 ))}
               </div>
             </div>
@@ -376,17 +381,17 @@ export default function DashboardPage() {
                 <div className="flex items-center gap-2">
                   <Star size={16} className="text-amber-500" />
                   <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">
-                    Popular for {user.targetRole}
+                    {t("dash_popular_for")} {user.targetRole}
                   </h2>
                 </div>
                 <Link href={`/tests?role=${encodeURIComponent(user.targetRole ?? "")}`}
                   className="text-xs text-[#4f46e5] font-semibold hover:underline flex items-center gap-1">
-                  See all <ChevronRight size={12} />
+                  {t("dash_see_all")} <ChevronRight size={12} />
                 </Link>
               </div>
               <div className="grid sm:grid-cols-3 gap-4">
                 {popularForRole.map((test) => (
-                  <RecommendedTestCard key={test.id} test={test} badge="Popular" />
+                  <RecommendedTestCard key={test.id} test={test} badge={t("dash_badge_popular")} />
                 ))}
               </div>
             </div>
@@ -400,9 +405,9 @@ export default function DashboardPage() {
                   <Users size={16} className="text-[#7c3aed]" />
                   <div>
                     <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">
-                      Frequently used at {user.targetCompany}
+                      {t("dash_frequently_used_at", { company: user.targetCompany ?? "" })}
                     </h2>
-                    <p className="text-xs text-[#94a3b8]">Candidates applying here practise these</p>
+                    <p className="text-xs text-[#94a3b8]">{t("dash_candidates_practise")}</p>
                   </div>
                 </div>
               </div>
@@ -425,7 +430,7 @@ export default function DashboardPage() {
           <div className="grid lg:grid-cols-2 gap-6 animate-fade-up delay-500">
             <div className="card p-5">
               <div className="flex items-center justify-between mb-5">
-                <h2 className="font-display font-semibold text-base text-[#0D1B2E]">Skill Overview</h2>
+                <h2 className="font-display font-semibold text-base text-[#0D1B2E]">{t("dash_skill_overview")}</h2>
                 <BarChart3 size={16} className="text-[#94a3b8]" />
               </div>
               {skillAreas.length === 0 ? (
@@ -433,8 +438,8 @@ export default function DashboardPage() {
                   <div className="w-10 h-10 rounded-xl bg-[#f1f5f9] flex items-center justify-center">
                     <BarChart3 size={18} className="text-[#94a3b8]" />
                   </div>
-                  <p className="text-sm text-[#64748b]">Complete tests to see your skill breakdown.</p>
-                  <Link href="/tests" className="text-sm font-semibold text-[#4f46e5] hover:underline">Browse tests</Link>
+                  <p className="text-sm text-[#64748b]">{t("dash_complete_tests")}</p>
+                  <Link href="/tests" className="text-sm font-semibold text-[#4f46e5] hover:underline">{t("dash_browse_tests")}</Link>
                 </div>
               ) : (
                 <div className="flex flex-col gap-4">
@@ -456,17 +461,17 @@ export default function DashboardPage() {
 
             <div className="card p-5">
               <div className="flex items-center justify-between mb-5">
-                <h2 className="font-display font-semibold text-base text-[#0D1B2E]">Recent Results</h2>
-                <Link href="/results" className="text-xs text-[#4f46e5] font-semibold hover:underline">View all</Link>
+                <h2 className="font-display font-semibold text-base text-[#0D1B2E]">{t("dash_recent_results")}</h2>
+                <Link href="/results" className="text-xs text-[#4f46e5] font-semibold hover:underline">{t("dash_view_all")}</Link>
               </div>
               {results.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-8 gap-3 text-center">
                   <div className="w-10 h-10 rounded-xl bg-[#f1f5f9] flex items-center justify-center">
                     <BookOpen size={18} className="text-[#94a3b8]" />
                   </div>
-                  <p className="text-sm text-[#64748b]">No results yet. Start a test to see your progress here.</p>
+                  <p className="text-sm text-[#64748b]">{t("dash_no_results")}</p>
                   <Link href="/tests" className="text-sm font-semibold text-[#4f46e5] hover:underline">
-                    Browse tests
+                    {t("dash_browse_tests")}
                   </Link>
                 </div>
               ) : (
@@ -498,10 +503,10 @@ export default function DashboardPage() {
           <div className="animate-fade-up delay-600">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">Pro Tests</h2>
+                <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">{t("dash_pro_tests")}</h2>
                 <Lock size={14} className="text-[#94a3b8]" />
               </div>
-              <Link href="/pricing" className="text-xs text-[#4f46e5] font-semibold hover:underline">Upgrade</Link>
+              <Link href="/pricing" className="text-xs text-[#4f46e5] font-semibold hover:underline">{t("nav_upgrade")}</Link>
             </div>
             <div className="grid sm:grid-cols-3 gap-4">
               {lockedTests.map((test) => (
@@ -511,7 +516,7 @@ export default function DashboardPage() {
                     <div className="flex items-center gap-1.5">
                       {test.isGeneratedByAI && (
                         <span className="text-xs font-semibold text-[#4f46e5] bg-[#eef2ff] px-2 py-0.5 rounded-full flex items-center gap-1">
-                          <Sparkles size={9} /> Nieuw
+                          <Sparkles size={9} /> {t("dash_badge_new")}
                         </span>
                       )}
                       <Lock size={12} className="text-[#94a3b8]" />
@@ -519,7 +524,7 @@ export default function DashboardPage() {
                   </div>
                   <div>
                     <p className="font-semibold text-[#0D1B2E] text-sm leading-snug">{test.title}</p>
-                    <p className="text-xs text-[#94a3b8] mt-1">{test.estimatedTime} min</p>
+                    <p className="text-xs text-[#94a3b8] mt-1">{test.estimatedTime} {t("minutes")}</p>
                   </div>
                 </div>
               ))}
@@ -534,22 +539,22 @@ export default function DashboardPage() {
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <h3 className="font-display font-semibold text-[#0D1B2E]">Persoonlijke coaching</h3>
+                  <h3 className="font-display font-semibold text-[#0D1B2E]">{t("dash_personal_coaching")}</h3>
                   <span className="text-[10px] font-bold text-[#7c3aed] bg-[#f5f3ff] border border-[#ddd6fe] px-2 py-0.5 rounded-full uppercase tracking-wider">
-                    Coming soon
+                    {t("dash_coming_soon")}
                   </span>
                 </div>
                 <p className="text-sm text-[#475569] leading-relaxed mb-4">
-                  Soon your coach will detect weak skills, generate company-specific test series, adapt difficulty in real time, and build a daily practice schedule — all from your performance data.
+                  {t("dash_coach_desc")}
                 </p>
                 <div className="flex items-center gap-3">
                   <Link
                     href="/pricing"
                     className="px-4 py-2 rounded-lg bg-[#4f46e5] text-white text-sm font-semibold hover:bg-[#4338ca] transition-colors"
                   >
-                    Get early access
+                    {t("dash_get_early_access")}
                   </Link>
-                  <span className="text-xs text-[#94a3b8]">Pro plan</span>
+                  <span className="text-xs text-[#94a3b8]">{t("dash_pro_plan")}</span>
                 </div>
               </div>
             </div>
