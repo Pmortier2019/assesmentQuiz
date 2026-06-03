@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Sparkles, PackageOpen, Star, Wand2, Lock, CheckCircle2, Crown } from "lucide-react";
 import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
@@ -8,24 +9,22 @@ import { Sidebar } from "@/components/layout/Sidebar";
 import { TestCard } from "@/components/cards/TestCard";
 import { FilterBar } from "@/components/test/FilterBar";
 import type { SortOption } from "@/components/test/FilterBar";
-import { getTests, generateTestOfType, getGenerationStatus, getCurrentUser, ALL_GENERATE_TYPES, ALL_DIFFICULTIES } from "@/lib/api";
-import { isAdmin, isLoggedIn } from "@/lib/auth";
+import { generateTestOfType, getGenerationStatus, ALL_GENERATE_TYPES, ALL_DIFFICULTIES } from "@/lib/api";
+import { useTests, useCurrentUser, queryKeys } from "@/lib/queries";
+import { isAdmin } from "@/lib/auth";
 import { useClientValue } from "@/lib/useClientValue";
 import { FREE_TEST_LIMIT } from "@/lib/constants";
 import { useT } from "@/lib/i18n";
-import type { Test, AssessmentType, Difficulty, RoleCategory, IndustryCategory } from "@/lib/types";
+import type { AssessmentType, Difficulty, RoleCategory, IndustryCategory } from "@/lib/types";
 
 export default function TestsPage() {
   const { t, plural } = useT();
-  const [tests, setTests] = useState<Test[]>([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
   const [generating, setGenerating] = useState(false);
   const [generateProgress, setGenerateProgress] = useState<{ current: number; total: number; label: string } | null>(null);
   const [generateError, setGenerateError] = useState("");
   const [generateAsFree, setGenerateAsFree] = useState(true);
   const adminMode = useClientValue(() => isAdmin(), false);
-  const [freeTestsUsed, setFreeTestsUsed] = useState<number | null>(null);
-  const [isPro, setIsPro] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedType, setSelectedType] = useState<AssessmentType | "all">("all");
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | "all">("all");
@@ -34,29 +33,21 @@ export default function TestsPage() {
   const [selectedIndustry, setSelectedIndustry] = useState<IndustryCategory | "all">("all");
   const [sortBy, setSortBy] = useState<SortOption>("default");
 
-  useEffect(() => {
-    if (isLoggedIn()) {
-      getCurrentUser().then((u) => {
-        setFreeTestsUsed(u.freeTestsUsed);
-        setIsPro(u.subscription === "pro");
-      }).catch(() => {});
-    }
-  }, []);
+  // AuthGuard guarantees we're logged in here; user data is shared with the
+  // dashboard's cache, so this is free on second visit.
+  const { data: user } = useCurrentUser();
+  const freeTestsUsed = user?.freeTestsUsed ?? null;
+  const isPro = user?.subscription === "pro";
 
-  useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-      const result = await getTests({
-        search: search || undefined,
-        type: selectedType === "all" ? undefined : selectedType,
-        difficulty: selectedDifficulty === "all" ? undefined : selectedDifficulty,
-        tier: selectedTier === "all" ? undefined : selectedTier,
-      });
-      setTests(result.data);
-      setLoading(false);
-    };
-    load().catch(() => setLoading(false));
-  }, [search, selectedType, selectedDifficulty, selectedTier]);
+  // Server-side filters drive the query key — each combo is cached and deduped,
+  // so toggling filters back and forth doesn't re-hit the network.
+  const { data: testsPage, isPending: loading } = useTests({
+    search: search || undefined,
+    type: selectedType === "all" ? undefined : selectedType,
+    difficulty: selectedDifficulty === "all" ? undefined : selectedDifficulty,
+    tier: selectedTier === "all" ? undefined : selectedTier,
+  });
+  const tests = testsPage?.data ?? [];
 
   // Client-side role/industry/sort filtering
   const filtered = tests
@@ -119,8 +110,7 @@ export default function TestsPage() {
     if (todo.length === 0) {
       setGenerating(false);
       setGenerateError("");
-      const result = await getTests({});
-      setTests(result.data);
+      await queryClient.invalidateQueries({ queryKey: queryKeys.tests.all });
       return;
     }
 
@@ -145,8 +135,7 @@ export default function TestsPage() {
       if (failed > 0) {
         setGenerateError(plural(failed, { one: "tests_gen_failed_some_one", other: "tests_gen_failed_some_other" }));
       }
-      const result = await getTests({});
-      setTests(result.data);
+      await queryClient.invalidateQueries({ queryKey: queryKeys.tests.all });
     }
   };
 
