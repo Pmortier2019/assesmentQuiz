@@ -8,7 +8,7 @@ interface DashboardCardProps {
   icon?: LucideIcon;
   iconColor?: string;
   iconBg?: string;
-  trend?: { value: number; label: string };
+  trend?: { value: number; label: string; unit?: string };
   children?: React.ReactNode;
   className?: string;
 }
@@ -51,7 +51,7 @@ export function DashboardCard({
               trend.value >= 0 ? "text-[#10b981]" : "text-[#f43f5e]"
             )}
           >
-            {trend.value >= 0 ? "+" : ""}{trend.value}%
+            {trend.value >= 0 ? "+" : ""}{trend.value}{trend.unit ?? "%"}
           </span>
           <span className="text-xs text-[#94a3b8]">{trend.label}</span>
         </div>

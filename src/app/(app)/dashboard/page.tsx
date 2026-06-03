@@ -30,6 +30,7 @@ import {
 } from "@/lib/utils";
 import type { Test, User, TestResult, PreparationPath } from "@/lib/types";
 import { FREE_TEST_LIMIT } from "@/lib/constants";
+import { testsCompletedThisWeek, scoreImprovement } from "@/lib/dashboardStats";
 
 const FREE_TESTS_LIMIT = FREE_TEST_LIMIT;
 
@@ -177,6 +178,10 @@ export default function DashboardPage() {
     .sort((a, b) => b.score - a.score)
     .slice(0, 5);
 
+  // Real trend figures (or null/0 → badge hidden) instead of hardcoded numbers
+  const testsThisWeek = testsCompletedThisWeek(results);
+  const improvement = scoreImprovement(results);
+
   return (
     <div className="flex min-h-screen bg-[#f8fafc]">
       <Sidebar streak={user.streak} userName={user.name} isAdmin={user.isAdmin} />
@@ -223,7 +228,7 @@ export default function DashboardPage() {
               icon={BookOpen}
               iconColor="text-[#4f46e5]"
               iconBg="bg-[#eef2ff]"
-              trend={{ value: 33, label: "this week" }}
+              trend={testsThisWeek > 0 ? { value: testsThisWeek, label: "this week", unit: "" } : undefined}
             />
             {/* Avg score — score ring */}
             <div className="card p-5 flex flex-col gap-3">
@@ -240,9 +245,11 @@ export default function DashboardPage() {
                 ) : (
                   <p className="font-display font-bold text-2xl text-[#0D1B2E]">—</p>
                 )}
-                {results.length > 0 && (
+                {improvement !== null && (
                   <div>
-                    <p className="text-xs text-[#10b981] font-semibold">+12%</p>
+                    <p className={`text-xs font-semibold ${improvement >= 0 ? "text-[#10b981]" : "text-[#f43f5e]"}`}>
+                      {improvement >= 0 ? "+" : ""}{improvement}%
+                    </p>
                     <p className="text-xs text-[#94a3b8]">improvement</p>
                   </div>
                 )}
