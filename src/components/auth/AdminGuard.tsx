@@ -2,24 +2,23 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { isLoggedIn, isAdmin } from "@/lib/auth";
 import { PageLoader } from "@/components/ui/PageLoader";
-import { useClientValue } from "@/lib/useClientValue";
+import { useAuth } from "@/lib/useAuth";
 
 export function AdminGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const loggedIn = useClientValue(() => isLoggedIn(), false);
-  const admin = useClientValue(() => isAdmin(), false);
+  const { status, isAdmin } = useAuth();
 
   useEffect(() => {
-    if (!loggedIn) {
+    if (status === "unauthenticated") {
       router.replace("/login");
-    } else if (!admin) {
+    } else if (status === "authenticated" && !isAdmin) {
       router.replace("/dashboard");
     }
-  }, [loggedIn, admin, router]);
+  }, [status, isAdmin, router]);
 
-  if (!loggedIn || !admin) return <PageLoader />;
+  // Wait while the session resolves; never flash admin content to a non-admin.
+  if (status !== "authenticated" || !isAdmin) return <PageLoader />;
 
   return <>{children}</>;
 }

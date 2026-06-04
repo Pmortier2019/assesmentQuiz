@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { StreakBadge } from "@/components/ui/StreakBadge";
 import { DarkModeToggle } from "@/components/ui/DarkModeToggle";
 import { useT } from "@/lib/i18n";
-import { isAdmin as getIsAdmin } from "@/lib/auth";
+import { useAuth } from "@/lib/useAuth";
 import { logout } from "@/lib/api";
 
 interface SidebarProps {
@@ -19,7 +19,8 @@ interface SidebarProps {
 }
 
 export function Sidebar({ streak = 7, userName = "Pierre", isAdmin: isAdminProp }: SidebarProps) {
-  const isAdmin = isAdminProp ?? (typeof window !== "undefined" ? getIsAdmin() : false);
+  const { isAdmin: authIsAdmin } = useAuth();
+  const isAdmin = isAdminProp ?? authIsAdmin;
   const pathname = usePathname();
   const router = useRouter();
   const { t } = useT();

@@ -3,6 +3,7 @@ import { Bricolage_Grotesque, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/lib/i18n";
 import { QueryProvider } from "@/lib/queryClient";
+import { AuthProvider } from "@/components/auth/AuthProvider";
 
 // Self-hosted at build time (no render-blocking Google Fonts request, no CLS).
 // Both are variable fonts, so the full weight range comes for free.
@@ -78,7 +79,9 @@ export default function RootLayout({
         />
         <LanguageProvider>
           <QueryProvider>
-            {children}
+            <AuthProvider>
+              {children}
+            </AuthProvider>
           </QueryProvider>
         </LanguageProvider>
       </body>

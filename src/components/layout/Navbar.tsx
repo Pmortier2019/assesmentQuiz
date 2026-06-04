@@ -8,8 +8,7 @@ import { cn } from "@/lib/utils";
 import { useT } from "@/lib/i18n";
 import { DarkModeToggle } from "@/components/ui/DarkModeToggle";
 import { logout } from "@/lib/api";
-import { isLoggedIn, isAdmin } from "@/lib/auth";
-import { useClientValue } from "@/lib/useClientValue";
+import { useAuth } from "@/lib/useAuth";
 
 interface NavbarProps {
   transparent?: boolean;
@@ -17,8 +16,7 @@ interface NavbarProps {
 
 export function Navbar({ transparent = false }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const loggedIn = useClientValue(() => isLoggedIn(), false);
-  const userIsAdmin = useClientValue(() => isAdmin(), false);
+  const { loggedIn, isAdmin: userIsAdmin } = useAuth();
   const router = useRouter();
   const { t } = useT();
 

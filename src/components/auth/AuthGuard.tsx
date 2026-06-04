@@ -2,22 +2,23 @@
 
 import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { isLoggedIn } from "@/lib/auth";
 import { PageLoader } from "@/components/ui/PageLoader";
-import { useClientValue } from "@/lib/useClientValue";
+import { useAuth } from "@/lib/useAuth";
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const loggedIn = useClientValue(() => isLoggedIn(), false);
+  const { status } = useAuth();
 
   useEffect(() => {
-    if (!loggedIn) {
+    if (status === "unauthenticated") {
       router.replace(`/login?from=${encodeURIComponent(pathname)}`);
     }
-  }, [loggedIn, router, pathname]);
+  }, [status, router, pathname]);
 
-  if (!loggedIn) return <PageLoader />;
+  // Wait for the session to resolve (loading) and never render protected
+  // content for an unauthenticated user — no flash before the redirect.
+  if (status !== "authenticated") return <PageLoader />;
 
   return <>{children}</>;
 }
