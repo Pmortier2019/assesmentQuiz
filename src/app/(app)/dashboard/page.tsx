@@ -16,7 +16,6 @@ import { PaywallCard } from "@/components/ui/PaywallCard";
 import { ScoreRing } from "@/components/ui/ScoreRing";
 import { XPLevelBar } from "@/components/ui/XPLevelBar";
 import { AchievementBadges } from "@/components/ui/AchievementBadges";
-import { PageLoader } from "@/components/ui/PageLoader";
 import { PageError } from "@/components/ui/ErrorState";
 import { LeaderboardCard } from "@/components/cards/LeaderboardCard";
 import { WeakSpotCard } from "@/components/cards/WeakSpotCard";
@@ -84,6 +83,54 @@ function RecommendedTestCard({ test, badge }: { test: Test; badge?: string }) {
   );
 }
 
+// Skeleton mirroring the real dashboard layout — feels faster than a blank
+// full-page loader and avoids a jarring swap once data lands.
+function DashboardSkeleton() {
+  return (
+    <div className="flex min-h-screen bg-surface-subtle">
+      <Sidebar />
+      <div className="flex-1 flex flex-col min-w-0">
+        <div className="lg:hidden">
+          <Navbar />
+        </div>
+        <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 flex flex-col gap-8" aria-busy="true">
+          {/* Header */}
+          <div className="flex flex-col gap-3">
+            <div className="skeleton h-8 w-64 rounded-lg" />
+            <div className="skeleton h-4 w-40 rounded" />
+          </div>
+          {/* Stats row */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="skeleton h-28 rounded-2xl" />
+            ))}
+          </div>
+          {/* XP / achievements / weak spots */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="skeleton h-32 rounded-2xl" />
+            ))}
+          </div>
+          {/* Preparation path + daily challenge */}
+          <div className="grid lg:grid-cols-2 gap-6">
+            <div className="skeleton h-48 rounded-2xl" />
+            <div className="skeleton h-48 rounded-2xl" />
+          </div>
+          {/* Recommended */}
+          <div className="flex flex-col gap-4">
+            <div className="skeleton h-5 w-48 rounded" />
+            <div className="grid sm:grid-cols-3 gap-4">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="skeleton h-40 rounded-2xl" />
+              ))}
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const { t } = useT();
   const { data: user, isError: userError, refetch: refetchUser } = useCurrentUser();
@@ -112,7 +159,7 @@ export default function DashboardPage() {
   }
 
   if (!user || testsPending || resultsPending) {
-    return <PageLoader label={t("dash_loading")} />;
+    return <DashboardSkeleton />;
   }
 
   const tests = testsPage?.data ?? [];
