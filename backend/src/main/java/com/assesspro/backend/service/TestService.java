@@ -11,6 +11,10 @@ import com.assesspro.backend.exception.ResourceNotFoundException;
 import com.assesspro.backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +52,56 @@ public class TestService {
                 .stream()
                 .map(this::toTestResponse)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Paginated search for the public test library. Search, role and industry
+     * are matched server-side so the client never downloads-then-filters, and
+     * only the requested page is fetched from the database.
+     */
+    @Transactional(readOnly = true)
+    public PagedResponse<TestResponse> searchTests(
+            String type, String difficulty, String access,
+            String search, String role, String industry,
+            int page, int size) {
+
+        TestType testType = type != null ? TestType.valueOf(type.toUpperCase()) : null;
+        Difficulty diff = difficulty != null ? Difficulty.valueOf(difficulty.toUpperCase()) : null;
+        Boolean isFree = switch (access != null ? access.toLowerCase() : "") {
+            case "free" -> true;
+            case "pro"  -> false;
+            default     -> null;
+        };
+
+        String searchParam   = toLikeParam(search);
+        String roleParam     = toLikeParam(role);
+        String industryParam = toLikeParam(industry);
+
+        // Defensive bounds: never let a client request an unbounded page.
+        int safePage = Math.max(0, page);
+        int safeSize = Math.min(Math.max(1, size), 100);
+        Pageable pageable = PageRequest.of(safePage, safeSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        Page<AssessmentTest> result = testRepository.searchWithFilters(
+                testType, diff, isFree, searchParam, roleParam, industryParam, pageable);
+
+        List<TestResponse> data = result.getContent().stream()
+                .map(this::toTestResponse)
+                .collect(Collectors.toList());
+
+        return PagedResponse.<TestResponse>builder()
+                .data(data)
+                .page(safePage)
+                .pageSize(safeSize)
+                .total(result.getTotalElements())
+                .hasMore(result.hasNext())
+                .build();
+    }
+
+    /** Lower-cases and wraps a filter term in %…% for a LIKE match, or null if blank. */
+    private String toLikeParam(String value) {
+        if (value == null || value.isBlank()) return null;
+        return "%" + value.toLowerCase() + "%";
     }
 
     @Transactional(readOnly = true)

@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import {
   getCurrentUser,
   getTests,
@@ -19,7 +19,8 @@ export const queryKeys = {
   recommendedTests: ["recommendedTests"] as const,
   tests: {
     all: ["tests"] as const,
-    list: (filters: TestFilters) => ["tests", filters] as const,
+    list: (filters: TestFilters) => ["tests", "list", filters] as const,
+    infinite: (filters: TestFilters) => ["tests", "infinite", filters] as const,
   },
 };
 
@@ -45,6 +46,22 @@ export function useTests(filters: TestFilters = {}) {
   return useQuery({
     queryKey: queryKeys.tests.list(filters),
     queryFn: () => getTests(filters),
+  });
+}
+
+/**
+ * Paginated test library with "load more" semantics. Each page is fetched
+ * server-side (search/filter/paging all live in the query key), so changing a
+ * filter starts a fresh paginated query and `fetchNextPage` appends the next
+ * page instead of re-downloading everything.
+ */
+export function useTestsInfinite(filters: TestFilters = {}, pageSize = 12) {
+  return useInfiniteQuery({
+    queryKey: queryKeys.tests.infinite(filters),
+    queryFn: ({ pageParam }) => getTests(filters, pageParam, pageSize),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) =>
+      lastPage.hasMore ? lastPage.page + 1 : undefined,
   });
 }
 

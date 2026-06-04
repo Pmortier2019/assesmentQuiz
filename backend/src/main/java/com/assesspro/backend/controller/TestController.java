@@ -1,5 +1,6 @@
 package com.assesspro.backend.controller;
 
+import com.assesspro.backend.dto.PagedResponse;
 import com.assesspro.backend.dto.SubmitTestRequest;
 import com.assesspro.backend.dto.SubmitTestResponse;
 import com.assesspro.backend.dto.TestDetailResponse;
@@ -25,14 +26,24 @@ public class TestController {
     /**
      * GET /api/tests
      * GET /api/tests?type=NUMERICAL_REASONING&difficulty=MEDIUM&access=free
+     *               &search=verbal&role=finance&industry=technology&page=0&size=12
+     *
+     * Returns a paginated envelope. Search/role/industry filtering and paging
+     * are resolved server-side, so the client only receives the requested page.
      */
     @GetMapping
-    public ResponseEntity<List<TestResponse>> getTests(
+    public ResponseEntity<PagedResponse<TestResponse>> getTests(
             @RequestParam(required = false) String type,
             @RequestParam(required = false) String difficulty,
-            @RequestParam(required = false) String access
+            @RequestParam(required = false) String access,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String role,
+            @RequestParam(required = false) String industry,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size
     ) {
-        return ResponseEntity.ok(testService.getTests(type, difficulty, access));
+        return ResponseEntity.ok(
+                testService.searchTests(type, difficulty, access, search, role, industry, page, size));
     }
 
     /**
