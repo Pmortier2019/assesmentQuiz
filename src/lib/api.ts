@@ -21,7 +21,16 @@ import { getToken, getUserIdFromToken, saveAuth, clearAuth } from "./auth";
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
 
 function currentUserId(): number {
-  return getUserIdFromToken() ?? 1; // fallback to 1 for seeded demo user
+  const id = getUserIdFromToken();
+  // Never silently fall back to another user's data (previously user #1). A
+  // missing/undecodable token means there is no valid session — clear it and
+  // bounce to login, mirroring how apiFetch handles a 401.
+  if (id == null || Number.isNaN(id)) {
+    clearAuth();
+    if (typeof window !== "undefined") window.location.href = "/login";
+    throw new ApiError(401, "Not authenticated");
+  }
+  return id;
 }
 
 // ─── Type mappers ─────────────────────────────────────────────────────────────
