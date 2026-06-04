@@ -56,8 +56,8 @@ export function WeakSpotCard({ results, tests }: WeakSpotCardProps) {
           <Brain size={18} className="text-[#f43f5e]" />
         </div>
         <div>
-          <h3 className="font-display font-semibold text-[#0D1B2E] text-sm">Weak spot detected</h3>
-          <p className="text-xs text-[#94a3b8] mt-0.5">Based on your last {results.length} test results</p>
+          <h3 className="font-display font-semibold text-default text-sm">Weak spot detected</h3>
+          <p className="text-xs text-subtle mt-0.5">Based on your last {results.length} test results</p>
         </div>
         <span className="ml-auto text-[10px] font-semibold text-[#4f46e5] bg-[#eef2ff] px-2 py-0.5 rounded-full">Smart</span>
       </div>
@@ -67,10 +67,10 @@ export function WeakSpotCard({ results, tests }: WeakSpotCardProps) {
           <div key={spot.type} className="flex items-center gap-3">
             <div className="flex-1">
               <div className="flex items-center justify-between mb-1">
-                <p className="text-xs font-medium text-[#475569]">{spot.label}</p>
+                <p className="text-xs font-medium text-body">{spot.label}</p>
                 <span className="text-xs font-bold text-[#f43f5e]">{spot.avgScore}%</span>
               </div>
-              <div className="h-1.5 bg-[#f1f5f9] rounded-full overflow-hidden">
+              <div className="h-1.5 bg-surface-muted rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-[#f43f5e] to-[#fb7185]"
                   style={{ width: `${spot.avgScore}%` }}

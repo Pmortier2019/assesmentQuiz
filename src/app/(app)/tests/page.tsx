@@ -120,7 +120,7 @@ export default function TestsPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#f8fafc]">
+    <div className="flex min-h-screen bg-surface-subtle">
       <Sidebar />
 
       <div className="flex-1 flex flex-col min-w-0">
@@ -132,9 +132,9 @@ export default function TestsPage() {
           {/* Header */}
           <div className="animate-fade-up flex items-start justify-between gap-4 flex-wrap">
             <div>
-              <h1 className="font-display font-bold text-2xl text-[#0D1B2E] mb-1">📚 {t("tests_library_title")}</h1>
-              <p className="text-[#64748b] text-sm">
-                <span className="font-semibold text-[#0D1B2E]">{t("tests_n_total", { n: total })}</span>
+              <h1 className="font-display font-bold text-2xl text-default mb-1">📚 {t("tests_library_title")}</h1>
+              <p className="text-muted text-sm">
+                <span className="font-semibold text-default">{t("tests_n_total", { n: total })}</span>
               </p>
             </div>
 
@@ -142,17 +142,17 @@ export default function TestsPage() {
             {adminMode && (
               <div className="flex flex-col items-end gap-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-[#64748b] font-medium">{t("tests_generate_as")}</span>
-                  <div className="flex rounded-lg border border-[#e2e8f0] overflow-hidden text-xs font-semibold">
+                  <span className="text-xs text-muted font-medium">{t("tests_generate_as")}</span>
+                  <div className="flex rounded-lg border border-line overflow-hidden text-xs font-semibold">
                     <button
                       onClick={() => setGenerateAsFree(true)}
-                      className={`px-3 py-1.5 transition-colors ${generateAsFree ? "bg-emerald-500 text-white" : "bg-white text-[#64748b] hover:bg-[#f8fafc]"}`}
+                      className={`px-3 py-1.5 transition-colors ${generateAsFree ? "bg-emerald-500 text-white" : "bg-surface text-muted hover:bg-surface-subtle"}`}
                     >
                       {t("free")}
                     </button>
                     <button
                       onClick={() => setGenerateAsFree(false)}
-                      className={`px-3 py-1.5 transition-colors ${!generateAsFree ? "bg-[#4f46e5] text-white" : "bg-white text-[#64748b] hover:bg-[#f8fafc]"}`}
+                      className={`px-3 py-1.5 transition-colors ${!generateAsFree ? "bg-[#4f46e5] text-white" : "bg-surface text-muted hover:bg-surface-subtle"}`}
                     >
                       {t("pro")}
                     </button>
@@ -168,10 +168,10 @@ export default function TestsPage() {
                 </div>
                 {generating && generateProgress && (
                   <div className="flex flex-col items-end gap-1 min-w-[220px]">
-                    <p className="text-xs text-[#64748b]">
+                    <p className="text-xs text-muted">
                       {generateProgress.current}/{generateProgress.total} — {generateProgress.label}
                     </p>
-                    <div className="w-full h-1.5 bg-[#e2e8f0] rounded-full overflow-hidden">
+                    <div className="w-full h-1.5 bg-line rounded-full overflow-hidden">
                       <div
                         className="h-full bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] rounded-full transition-all duration-300"
                         style={{ width: `${(generateProgress.current / generateProgress.total) * 100}%` }}
@@ -201,7 +201,7 @@ export default function TestsPage() {
                       ? t("tests_paywall_all_title", { limit: FREE_TEST_LIMIT })
                       : plural(FREE_TEST_LIMIT - freeTestsUsed, { one: "tests_free_remaining_one", other: "tests_free_remaining_other" })}
                   </p>
-                  <p className="text-xs text-[#64748b] mt-0.5">
+                  <p className="text-xs text-muted mt-0.5">
                     {freeTestsUsed >= FREE_TEST_LIMIT
                       ? t("tests_paywall_all_desc")
                       : t("tests_paywall_near_desc")}
@@ -246,12 +246,12 @@ export default function TestsPage() {
             </div>
           ) : tests.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-24 gap-4 text-center animate-fade-in">
-              <div className="w-16 h-16 rounded-2xl bg-[#f1f5f9] flex items-center justify-center">
-                <PackageOpen size={28} className="text-[#94a3b8]" />
+              <div className="w-16 h-16 rounded-2xl bg-surface-muted flex items-center justify-center">
+                <PackageOpen size={28} className="text-subtle" />
               </div>
               <div>
-                <h3 className="font-display font-semibold text-[#0D1B2E] text-lg mb-1">{t("tests_none_found")}</h3>
-                <p className="text-sm text-[#64748b] max-w-xs">
+                <h3 className="font-display font-semibold text-default text-lg mb-1">{t("tests_none_found")}</h3>
+                <p className="text-sm text-muted max-w-xs">
                   {t("tests_none_found_desc")}
                 </p>
               </div>
@@ -281,7 +281,7 @@ export default function TestsPage() {
                   <button
                     onClick={() => fetchNextPage()}
                     disabled={isFetchingNextPage}
-                    className="px-6 py-3 rounded-xl border border-[#e2e8f0] bg-white text-sm font-semibold text-[#0D1B2E] hover:bg-[#f8fafc] disabled:opacity-60 transition-colors shadow-sm"
+                    className="px-6 py-3 rounded-xl border border-line bg-surface text-sm font-semibold text-default hover:bg-surface-subtle disabled:opacity-60 transition-colors shadow-sm"
                   >
                     {isFetchingNextPage ? t("tests_loading_more") : t("tests_load_more")}
                   </button>
@@ -293,10 +293,10 @@ export default function TestsPage() {
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#4f46e5]/15 to-[#7c3aed]/15 flex items-center justify-center mx-auto mb-4">
                   <Sparkles size={22} className="text-[#4f46e5]" />
                 </div>
-                <h3 className="font-display font-semibold text-[#0D1B2E] mb-2">
+                <h3 className="font-display font-semibold text-default mb-2">
                   {t("tests_coming_soon_title")}
                 </h3>
-                <p className="text-sm text-[#64748b] max-w-xs mx-auto">
+                <p className="text-sm text-muted max-w-xs mx-auto">
                   {t("tests_coming_soon_desc")}
                 </p>
               </div>

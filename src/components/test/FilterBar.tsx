@@ -160,19 +160,19 @@ export function FilterBar({
     <div className="flex flex-col gap-4">
       {/* Search */}
       <div className="relative">
-        <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#94a3b8]" />
+        <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-subtle" />
         <input
           type="text"
           placeholder="Search tests..."
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#e2e8f0] bg-white text-sm text-[#0D1B2E] placeholder-[#94a3b8] focus:outline-none focus:border-[#4f46e5] focus:ring-2 focus:ring-[#4f46e5]/10 transition-all"
+          className="w-full pl-10 pr-4 py-3 rounded-xl border border-line bg-surface text-sm text-default placeholder-[#94a3b8] focus:outline-none focus:border-[#4f46e5] focus:ring-2 focus:ring-[#4f46e5]/10 transition-all"
         />
       </div>
 
       {/* Sort + type + difficulty + tier */}
       <div className="flex flex-wrap gap-2 items-center">
-        <div className="flex items-center gap-1.5 text-xs text-[#94a3b8] font-medium">
+        <div className="flex items-center gap-1.5 text-xs text-subtle font-medium">
           <SlidersHorizontal size={13} />
           Filter:
         </div>
@@ -190,7 +190,7 @@ export function FilterBar({
             >
               <Star size={11} /> Best match
             </button>
-            <div className="w-px h-4 bg-[#e2e8f0]" />
+            <div className="w-px h-4 bg-line" />
           </>
         )}
 
@@ -201,7 +201,7 @@ export function FilterBar({
             "px-3 py-1.5 rounded-lg text-xs font-medium border transition-all outline-none cursor-pointer",
             selectedType !== "all"
               ? "border-[#4f46e5] bg-[#eef2ff] text-[#4f46e5]"
-              : "border-[#e2e8f0] bg-[#f1f5f9] text-[#64748b] hover:bg-[#e2e8f0]"
+              : "border-line bg-surface-muted text-muted hover:bg-line"
           )}
         >
           <option value="all">All types</option>
@@ -213,16 +213,16 @@ export function FilterBar({
             </optgroup>
           ))}
         </select>
-        <div className="w-px h-4 bg-[#e2e8f0]" />
+        <div className="w-px h-4 bg-line" />
         <FilterChips options={DIFFICULTY_OPTIONS} selected={selectedDifficulty} onChange={onDifficultyChange as (v: string) => void} />
-        <div className="w-px h-4 bg-[#e2e8f0]" />
+        <div className="w-px h-4 bg-line" />
         <FilterChips options={TIER_OPTIONS} selected={selectedTier} onChange={onTierChange as (v: string) => void} />
       </div>
 
       {/* Role + industry filters */}
       {showRoleFilter && (onRoleChange || onIndustryChange) && (
         <div className="flex flex-wrap gap-2 items-center">
-          <div className="flex items-center gap-1.5 text-xs text-[#94a3b8] font-medium">
+          <div className="flex items-center gap-1.5 text-xs text-subtle font-medium">
             <Star size={13} />
             Career:
           </div>
@@ -235,7 +235,7 @@ export function FilterBar({
                 "px-3 py-1.5 rounded-lg text-xs font-medium border transition-all outline-none cursor-pointer",
                 selectedRole !== "all"
                   ? "border-[#4f46e5] bg-[#eef2ff] text-[#4f46e5]"
-                  : "border-[#e2e8f0] bg-[#f1f5f9] text-[#64748b] hover:bg-[#e2e8f0]"
+                  : "border-line bg-surface-muted text-muted hover:bg-line"
               )}
             >
               {ROLE_OPTIONS.map((o) => (
@@ -252,7 +252,7 @@ export function FilterBar({
                 "px-3 py-1.5 rounded-lg text-xs font-medium border transition-all outline-none cursor-pointer",
                 selectedIndustry !== "all"
                   ? "border-[#0891b2] bg-[#ecfeff] text-[#0891b2]"
-                  : "border-[#e2e8f0] bg-[#f1f5f9] text-[#64748b] hover:bg-[#e2e8f0]"
+                  : "border-line bg-surface-muted text-muted hover:bg-line"
               )}
             >
               {INDUSTRY_OPTIONS.map((o) => (
@@ -296,7 +296,7 @@ function FilterChips({
             "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
             selected === opt.value
               ? "bg-[#0D1B2E] text-white"
-              : "bg-[#f1f5f9] text-[#64748b] hover:bg-[#e2e8f0] hover:text-[#334155]"
+              : "bg-surface-muted text-muted hover:bg-line hover:text-body"
           )}
         >
           {opt.label}

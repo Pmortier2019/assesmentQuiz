@@ -1,6 +1,24 @@
 @import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap");
 @import "tailwindcss";
 
+/* Class-based dark mode: make `dark:` utilities follow the `.dark` class that
+   DarkModeToggle sets, instead of Tailwind v4's default OS media query. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Semantic colour utilities (bg-surface, text-default, text-muted, …). The
+   `inline` keyword keeps them referencing the runtime CSS variables below, so
+   the utilities switch automatically under the `.dark` class. */
+@theme inline {
+  --color-surface:        var(--bg);
+  --color-surface-subtle: var(--bg-subtle);
+  --color-surface-muted:  var(--surface-muted);
+  --color-default:        var(--text);
+  --color-body:           var(--text-body);
+  --color-muted:          var(--text-muted);
+  --color-subtle:         var(--text-subtle);
+  --color-line:           var(--border);
+}
+
 /* ── Design tokens ── */
 :root {
   --navy:       #0D1B2E;
@@ -16,11 +34,14 @@
   --amber:      #f59e0b;
   --rose:       #f43f5e;
 
-  --bg:         #ffffff;
-  --bg-subtle:  #f8fafc;
-  --border:     #e2e8f0;
-  --text:       #0D1B2E;
-  --text-muted: #64748b;
+  --bg:            #ffffff;
+  --bg-subtle:     #f8fafc;
+  --surface-muted: #f1f5f9;
+  --border:        #e2e8f0;
+  --text:          #0D1B2E;
+  --text-body:     #475569;
+  --text-muted:    #64748b;
+  --text-subtle:   #94a3b8;
 
   --gradient-hero: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #2563eb 100%);
   --gradient-pro:  linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
@@ -37,11 +58,14 @@
 
 /* ── Dark mode tokens ── */
 .dark {
-  --bg:         #0f1520;
-  --bg-subtle:  #151d2e;
-  --border:     #1e2d45;
-  --text:       #e2e8f0;
-  --text-muted: #94a3b8;
+  --bg:            #0f1520;
+  --bg-subtle:     #151d2e;
+  --surface-muted: #1e2d45;
+  --border:        #1e2d45;
+  --text:          #e2e8f0;
+  --text-body:     #cbd5e1;
+  --text-muted:    #94a3b8;
+  --text-subtle:   #64748b;
   color-scheme: dark;
 }
 
@@ -170,6 +194,10 @@ h1, h2, h3, h4, h5, h6 {
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: var(--radius);
+}
+.dark .skeleton {
+  background: linear-gradient(90deg, #151d2e 25%, #1e2d45 50%, #151d2e 75%);
+  background-size: 200% 100%;
 }
 
 .scrollbar-hide::-webkit-scrollbar { display: none; }

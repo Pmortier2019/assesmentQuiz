@@ -33,11 +33,11 @@ export function DashboardHeader({
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 animate-fade-up">
       <div>
-        <h1 className="font-display font-bold text-2xl text-[#0D1B2E]">
+        <h1 className="font-display font-bold text-2xl text-default">
           {t(greeting())}, {userName.split(" ")[0]} 👋
         </h1>
         {hasCareerTargets ? (
-          <p className="text-[#64748b] text-sm mt-1">
+          <p className="text-muted text-sm mt-1">
             {t("dash_preparing_for")}{" "}
             <span className="font-semibold text-[#4f46e5]">{targetRole}</span>
             {targetIndustry && (
@@ -48,7 +48,7 @@ export function DashboardHeader({
             )}
           </p>
         ) : (
-          <p className="text-[#64748b] text-sm mt-1">
+          <p className="text-muted text-sm mt-1">
             {isAtLimit
               ? t("dash_used_all")
               : t("dash_free_remaining", { n: remaining, s: remaining !== 1 ? "s" : "" })}

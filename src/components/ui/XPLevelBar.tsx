@@ -61,9 +61,9 @@ export function XPLevelBar({ xp, compact = false }: XPLevelBarProps) {
       <div className="flex flex-col gap-1 w-full">
         <div className="flex items-center justify-between">
           <span className="text-[10px] font-semibold text-[#4f46e5]">Lv.{levelNum} {levelName}</span>
-          <span className="text-[10px] text-[#94a3b8]">{xp} / {nextXP} XP</span>
+          <span className="text-[10px] text-subtle">{xp} / {nextXP} XP</span>
         </div>
-        <div ref={barRef} className="h-1.5 bg-[#f1f5f9] rounded-full overflow-hidden">
+        <div ref={barRef} className="h-1.5 bg-surface-muted rounded-full overflow-hidden">
           <div
             className="h-full rounded-full bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] transition-none"
             style={{ width: `${displayed}%` }}
@@ -81,24 +81,24 @@ export function XPLevelBar({ xp, compact = false }: XPLevelBarProps) {
             <span className="text-white text-xs font-bold">{levelNum}</span>
           </div>
           <div>
-            <p className="text-xs font-bold text-[#0D1B2E]">{levelName}</p>
-            <p className="text-[10px] text-[#94a3b8]">Level {levelNum}</p>
+            <p className="text-xs font-bold text-default">{levelName}</p>
+            <p className="text-[10px] text-subtle">Level {levelNum}</p>
           </div>
         </div>
         <div className="text-right">
           <p className="text-sm font-bold text-[#4f46e5]">{xp} XP</p>
-          <p className="text-[10px] text-[#94a3b8]">→ {nextXP} XP</p>
+          <p className="text-[10px] text-subtle">→ {nextXP} XP</p>
         </div>
       </div>
 
-      <div ref={barRef} className="h-2 bg-[#f1f5f9] rounded-full overflow-hidden">
+      <div ref={barRef} className="h-2 bg-surface-muted rounded-full overflow-hidden">
         <div
           className="h-full rounded-full bg-gradient-to-r from-[#4f46e5] to-[#7c3aed]"
           style={{ width: `${displayed}%`, transition: "width 0.05s linear" }}
         />
       </div>
 
-      <p className="text-[10px] text-[#94a3b8]">{progress}% to next level</p>
+      <p className="text-[10px] text-subtle">{progress}% to next level</p>
     </div>
   );
 }

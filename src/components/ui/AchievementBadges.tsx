@@ -68,7 +68,7 @@ export function AchievementBadges({ results, streak }: AchievementBadgesProps) {
 
   return (
     <div className="card p-4">
-      <h3 className="font-display font-semibold text-sm text-[#0D1B2E] mb-3">Achievements</h3>
+      <h3 className="font-display font-semibold text-sm text-default mb-3">Achievements</h3>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {badges.map((badge) => (
           <div
@@ -76,15 +76,15 @@ export function AchievementBadges({ results, streak }: AchievementBadgesProps) {
             className={`flex flex-col items-center gap-2 p-3 rounded-xl border text-center transition-all ${
               badge.earned
                 ? "border-transparent shadow-sm"
-                : "border-[#e2e8f0] opacity-40 grayscale"
+                : "border-line opacity-40 grayscale"
             }`}
             style={badge.earned ? { background: "white" } : {}}
             title={badge.earned ? badge.desc : `Locked: ${badge.desc}`}
           >
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${badge.earned ? badge.bg : "bg-[#f1f5f9]"}`}>
-              <span className={badge.earned ? badge.color : "text-[#94a3b8]"}>{badge.icon}</span>
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${badge.earned ? badge.bg : "bg-surface-muted"}`}>
+              <span className={badge.earned ? badge.color : "text-subtle"}>{badge.icon}</span>
             </div>
-            <p className={`text-[11px] font-semibold leading-tight ${badge.earned ? "text-[#0D1B2E]" : "text-[#94a3b8]"}`}>
+            <p className={`text-[11px] font-semibold leading-tight ${badge.earned ? "text-default" : "text-subtle"}`}>
               {badge.label}
             </p>
             {!badge.earned && (

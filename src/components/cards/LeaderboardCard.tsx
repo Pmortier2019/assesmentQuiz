@@ -26,10 +26,10 @@ export function LeaderboardCard({ type }: LeaderboardCardProps) {
     <div className="card p-4">
       <div className="flex items-center gap-2 mb-4">
         <Trophy size={16} className="text-amber-500" />
-        <h3 className="font-display font-semibold text-sm text-[#0D1B2E]">
+        <h3 className="font-display font-semibold text-sm text-default">
           Weekly Leaderboard
         </h3>
-        <span className="ml-auto text-[10px] font-semibold text-[#94a3b8] bg-[#f1f5f9] px-2 py-0.5 rounded-full">
+        <span className="ml-auto text-[10px] font-semibold text-subtle bg-surface-muted px-2 py-0.5 rounded-full">
           This week
         </span>
       </div>
@@ -37,20 +37,20 @@ export function LeaderboardCard({ type }: LeaderboardCardProps) {
       {loading ? (
         <InlineLoader />
       ) : entries.length === 0 ? (
-        <p className="text-xs text-[#94a3b8] text-center py-6">No results yet this week</p>
+        <p className="text-xs text-subtle text-center py-6">No results yet this week</p>
       ) : (
         <div className="flex flex-col gap-2">
           {entries.map((e) => (
             <div
               key={e.rank}
-              className="flex items-center gap-3 px-3 py-2 rounded-xl bg-[#f8fafc] hover:bg-[#f1f5f9] transition-colors"
+              className="flex items-center gap-3 px-3 py-2 rounded-xl bg-surface-subtle hover:bg-surface-muted transition-colors"
             >
               <span className="text-base w-7 text-center flex-shrink-0">
-                {e.rank <= 3 ? MEDALS[e.rank - 1] : <Medal size={14} className="text-[#94a3b8]" />}
+                {e.rank <= 3 ? MEDALS[e.rank - 1] : <Medal size={14} className="text-subtle" />}
               </span>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-[#0D1B2E] truncate">{e.displayName}</p>
-                <p className="text-[10px] text-[#94a3b8] truncate">{e.testTitle}</p>
+                <p className="text-sm font-semibold text-default truncate">{e.displayName}</p>
+                <p className="text-[10px] text-subtle truncate">{e.testTitle}</p>
               </div>
               <span
                 className={`text-sm font-bold flex-shrink-0 ${

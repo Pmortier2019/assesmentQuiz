@@ -1,6 +1,6 @@
 export function PageLoader({ label = "Loading…" }: { label?: string }) {
   return (
-    <div className="flex min-h-screen bg-[#f8fafc] items-center justify-center">
+    <div className="flex min-h-screen bg-surface-subtle items-center justify-center">
       <div className="flex flex-col items-center gap-4">
         {/* Pulsing logo mark */}
         <div className="relative w-12 h-12">
@@ -19,7 +19,7 @@ export function PageLoader({ label = "Loading…" }: { label?: string }) {
           <div className="skeleton w-32 h-2.5 rounded-full" />
           <div className="skeleton w-20 h-2 rounded-full" />
         </div>
-        <p className="text-xs text-[#94a3b8] font-medium">{label}</p>
+        <p className="text-xs text-subtle font-medium">{label}</p>
       </div>
     </div>
   );
