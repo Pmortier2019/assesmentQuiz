@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import {
   Flame, TrendingUp, BookOpen, Trophy, Sparkles, Lock, ChevronRight,
   Target, BarChart3, Clock, Star, Users, Zap, ArrowRight,
@@ -21,14 +20,14 @@ import { PageLoader } from "@/components/ui/PageLoader";
 import { LeaderboardCard } from "@/components/cards/LeaderboardCard";
 import { WeakSpotCard } from "@/components/cards/WeakSpotCard";
 import {
-  getCurrentUser, getTests, getUserResults,
-  getPreparationPath, getRecommendedTests,
-} from "@/lib/api";
+  useCurrentUser, useTests, useUserResults,
+  usePreparationPath, useRecommendedTests,
+} from "@/lib/queries";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import {
   ASSESSMENT_TYPE_LABELS, ASSESSMENT_TYPE_ICONS, getScoreColor, formatTime,
 } from "@/lib/utils";
-import type { Test, User, TestResult, PreparationPath } from "@/lib/types";
+import type { Test } from "@/lib/types";
 import { FREE_TEST_LIMIT } from "@/lib/constants";
 import { testsCompletedThisWeek, scoreImprovement } from "@/lib/dashboardStats";
 import { useT, type TranslationKey } from "@/lib/i18n";
@@ -86,46 +85,24 @@ function RecommendedTestCard({ test, badge }: { test: Test; badge?: string }) {
 
 export default function DashboardPage() {
   const { t } = useT();
-  const [user, setUser] = useState<User | null>(null);
-  const [tests, setTests] = useState<Test[]>([]);
-  const [results, setResults] = useState<TestResult[]>([]);
-  const [preparationPath, setPreparationPath] = useState<PreparationPath | null>(null);
-  const [recommendedTests, setRecommendedTests] = useState<Test[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: user } = useCurrentUser();
+  const { data: testsPage, isPending: testsPending } = useTests();
+  const { data: results = [], isPending: resultsPending } = useUserResults();
 
-  useEffect(() => {
-    async function load() {
-      try {
-        const [u, testsPage, res] = await Promise.all([
-          getCurrentUser(),
-          getTests(),
-          getUserResults(),
-        ]);
-        setUser(u);
-        setTests(testsPage.data);
-        setResults(res);
-        if (u.targetRole || u.targetIndustry) {
-          const [path, recs] = await Promise.all([
-            getPreparationPath().catch(() => null),
-            getRecommendedTests().catch(() => [] as Test[]),
-          ]);
-          setPreparationPath(path);
-          setRecommendedTests(recs);
-        }
-      } finally {
-        setLoading(false);
-      }
-    }
-    load();
-  }, []);
+  // preparationPath/recommended only matter once the user has career targets.
+  // Gating both on the same flag lets them fire in parallel the moment the
+  // user resolves — no serial user → path → recommended waterfall.
+  const hasCareerTargets = !!(user?.targetRole || user?.targetIndustry);
+  const { data: preparationPath = null } = usePreparationPath(hasCareerTargets);
+  const { data: recommendedTests = [] } = useRecommendedTests(hasCareerTargets);
 
-  if (loading || !user) {
+  if (!user || testsPending || resultsPending) {
     return <PageLoader label={t("dash_loading")} />;
   }
 
+  const tests = testsPage?.data ?? [];
   const dailyChallenge = tests[0];
   const isAtLimit = user.freeTestsUsed >= FREE_TESTS_LIMIT;
-  const hasCareerTargets = !!(user.targetRole || user.targetIndustry);
 
   // Popular for role — tests whose targetRoles include user's role
   const popularForRole = user.targetRole

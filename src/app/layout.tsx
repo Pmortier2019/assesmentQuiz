@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { LanguageProvider } from "@/lib/i18n";
+import { QueryProvider } from "@/lib/queryClient";
 
 export const metadata: Metadata = {
   title: {
@@ -54,7 +55,9 @@ export default function RootLayout({
     <html lang="en" className="h-full">
       <body className="min-h-full flex flex-col bg-white text-[#0D1B2E] antialiased">
         <LanguageProvider>
-          {children}
+          <QueryProvider>
+            {children}
+          </QueryProvider>
         </LanguageProvider>
       </body>
     </html>
