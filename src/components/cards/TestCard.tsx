@@ -47,7 +47,7 @@ export function TestCard({ test, isLocked = false, onStart, className, showRecom
 
       {/* Icon + type */}
       <div className="flex items-start justify-between gap-2">
-        <div className="w-10 h-10 rounded-xl bg-surface-subtle border border-line flex items-center justify-center text-xl">
+        <div className="w-10 h-10 rounded-xl bg-surface-subtle border border-line flex items-center justify-center text-xl" aria-hidden="true">
           {ASSESSMENT_TYPE_ICONS[test.type]}
         </div>
         {locked ? (

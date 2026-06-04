@@ -49,7 +49,7 @@ function RecommendedTestCard({ test, badge }: { test: Test; badge?: string }) {
       className="card card-interactive p-4 flex flex-col gap-3 group"
     >
       <div className="flex items-start justify-between gap-2">
-        <span className="text-xl">{ASSESSMENT_TYPE_ICONS[test.type]}</span>
+        <span className="text-xl" aria-hidden="true">{ASSESSMENT_TYPE_ICONS[test.type]}</span>
         <div className="flex flex-col items-end gap-1">
           {badge && (
             <span className="text-[10px] font-bold text-[#4f46e5] bg-[#eef2ff] px-2 py-0.5 rounded-full uppercase tracking-wider">
@@ -305,7 +305,7 @@ export default function DashboardPage() {
                   href={`/tests?type=${ex.type}`}
                   className="card card-interactive p-4 flex items-center gap-4"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-surface-muted flex items-center justify-center text-xl flex-shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-surface-muted flex items-center justify-center text-xl flex-shrink-0" aria-hidden="true">
                     {ex.icon}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -439,7 +439,7 @@ export default function DashboardPage() {
                     <div key={skill.name}>
                       <div className="flex items-center justify-between mb-1.5">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm">{skill.icon}</span>
+                          <span className="text-sm" aria-hidden="true">{skill.icon}</span>
                           <span className="text-sm font-medium text-body">{skill.name}</span>
                         </div>
                         <span className={`text-sm font-bold ${getScoreColor(skill.score)}`}>{skill.score}%</span>
@@ -472,7 +472,7 @@ export default function DashboardPage() {
                     const test = tests.find((t) => t.id === result.testId);
                     return (
                       <div key={result.id} className="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-subtle transition-colors">
-                        <div className="w-8 h-8 rounded-lg bg-surface-muted flex items-center justify-center text-base flex-shrink-0">
+                        <div className="w-8 h-8 rounded-lg bg-surface-muted flex items-center justify-center text-base flex-shrink-0" aria-hidden="true">
                           {test ? ASSESSMENT_TYPE_ICONS[test.type] : "📋"}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -504,7 +504,7 @@ export default function DashboardPage() {
               {lockedTests.map((test) => (
                 <div key={test.id} className="card p-4 flex flex-col gap-3 opacity-60 cursor-not-allowed">
                   <div className="flex items-center justify-between">
-                    <span className="text-xl">{ASSESSMENT_TYPE_ICONS[test.type]}</span>
+                    <span className="text-xl" aria-hidden="true">{ASSESSMENT_TYPE_ICONS[test.type]}</span>
                     <div className="flex items-center gap-1.5">
                       {test.isGeneratedByAI && (
                         <span className="text-xs font-semibold text-[#4f46e5] bg-[#eef2ff] px-2 py-0.5 rounded-full flex items-center gap-1">

@@ -270,3 +270,27 @@ h1, h2, h3, h4, h5, h6 {
   background: rgba(79,70,229,0.15);
   color: var(--navy);
 }
+
+/* ── Reduced motion ──
+   Respect users who ask for less motion: kill the infinite decorative
+   animations (mesh blobs, streak flames, float, shimmer), neutralise entrance
+   animations and transitions, and disable smooth scrolling. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  html { scroll-behavior: auto; }
+  .mesh-blob,
+  .streak-flame-hot,
+  .streak-flame-blue,
+  .streak-badge-hot,
+  .streak-badge-blue,
+  .animate-float,
+  .animate-streak,
+  .skeleton {
+    animation: none !important;
+  }
+}
