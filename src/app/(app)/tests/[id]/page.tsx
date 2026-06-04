@@ -33,13 +33,13 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
   const timeDelta = estimatedSecs - result.timeTaken;
 
   return (
-    <div className="min-h-screen bg-[#f8fafc]">
+    <div className="min-h-screen bg-surface-subtle">
       {/* Header */}
-      <header className="bg-white border-b border-[#e2e8f0] sticky top-0 z-40">
+      <header className="bg-surface border-b border-line sticky top-0 z-40">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <div>
-            <p className="text-xs text-[#94a3b8] font-medium">{ASSESSMENT_TYPE_LABELS[test.type]}</p>
-            <p className="text-sm font-semibold text-[#0D1B2E] truncate">{test.title}</p>
+            <p className="text-xs text-subtle font-medium">{ASSESSMENT_TYPE_LABELS[test.type]}</p>
+            <p className="text-sm font-semibold text-default truncate">{test.title}</p>
           </div>
           <Link
             href="/results"
@@ -93,7 +93,7 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
               {passed ? <CheckCircle2 size={14} /> : <AlertCircle size={14} />}
               {passed ? t("tt_passed") : t("tt_not_passed")}
             </div>
-            <p className="text-[#64748b] text-sm">
+            <p className="text-muted text-sm">
               {t("tt_pass_mark", { mark: PASS_THRESHOLD, correct, total })}
             </p>
           </div>
@@ -105,15 +105,15 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
             <div className="w-9 h-9 rounded-xl bg-[#eef2ff] flex items-center justify-center">
               <Trophy size={18} className="text-[#4f46e5]" />
             </div>
-            <p className="font-display font-bold text-lg text-[#0D1B2E]">{result.score}%</p>
-            <p className="text-xs text-[#94a3b8]">{t("tt_your_score")}</p>
+            <p className="font-display font-bold text-lg text-default">{result.score}%</p>
+            <p className="text-xs text-subtle">{t("tt_your_score")}</p>
           </div>
 
           <div className="card p-4 flex flex-col items-center gap-1.5 text-center">
             <div className="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center">
               <Clock size={18} className="text-amber-500" />
             </div>
-            <p className="font-display font-bold text-lg text-[#0D1B2E]">{formatTime(result.timeTaken)}</p>
+            <p className="font-display font-bold text-lg text-default">{formatTime(result.timeTaken)}</p>
             <p className={cn("text-xs font-medium", timeDelta >= 0 ? "text-emerald-600" : "text-rose-500")}>
               {timeDelta >= 0
                 ? t("tt_under_target", { time: formatTime(timeDelta) })
@@ -125,16 +125,16 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
             <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center">
               <TrendingUp size={18} className="text-emerald-500" />
             </div>
-            <p className="font-display font-bold text-lg text-[#0D1B2E]">{correct}/{total}</p>
-            <p className="text-xs text-[#94a3b8]">{t("tt_correct")}</p>
+            <p className="font-display font-bold text-lg text-default">{correct}/{total}</p>
+            <p className="text-xs text-subtle">{t("tt_correct")}</p>
           </div>
         </div>
 
         {/* Feedback */}
         {result.aiFeedback && (
           <div className="card p-4 border-l-4 border-[#4f46e5] animate-fade-up delay-200">
-            <p className="text-sm font-semibold text-[#0D1B2E] mb-1">{t("tt_feedback")}</p>
-            <p className="text-sm text-[#475569]">{result.aiFeedback}</p>
+            <p className="text-sm font-semibold text-default mb-1">{t("tt_feedback")}</p>
+            <p className="text-sm text-body">{result.aiFeedback}</p>
           </div>
         )}
 
@@ -145,7 +145,7 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
               <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center">
                 <Lightbulb size={16} className="text-amber-500" />
               </div>
-              <h2 className="font-display font-semibold text-base text-[#0D1B2E]">{t("tt_tips")}</h2>
+              <h2 className="font-display font-semibold text-base text-default">{t("tt_tips")}</h2>
             </div>
             <ul className="flex flex-col gap-3">
               {result.tips.map((tip, i) => (
@@ -153,7 +153,7 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
                   <span className="mt-0.5 w-5 h-5 rounded-full bg-amber-100 text-amber-700 text-xs font-bold flex items-center justify-center flex-shrink-0">
                     {i + 1}
                   </span>
-                  <p className="text-sm text-[#475569] leading-relaxed">{tip}</p>
+                  <p className="text-sm text-body leading-relaxed">{tip}</p>
                 </li>
               ))}
             </ul>
@@ -163,7 +163,7 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
         {/* Per-question breakdown */}
         {result.questionResults && result.questionResults.length > 0 && (
           <div className="flex flex-col gap-3 animate-fade-up delay-300">
-            <h2 className="font-display font-semibold text-base text-[#0D1B2E]">{t("results_q_review")}</h2>
+            <h2 className="font-display font-semibold text-base text-default">{t("results_q_review")}</h2>
             {result.questionResults.map((qr, i) => (
               <QuestionReviewCard
                 key={qr.questionId}
@@ -180,7 +180,7 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
         <div className="flex gap-3 animate-fade-up delay-400">
           <Link
             href="/tests"
-            className="flex-1 py-3 rounded-xl border border-[#e2e8f0] text-sm font-semibold text-[#475569] hover:bg-[#f8fafc] transition-colors text-center"
+            className="flex-1 py-3 rounded-xl border border-line text-sm font-semibold text-body hover:bg-surface-subtle transition-colors text-center"
           >
             {t("results_back")}
           </Link>
@@ -209,7 +209,7 @@ function QuestionReviewCard({
     )}>
       <button
         onClick={onToggle}
-        className="w-full flex items-center gap-3 p-4 text-left hover:bg-[#f8fafc] transition-colors"
+        className="w-full flex items-center gap-3 p-4 text-left hover:bg-surface-subtle transition-colors"
       >
         <div className={cn(
           "w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold text-white flex-shrink-0",
@@ -217,7 +217,7 @@ function QuestionReviewCard({
         )}>
           {qr.isCorrect ? "✓" : "✗"}
         </div>
-        <p className="flex-1 text-sm font-medium text-[#0D1B2E] line-clamp-1">{qr.questionText}</p>
+        <p className="flex-1 text-sm font-medium text-default line-clamp-1">{qr.questionText}</p>
         <div className="flex items-center gap-2 flex-shrink-0">
           <span className={cn(
             "text-xs font-semibold px-2 py-0.5 rounded-full",
@@ -227,13 +227,13 @@ function QuestionReviewCard({
           )}>
             {qr.isCorrect ? `✓ ${t("tt_correct")}` : `✗ ${t("tt_incorrect")}`}
           </span>
-          <ChevronDown size={14} className={cn("text-[#94a3b8] transition-transform", open && "rotate-180")} />
+          <ChevronDown size={14} className={cn("text-subtle transition-transform", open && "rotate-180")} />
         </div>
       </button>
 
       {open && (
-        <div className="px-4 pb-4 flex flex-col gap-3 border-t border-[#f1f5f9]">
-          <p className="text-sm text-[#475569] pt-3">{qr.questionText}</p>
+        <div className="px-4 pb-4 flex flex-col gap-3 border-t border-line">
+          <p className="text-sm text-body pt-3">{qr.questionText}</p>
           <div className="flex flex-col gap-2">
             {qr.answerOptions.map((opt) => {
               const isSelected = opt.id === qr.selectedAnswerOptionId;
@@ -247,7 +247,7 @@ function QuestionReviewCard({
                       ? "border-emerald-300 bg-emerald-50 text-emerald-800 font-medium"
                       : isSelected && !isCorrectAnswer
                       ? "border-rose-300 bg-rose-50 text-rose-700"
-                      : "border-transparent text-[#475569]"
+                      : "border-transparent text-body"
                   )}
                 >
                   <span className="text-xs font-bold w-4 flex-shrink-0">
@@ -258,9 +258,9 @@ function QuestionReviewCard({
               );
             })}
           </div>
-          <div className="rounded-lg bg-[#f8fafc] border border-[#e2e8f0] px-3 py-2">
-            <p className="text-xs font-semibold text-[#0D1B2E] mb-0.5">{t("results_explanation")}</p>
-            <p className="text-xs text-[#475569]">{qr.explanation}</p>
+          <div className="rounded-lg bg-surface-subtle border border-line px-3 py-2">
+            <p className="text-xs font-semibold text-default mb-0.5">{t("results_explanation")}</p>
+            <p className="text-xs text-body">{qr.explanation}</p>
           </div>
         </div>
       )}
@@ -393,13 +393,13 @@ export default function TestPage() {
     const paywallReason = freeTestsUsed >= FREE_TEST_LIMIT ? "free_limit" : "pro_test";
 
     return (
-      <div className="min-h-screen bg-[#f8fafc] flex flex-col">
-        <header className="bg-white border-b border-[#e2e8f0]">
+      <div className="min-h-screen bg-surface-subtle flex flex-col">
+        <header className="bg-surface border-b border-line">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
-            <Link href="/tests" className="text-[#64748b] hover:text-[#0D1B2E] transition-colors">
+            <Link href="/tests" className="text-muted hover:text-default transition-colors">
               <ChevronLeft size={20} />
             </Link>
-            {test && <p className="text-sm font-semibold text-[#0D1B2E] truncate">{test.title}</p>}
+            {test && <p className="text-sm font-semibold text-default truncate">{test.title}</p>}
           </div>
         </header>
         <div className="flex-1 flex items-center justify-center px-4 py-16">
@@ -408,10 +408,10 @@ export default function TestPage() {
               <Lock size={24} className="text-white" />
             </div>
             <div>
-              <h2 className="font-display font-bold text-2xl text-[#0D1B2E] mb-2">
+              <h2 className="font-display font-bold text-2xl text-default mb-2">
                 {paywallReason === "free_limit" ? t("tt_free_limit_title") : t("tt_pro_test_title")}
               </h2>
-              <p className="text-[#64748b] text-sm leading-relaxed">
+              <p className="text-muted text-sm leading-relaxed">
                 {paywallReason === "free_limit"
                   ? t("tt_free_limit_desc", { limit: FREE_TEST_LIMIT })
                   : t("tt_pro_test_desc")}
@@ -426,12 +426,12 @@ export default function TestPage() {
               </Link>
               <Link
                 href="/tests"
-                className="px-6 py-3 rounded-xl border border-[#e2e8f0] text-[#475569] font-semibold text-sm hover:border-[#4f46e5]/30 hover:text-[#4f46e5] transition-colors"
+                className="px-6 py-3 rounded-xl border border-line text-body font-semibold text-sm hover:border-[#4f46e5]/30 hover:text-[#4f46e5] transition-colors"
               >
                 {t("results_back")}
               </Link>
             </div>
-            <p className="text-xs text-[#94a3b8]">{t("tt_cancel_anytime")}</p>
+            <p className="text-xs text-subtle">{t("tt_cancel_anytime")}</p>
           </div>
         </div>
       </div>
@@ -440,8 +440,8 @@ export default function TestPage() {
 
   if (!test || test.questions.length === 0) {
     return (
-      <div className="min-h-screen bg-[#f8fafc] flex flex-col items-center justify-center gap-4 p-4">
-        <p className="font-display font-semibold text-[#0D1B2E] text-xl">{t("tt_test_not_available")}</p>
+      <div className="min-h-screen bg-surface-subtle flex flex-col items-center justify-center gap-4 p-4">
+        <p className="font-display font-semibold text-default text-xl">{t("tt_test_not_available")}</p>
         <Link href="/tests" className="text-sm text-[#4f46e5] hover:underline">← {t("results_back")}</Link>
       </div>
     );
@@ -458,31 +458,31 @@ export default function TestPage() {
   const allAnswered = answered === total;
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] flex flex-col">
+    <div className="min-h-screen bg-surface-subtle flex flex-col">
       {/* Header bar */}
-      <header className="bg-white border-b border-[#e2e8f0] sticky top-0 z-40">
+      <header className="bg-surface border-b border-line sticky top-0 z-40">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-4">
-          <Link href="/tests" className="text-[#64748b] hover:text-[#0D1B2E] transition-colors">
+          <Link href="/tests" className="text-muted hover:text-default transition-colors">
             <ChevronLeft size={20} />
           </Link>
           <div className="flex-1 min-w-0">
-            <p className="text-xs text-[#94a3b8] font-medium truncate">{ASSESSMENT_TYPE_LABELS[test.type]}</p>
-            <p className="text-sm font-semibold text-[#0D1B2E] truncate">{test.title}</p>
+            <p className="text-xs text-subtle font-medium truncate">{ASSESSMENT_TYPE_LABELS[test.type]}</p>
+            <p className="text-sm font-semibold text-default truncate">{test.title}</p>
           </div>
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1.5 text-sm font-mono font-semibold text-[#475569]">
-              <Clock size={15} className="text-[#94a3b8]" />
+            <div className="flex items-center gap-1.5 text-sm font-mono font-semibold text-body">
+              <Clock size={15} className="text-subtle" />
               {formatTime(elapsed)}
             </div>
             <div className="hidden sm:flex items-center gap-2">
-              <span className="text-xs text-[#94a3b8]">{answered}/{total}</span>
+              <span className="text-xs text-subtle">{answered}/{total}</span>
               <div className="w-24">
                 <ProgressBar value={answered} max={total} size="sm" />
               </div>
             </div>
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#f1f5f9] text-xs font-semibold text-[#475569] hover:bg-[#e2e8f0] transition-colors lg:hidden"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-muted text-xs font-semibold text-body hover:bg-line transition-colors lg:hidden"
             >
               <Flag size={12} />
               {t("tt_questions")}
@@ -510,7 +510,7 @@ export default function TestPage() {
             <button
               onClick={() => setCurrentIndex((i) => Math.max(0, i - 1))}
               disabled={currentIndex === 0}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#e2e8f0] text-sm font-semibold text-[#475569] hover:bg-[#f8fafc] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-line text-sm font-semibold text-body hover:bg-surface-subtle disabled:opacity-40 disabled:cursor-not-allowed transition-all"
             >
               <ChevronLeft size={16} />
               {t("tt_previous")}
@@ -528,7 +528,7 @@ export default function TestPage() {
                       ? "bg-[#0D1B2E] text-white"
                       : answers[q.id]
                       ? "bg-[#4f46e5] text-white"
-                      : "bg-[#e2e8f0] text-[#64748b] hover:bg-[#d1d9e0]"
+                      : "bg-line text-muted hover:bg-[#d1d9e0]"
                   )}
                 >
                   {i + 1}
@@ -576,10 +576,10 @@ export default function TestPage() {
         {/* Desktop sidebar */}
         <aside className="hidden lg:flex flex-col w-56 flex-shrink-0">
           <div className="card p-4 sticky top-24">
-            <h3 className="font-semibold text-[#0D1B2E] text-sm mb-1">
+            <h3 className="font-semibold text-default text-sm mb-1">
               {t("tt_questions")}
             </h3>
-            <p className="text-xs text-[#94a3b8] mb-3">{t("tt_answered_of", { a: answered, t: total })}</p>
+            <p className="text-xs text-subtle mb-3">{t("tt_answered_of", { a: answered, t: total })}</p>
             <div className="grid grid-cols-4 gap-2">
               {test.questions.map((q, i) => (
                 <button
@@ -592,7 +592,7 @@ export default function TestPage() {
                       ? "bg-[#0D1B2E] text-white ring-2 ring-[#0D1B2E] ring-offset-1"
                       : answers[q.id]
                       ? "bg-[#4f46e5] text-white"
-                      : "bg-[#f1f5f9] text-[#64748b] hover:bg-[#e2e8f0]"
+                      : "bg-surface-muted text-muted hover:bg-line"
                   )}
                 >
                   {i + 1}
@@ -600,7 +600,7 @@ export default function TestPage() {
               ))}
             </div>
             {/* Legend */}
-            <div className="mt-3 flex flex-col gap-1.5 text-[10px] text-[#94a3b8]">
+            <div className="mt-3 flex flex-col gap-1.5 text-[10px] text-subtle">
               <span className="flex items-center gap-1.5">
                 <span className="w-3 h-3 rounded bg-[#4f46e5] inline-block" /> {t("tt_legend_answered")}
               </span>
@@ -608,7 +608,7 @@ export default function TestPage() {
                 <span className="w-3 h-3 rounded bg-[#0D1B2E] inline-block" /> {t("tt_legend_current")}
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded bg-[#e2e8f0] inline-block" /> {t("tt_legend_not_answered")}
+                <span className="w-3 h-3 rounded bg-line inline-block" /> {t("tt_legend_not_answered")}
               </span>
             </div>
             {allAnswered && (
@@ -622,7 +622,7 @@ export default function TestPage() {
               </button>
             )}
             {!allAnswered && (
-              <p className="mt-3 text-[10px] text-[#94a3b8] text-center">
+              <p className="mt-3 text-[10px] text-subtle text-center">
                 {plural(total - answered, { one: "tt_questions_left_one", other: "tt_questions_left_other" })}
               </p>
             )}

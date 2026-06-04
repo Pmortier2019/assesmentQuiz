@@ -17,6 +17,7 @@ import { ScoreRing } from "@/components/ui/ScoreRing";
 import { XPLevelBar } from "@/components/ui/XPLevelBar";
 import { AchievementBadges } from "@/components/ui/AchievementBadges";
 import { PageLoader } from "@/components/ui/PageLoader";
+import { PageError } from "@/components/ui/ErrorState";
 import { LeaderboardCard } from "@/components/cards/LeaderboardCard";
 import { WeakSpotCard } from "@/components/cards/WeakSpotCard";
 import {
@@ -58,22 +59,22 @@ function RecommendedTestCard({ test, badge }: { test: Test; badge?: string }) {
           {test.isFree ? (
             <span className="text-[10px] font-semibold text-[#10b981] bg-[#f0fdf4] px-2 py-0.5 rounded-full">{t("free")}</span>
           ) : (
-            <Lock size={11} className="text-[#94a3b8] mt-0.5" />
+            <Lock size={11} className="text-subtle mt-0.5" />
           )}
         </div>
       </div>
       <div>
-        <p className="font-semibold text-[#0D1B2E] text-sm leading-snug group-hover:text-[#4f46e5] transition-colors">
+        <p className="font-semibold text-default text-sm leading-snug group-hover:text-[#4f46e5] transition-colors">
           {test.title}
         </p>
-        <p className="text-xs text-[#94a3b8] mt-1">
+        <p className="text-xs text-subtle mt-1">
           {test.estimatedTime} {t("minutes")} · {test.questionCount ?? test.questions.length} {t("questions")}
         </p>
       </div>
       {test.skillsMeasured && test.skillsMeasured.length > 0 && (
         <div className="flex flex-wrap gap-1">
           {test.skillsMeasured.slice(0, 2).map((skill) => (
-            <span key={skill} className="text-[10px] font-medium text-[#475569] bg-[#f1f5f9] px-2 py-0.5 rounded-full">
+            <span key={skill} className="text-[10px] font-medium text-body bg-surface-muted px-2 py-0.5 rounded-full">
               {skill}
             </span>
           ))}
@@ -85,9 +86,9 @@ function RecommendedTestCard({ test, badge }: { test: Test; badge?: string }) {
 
 export default function DashboardPage() {
   const { t } = useT();
-  const { data: user } = useCurrentUser();
-  const { data: testsPage, isPending: testsPending } = useTests();
-  const { data: results = [], isPending: resultsPending } = useUserResults();
+  const { data: user, isError: userError, refetch: refetchUser } = useCurrentUser();
+  const { data: testsPage, isPending: testsPending, isError: testsError, refetch: refetchTests } = useTests();
+  const { data: results = [], isPending: resultsPending, isError: resultsError, refetch: refetchResults } = useUserResults();
 
   // preparationPath/recommended only matter once the user has career targets.
   // Gating both on the same flag lets them fire in parallel the moment the
@@ -95,6 +96,20 @@ export default function DashboardPage() {
   const hasCareerTargets = !!(user?.targetRole || user?.targetIndustry);
   const { data: preparationPath = null } = usePreparationPath(hasCareerTargets);
   const { data: recommendedTests = [] } = useRecommendedTests(hasCareerTargets);
+
+  // Any of the three core fetches failing leaves the dashboard unusable, so we
+  // surface one clear error + retry rather than a half-empty page.
+  if (userError || testsError || resultsError) {
+    return (
+      <PageError
+        onRetry={() => {
+          refetchUser();
+          refetchTests();
+          refetchResults();
+        }}
+      />
+    );
+  }
 
   if (!user || testsPending || resultsPending) {
     return <PageLoader label={t("dash_loading")} />;
@@ -163,7 +178,7 @@ export default function DashboardPage() {
   const improvement = scoreImprovement(results);
 
   return (
-    <div className="flex min-h-screen bg-[#f8fafc]">
+    <div className="flex min-h-screen bg-surface-subtle">
       <Sidebar streak={user.streak} userName={user.name} isAdmin={user.isAdmin} />
 
       <div className="flex-1 flex flex-col min-w-0">
@@ -212,7 +227,7 @@ export default function DashboardPage() {
             />
             {/* Avg score — score ring */}
             <div className="card p-5 flex flex-col gap-3">
-              <p className="text-sm font-medium text-[#64748b]">{t("dash_avg_score")}</p>
+              <p className="text-sm font-medium text-muted">{t("dash_avg_score")}</p>
               <div className="flex items-center gap-4">
                 {results.length > 0 ? (
                   <ScoreRing
@@ -223,14 +238,14 @@ export default function DashboardPage() {
                     trackColor="#f0fdf4"
                   />
                 ) : (
-                  <p className="font-display font-bold text-2xl text-[#0D1B2E]">—</p>
+                  <p className="font-display font-bold text-2xl text-default">—</p>
                 )}
                 {improvement !== null && (
                   <div>
                     <p className={`text-xs font-semibold ${improvement >= 0 ? "text-[#10b981]" : "text-[#f43f5e]"}`}>
                       {improvement >= 0 ? "+" : ""}{improvement}%
                     </p>
-                    <p className="text-xs text-[#94a3b8]">{t("dash_improvement")}</p>
+                    <p className="text-xs text-subtle">{t("dash_improvement")}</p>
                   </div>
                 )}
               </div>
@@ -266,13 +281,13 @@ export default function DashboardPage() {
             <div className="grid lg:grid-cols-2 gap-6 animate-fade-up delay-300">
               <PreparationPathCard path={preparationPath} />
               <div>
-                <h2 className="font-display font-semibold text-lg text-[#0D1B2E] mb-4">{t("dash_daily_challenge")}</h2>
+                <h2 className="font-display font-semibold text-lg text-default mb-4">{t("dash_daily_challenge")}</h2>
                 <DailyChallengeCard test={dailyChallenge} />
               </div>
             </div>
           ) : (
             <div className="animate-fade-up delay-300">
-              <h2 className="font-display font-semibold text-lg text-[#0D1B2E] mb-4">{t("dash_daily_challenge")}</h2>
+              <h2 className="font-display font-semibold text-lg text-default mb-4">{t("dash_daily_challenge")}</h2>
               <DailyChallengeCard test={dailyChallenge} />
             </div>
           )}
@@ -280,8 +295,8 @@ export default function DashboardPage() {
           {/* Suggested daily exercises */}
           <div className="animate-fade-up delay-350">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">{t("dash_daily_exercises")}</h2>
-              <span className="text-xs text-[#94a3b8]">{t("dash_short_focused")}</span>
+              <h2 className="font-display font-semibold text-lg text-default">{t("dash_daily_exercises")}</h2>
+              <span className="text-xs text-subtle">{t("dash_short_focused")}</span>
             </div>
             <div className="grid sm:grid-cols-3 gap-4">
               {DAILY_EXERCISES.map((ex) => (
@@ -290,16 +305,16 @@ export default function DashboardPage() {
                   href={`/tests?type=${ex.type}`}
                   className="card card-interactive p-4 flex items-center gap-4"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-[#f1f5f9] flex items-center justify-center text-xl flex-shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-surface-muted flex items-center justify-center text-xl flex-shrink-0">
                     {ex.icon}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[#0D1B2E] leading-snug">{t(ex.labelKey)}</p>
-                    <p className="text-xs text-[#94a3b8] flex items-center gap-1 mt-0.5">
+                    <p className="text-sm font-semibold text-default leading-snug">{t(ex.labelKey)}</p>
+                    <p className="text-xs text-subtle flex items-center gap-1 mt-0.5">
                       <Clock size={10} /> {ex.duration}
                     </p>
                   </div>
-                  <ArrowRight size={14} className="text-[#94a3b8] flex-shrink-0" />
+                  <ArrowRight size={14} className="text-subtle flex-shrink-0" />
                 </Link>
               ))}
             </div>
@@ -309,13 +324,13 @@ export default function DashboardPage() {
           <div className="animate-fade-up delay-400">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">
+                <h2 className="font-display font-semibold text-lg text-default">
                   {hasCareerTargets && user.targetRole
                     ? t("dash_recommended_for", { role: user.targetRole })
                     : t("dash_recommended")}
                 </h2>
                 {hasCareerTargets && (
-                  <p className="text-xs text-[#94a3b8] mt-0.5">{t("dash_based_on_role")}</p>
+                  <p className="text-xs text-subtle mt-0.5">{t("dash_based_on_role")}</p>
                 )}
               </div>
               <Link href="/tests?sort=recommended" className="text-xs text-[#4f46e5] font-semibold hover:underline flex items-center gap-1">
@@ -339,8 +354,8 @@ export default function DashboardPage() {
               <div className="flex items-center gap-2 mb-4">
                 <TrendingUp size={16} className="text-[#10b981]" />
                 <div>
-                  <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">{t("dash_ready_level_up")}</h2>
-                  <p className="text-xs text-[#94a3b8] mt-0.5">{t("dash_level_up_sub")}</p>
+                  <h2 className="font-display font-semibold text-lg text-default">{t("dash_ready_level_up")}</h2>
+                  <p className="text-xs text-subtle mt-0.5">{t("dash_level_up_sub")}</p>
                 </div>
               </div>
               <div className="grid sm:grid-cols-3 gap-4">
@@ -357,7 +372,7 @@ export default function DashboardPage() {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <Star size={16} className="text-amber-500" />
-                  <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">
+                  <h2 className="font-display font-semibold text-lg text-default">
                     {t("dash_popular_for")} {user.targetRole}
                   </h2>
                 </div>
@@ -381,10 +396,10 @@ export default function DashboardPage() {
                 <div className="flex items-center gap-2">
                   <Users size={16} className="text-[#7c3aed]" />
                   <div>
-                    <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">
+                    <h2 className="font-display font-semibold text-lg text-default">
                       {t("dash_frequently_used_at", { company: user.targetCompany ?? "" })}
                     </h2>
-                    <p className="text-xs text-[#94a3b8]">{t("dash_candidates_practise")}</p>
+                    <p className="text-xs text-subtle">{t("dash_candidates_practise")}</p>
                   </div>
                 </div>
               </div>
@@ -407,15 +422,15 @@ export default function DashboardPage() {
           <div className="grid lg:grid-cols-2 gap-6 animate-fade-up delay-500">
             <div className="card p-5">
               <div className="flex items-center justify-between mb-5">
-                <h2 className="font-display font-semibold text-base text-[#0D1B2E]">{t("dash_skill_overview")}</h2>
-                <BarChart3 size={16} className="text-[#94a3b8]" />
+                <h2 className="font-display font-semibold text-base text-default">{t("dash_skill_overview")}</h2>
+                <BarChart3 size={16} className="text-subtle" />
               </div>
               {skillAreas.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-8 gap-3 text-center">
-                  <div className="w-10 h-10 rounded-xl bg-[#f1f5f9] flex items-center justify-center">
-                    <BarChart3 size={18} className="text-[#94a3b8]" />
+                  <div className="w-10 h-10 rounded-xl bg-surface-muted flex items-center justify-center">
+                    <BarChart3 size={18} className="text-subtle" />
                   </div>
-                  <p className="text-sm text-[#64748b]">{t("dash_complete_tests")}</p>
+                  <p className="text-sm text-muted">{t("dash_complete_tests")}</p>
                   <Link href="/tests" className="text-sm font-semibold text-[#4f46e5] hover:underline">{t("dash_browse_tests")}</Link>
                 </div>
               ) : (
@@ -425,7 +440,7 @@ export default function DashboardPage() {
                       <div className="flex items-center justify-between mb-1.5">
                         <div className="flex items-center gap-2">
                           <span className="text-sm">{skill.icon}</span>
-                          <span className="text-sm font-medium text-[#334155]">{skill.name}</span>
+                          <span className="text-sm font-medium text-body">{skill.name}</span>
                         </div>
                         <span className={`text-sm font-bold ${getScoreColor(skill.score)}`}>{skill.score}%</span>
                       </div>
@@ -438,15 +453,15 @@ export default function DashboardPage() {
 
             <div className="card p-5">
               <div className="flex items-center justify-between mb-5">
-                <h2 className="font-display font-semibold text-base text-[#0D1B2E]">{t("dash_recent_results")}</h2>
+                <h2 className="font-display font-semibold text-base text-default">{t("dash_recent_results")}</h2>
                 <Link href="/results" className="text-xs text-[#4f46e5] font-semibold hover:underline">{t("dash_view_all")}</Link>
               </div>
               {results.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-8 gap-3 text-center">
-                  <div className="w-10 h-10 rounded-xl bg-[#f1f5f9] flex items-center justify-center">
-                    <BookOpen size={18} className="text-[#94a3b8]" />
+                  <div className="w-10 h-10 rounded-xl bg-surface-muted flex items-center justify-center">
+                    <BookOpen size={18} className="text-subtle" />
                   </div>
-                  <p className="text-sm text-[#64748b]">{t("dash_no_results")}</p>
+                  <p className="text-sm text-muted">{t("dash_no_results")}</p>
                   <Link href="/tests" className="text-sm font-semibold text-[#4f46e5] hover:underline">
                     {t("dash_browse_tests")}
                   </Link>
@@ -456,13 +471,13 @@ export default function DashboardPage() {
                   {results.map((result) => {
                     const test = tests.find((t) => t.id === result.testId);
                     return (
-                      <div key={result.id} className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#f8fafc] transition-colors">
-                        <div className="w-8 h-8 rounded-lg bg-[#f1f5f9] flex items-center justify-center text-base flex-shrink-0">
+                      <div key={result.id} className="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-subtle transition-colors">
+                        <div className="w-8 h-8 rounded-lg bg-surface-muted flex items-center justify-center text-base flex-shrink-0">
                           {test ? ASSESSMENT_TYPE_ICONS[test.type] : "📋"}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-[#0D1B2E] truncate">{test?.title ?? "Test"}</p>
-                          <p className="text-xs text-[#94a3b8] flex items-center gap-1">
+                          <p className="text-sm font-semibold text-default truncate">{test?.title ?? "Test"}</p>
+                          <p className="text-xs text-subtle flex items-center gap-1">
                             <Clock size={10} />
                             {formatTime(result.timeTaken)}
                           </p>
@@ -480,8 +495,8 @@ export default function DashboardPage() {
           <div className="animate-fade-up delay-600">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">{t("dash_pro_tests")}</h2>
-                <Lock size={14} className="text-[#94a3b8]" />
+                <h2 className="font-display font-semibold text-lg text-default">{t("dash_pro_tests")}</h2>
+                <Lock size={14} className="text-subtle" />
               </div>
               <Link href="/pricing" className="text-xs text-[#4f46e5] font-semibold hover:underline">{t("nav_upgrade")}</Link>
             </div>
@@ -496,12 +511,12 @@ export default function DashboardPage() {
                           <Sparkles size={9} /> {t("dash_badge_new")}
                         </span>
                       )}
-                      <Lock size={12} className="text-[#94a3b8]" />
+                      <Lock size={12} className="text-subtle" />
                     </div>
                   </div>
                   <div>
-                    <p className="font-semibold text-[#0D1B2E] text-sm leading-snug">{test.title}</p>
-                    <p className="text-xs text-[#94a3b8] mt-1">{test.estimatedTime} {t("minutes")}</p>
+                    <p className="font-semibold text-default text-sm leading-snug">{test.title}</p>
+                    <p className="text-xs text-subtle mt-1">{test.estimatedTime} {t("minutes")}</p>
                   </div>
                 </div>
               ))}
@@ -516,12 +531,12 @@ export default function DashboardPage() {
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <h3 className="font-display font-semibold text-[#0D1B2E]">{t("dash_personal_coaching")}</h3>
+                  <h3 className="font-display font-semibold text-default">{t("dash_personal_coaching")}</h3>
                   <span className="text-[10px] font-bold text-[#7c3aed] bg-[#f5f3ff] border border-[#ddd6fe] px-2 py-0.5 rounded-full uppercase tracking-wider">
                     {t("dash_coming_soon")}
                   </span>
                 </div>
-                <p className="text-sm text-[#475569] leading-relaxed mb-4">
+                <p className="text-sm text-body leading-relaxed mb-4">
                   {t("dash_coach_desc")}
                 </p>
                 <div className="flex items-center gap-3">
@@ -531,7 +546,7 @@ export default function DashboardPage() {
                   >
                     {t("dash_get_early_access")}
                   </Link>
-                  <span className="text-xs text-[#94a3b8]">{t("dash_pro_plan")}</span>
+                  <span className="text-xs text-subtle">{t("dash_pro_plan")}</span>
                 </div>
               </div>
             </div>

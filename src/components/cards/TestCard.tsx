@@ -47,7 +47,7 @@ export function TestCard({ test, isLocked = false, onStart, className, showRecom
 
       {/* Icon + type */}
       <div className="flex items-start justify-between gap-2">
-        <div className="w-10 h-10 rounded-xl bg-[#f8fafc] border border-[#e2e8f0] flex items-center justify-center text-xl">
+        <div className="w-10 h-10 rounded-xl bg-surface-subtle border border-line flex items-center justify-center text-xl">
           {ASSESSMENT_TYPE_ICONS[test.type]}
         </div>
         {locked ? (
@@ -63,30 +63,30 @@ export function TestCard({ test, isLocked = false, onStart, className, showRecom
       {/* Content */}
       <div className="flex-1">
         <div className="flex items-center gap-2 mb-1">
-          <span className="text-xs font-medium text-[#64748b]">
+          <span className="text-xs font-medium text-muted">
             {ASSESSMENT_TYPE_LABELS[test.type]}
           </span>
         </div>
-        <h3 className="font-display font-semibold text-[#0D1B2E] text-base leading-snug mb-2 line-clamp-2">
+        <h3 className="font-display font-semibold text-default text-base leading-snug mb-2 line-clamp-2">
           {test.title}
         </h3>
-        <p className="text-sm text-[#64748b] line-clamp-2 leading-relaxed">
+        <p className="text-sm text-muted line-clamp-2 leading-relaxed">
           {test.description}
         </p>
       </div>
 
       {/* Meta */}
-      <div className="flex items-center justify-between pt-3 border-t border-[#f1f5f9]">
+      <div className="flex items-center justify-between pt-3 border-t border-line">
         <div className="flex items-center gap-3">
           <span className={cn("text-xs font-semibold px-2 py-0.5 rounded-full", DIFFICULTY_COLORS[test.difficulty])}>
             {DIFFICULTY_LABELS[test.difficulty]}
           </span>
-          <span className="flex items-center gap-1 text-xs text-[#94a3b8]">
+          <span className="flex items-center gap-1 text-xs text-subtle">
             <Clock size={12} />
             {formatDuration(test.estimatedTime)}
           </span>
         </div>
-        <span className="text-xs text-[#94a3b8]">
+        <span className="text-xs text-subtle">
           {test.questions.length} vragen
         </span>
       </div>

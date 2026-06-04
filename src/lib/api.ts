@@ -21,7 +21,16 @@ import { getToken, getUserIdFromToken, saveAuth, clearAuth } from "./auth";
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
 
 function currentUserId(): number {
-  return getUserIdFromToken() ?? 1; // fallback to 1 for seeded demo user
+  const id = getUserIdFromToken();
+  // Never silently fall back to another user's data (previously user #1). A
+  // missing/undecodable token means there is no valid session — clear it and
+  // bounce to login, mirroring how apiFetch handles a 401.
+  if (id == null || Number.isNaN(id)) {
+    clearAuth();
+    if (typeof window !== "undefined") window.location.href = "/login";
+    throw new ApiError(401, "Not authenticated");
+  }
+  return id;
 }
 
 // ─── Type mappers ─────────────────────────────────────────────────────────────
@@ -467,8 +476,25 @@ export interface TestFilters {
   difficulty?: Difficulty;
   tier?: "free" | "pro" | "all";
   search?: string;
+  role?: string;
+  industry?: string;
 }
 
+interface BackendPagedResponse {
+  data: BackendTestListItem[];
+  page: number;
+  pageSize: number;
+  total: number;
+  hasMore: boolean;
+}
+
+/**
+ * Fetches one page of the test library. Search/filter/pagination are all
+ * resolved by the backend — we only send query params and receive the single
+ * requested page (no client-side filtering or slicing).
+ *
+ * `page` is 1-based on the client; the backend is 0-based, so we shift by one.
+ */
 export async function getTests(
   filters: TestFilters = {},
   page = 1,
@@ -479,30 +505,20 @@ export async function getTests(
   if (filters.difficulty) params.set("difficulty", mapDifficultyToBackend(filters.difficulty));
   if (filters.tier === "free") params.set("access", "free");
   else if (filters.tier === "pro") params.set("access", "pro");
+  if (filters.search) params.set("search", filters.search);
+  if (filters.role) params.set("role", filters.role);
+  if (filters.industry) params.set("industry", filters.industry);
+  params.set("page", String(page - 1));
+  params.set("size", String(pageSize));
 
-  const query = params.toString() ? `?${params.toString()}` : "";
-  const items = await apiFetch<BackendTestListItem[]>(`/api/tests${query}`);
-
-  let results = items.map(mapTestListItem);
-
-  if (filters.search) {
-    const q = filters.search.toLowerCase();
-    results = results.filter(
-      (t) =>
-        t.title.toLowerCase().includes(q) ||
-        t.description.toLowerCase().includes(q)
-    );
-  }
-
-  const total = results.length;
-  const start = (page - 1) * pageSize;
+  const res = await apiFetch<BackendPagedResponse>(`/api/tests?${params.toString()}`);
 
   return {
-    data: results.slice(start, start + pageSize),
+    data: res.data.map(mapTestListItem),
     page,
     pageSize,
-    total,
-    hasMore: start + pageSize < total,
+    total: res.total,
+    hasMore: res.hasMore,
   };
 }
 
