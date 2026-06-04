@@ -365,6 +365,31 @@ export default function TestPage() {
     setAnswers((prev) => ({ ...prev, [question.id]: answerId }));
   }, [test, currentIndex]);
 
+  // Keyboard shortcuts during the test: ← / → navigate, number keys pick an
+  // answer. Skipped once results are shown or while typing in a field.
+  useEffect(() => {
+    if (!test || result) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const tag = (e.target as HTMLElement | null)?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
+      const q = test.questions[currentIndex];
+      if (e.key === "ArrowLeft") {
+        setCurrentIndex((i) => Math.max(0, i - 1));
+      } else if (e.key === "ArrowRight") {
+        setCurrentIndex((i) => Math.min(test.questions.length - 1, i + 1));
+      } else if (q && /^[1-9]$/.test(e.key)) {
+        const idx = Number(e.key) - 1;
+        if (idx < q.answers.length) {
+          e.preventDefault();
+          handleSelect(q.answers[idx].id);
+        }
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [test, result, currentIndex, handleSelect]);
+
   const handleSubmit = async () => {
     if (!test) return;
     setSubmitting(true);
@@ -516,24 +541,30 @@ export default function TestPage() {
               {t("tt_previous")}
             </button>
 
-            <div className="hidden sm:flex items-center gap-1">
-              {test.questions.map((q, i) => (
-                <button
-                  key={q.id}
-                  onClick={() => setCurrentIndex(i)}
-                  title={t("tt_q_title", { n: i + 1, state: answers[q.id] ? t("tt_legend_answered") : t("tt_legend_not_answered") })}
-                  className={cn(
-                    "w-7 h-7 rounded-md text-xs font-bold transition-all",
-                    i === currentIndex
-                      ? "bg-[#0D1B2E] text-white"
-                      : answers[q.id]
-                      ? "bg-[#4f46e5] text-white"
-                      : "bg-line text-muted hover:bg-[#d1d9e0]"
-                  )}
-                >
-                  {i + 1}
-                </button>
-              ))}
+            <div className="hidden sm:flex items-center gap-1" role="group" aria-label={t("tt_questions")}>
+              {test.questions.map((q, i) => {
+                const stateLabel = i === currentIndex
+                  ? t("tt_legend_current")
+                  : answers[q.id] ? t("tt_legend_answered") : t("tt_legend_not_answered");
+                return (
+                  <button
+                    key={q.id}
+                    onClick={() => setCurrentIndex(i)}
+                    aria-label={t("tt_question_title", { n: i + 1, state: stateLabel })}
+                    aria-current={i === currentIndex ? "step" : undefined}
+                    className={cn(
+                      "w-7 h-7 rounded-md text-xs font-bold transition-all",
+                      i === currentIndex
+                        ? "bg-[#0D1B2E] text-white"
+                        : answers[q.id]
+                        ? "bg-[#4f46e5] text-white"
+                        : "bg-line text-muted hover:bg-[#d1d9e0]"
+                    )}
+                  >
+                    {i + 1}
+                  </button>
+                );
+              })}
             </div>
 
             {isLastQuestion ? (
@@ -555,6 +586,8 @@ export default function TestPage() {
               </button>
             )}
           </div>
+
+          <p className="hidden sm:block text-xs text-subtle text-center">{t("tt_kbd_hint")}</p>
 
           {allAnswered && !isLastQuestion && (
             <div className="p-4 rounded-xl border border-[#bbf7d0] bg-[#f0fdf4] flex items-center justify-between animate-fade-in">
@@ -580,24 +613,30 @@ export default function TestPage() {
               {t("tt_questions")}
             </h3>
             <p className="text-xs text-subtle mb-3">{t("tt_answered_of", { a: answered, t: total })}</p>
-            <div className="grid grid-cols-4 gap-2">
-              {test.questions.map((q, i) => (
-                <button
-                  key={q.id}
-                  onClick={() => setCurrentIndex(i)}
-                  title={t("tt_question_title", { n: i + 1, state: answers[q.id] ? t("tt_legend_answered") : t("tt_legend_not_answered") })}
-                  className={cn(
-                    "w-full aspect-square rounded-lg text-xs font-bold transition-all",
-                    i === currentIndex
-                      ? "bg-[#0D1B2E] text-white ring-2 ring-[#0D1B2E] ring-offset-1"
-                      : answers[q.id]
-                      ? "bg-[#4f46e5] text-white"
-                      : "bg-surface-muted text-muted hover:bg-line"
-                  )}
-                >
-                  {i + 1}
-                </button>
-              ))}
+            <div className="grid grid-cols-4 gap-2" role="group" aria-label={t("tt_questions")}>
+              {test.questions.map((q, i) => {
+                const stateLabel = i === currentIndex
+                  ? t("tt_legend_current")
+                  : answers[q.id] ? t("tt_legend_answered") : t("tt_legend_not_answered");
+                return (
+                  <button
+                    key={q.id}
+                    onClick={() => setCurrentIndex(i)}
+                    aria-label={t("tt_question_title", { n: i + 1, state: stateLabel })}
+                    aria-current={i === currentIndex ? "step" : undefined}
+                    className={cn(
+                      "w-full aspect-square rounded-lg text-xs font-bold transition-all",
+                      i === currentIndex
+                        ? "bg-[#0D1B2E] text-white ring-2 ring-[#0D1B2E] ring-offset-1"
+                        : answers[q.id]
+                        ? "bg-[#4f46e5] text-white"
+                        : "bg-surface-muted text-muted hover:bg-line"
+                    )}
+                  >
+                    {i + 1}
+                  </button>
+                );
+              })}
             </div>
             {/* Legend */}
             <div className="mt-3 flex flex-col gap-1.5 text-[10px] text-subtle">

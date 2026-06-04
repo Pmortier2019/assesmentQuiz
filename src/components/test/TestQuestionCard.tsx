@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { useT } from "@/lib/i18n";
 import { MediaRenderer } from "./MediaRenderer";
 import type { Question, AnswerOption } from "@/lib/types";
 
@@ -21,6 +22,7 @@ export function TestQuestionCard({
   showExplanation = false,
   onSelect,
 }: TestQuestionCardProps) {
+  const { t } = useT();
   // Determine if selected answer is wrong (mid-test feedback)
   const getAnswerState = (answer: AnswerOption) => {
     if (!showExplanation) {
@@ -61,7 +63,7 @@ export function TestQuestionCard({
         <p className="text-xs font-semibold text-subtle uppercase tracking-widest mb-3">
           Question {questionIndex + 1} of {total}
         </p>
-        <h2 className="font-display font-semibold text-default text-lg leading-relaxed">
+        <h2 id="tt-question-text" className="font-display font-semibold text-default text-lg leading-relaxed">
           {question.questionText}
         </h2>
       </div>
@@ -72,7 +74,7 @@ export function TestQuestionCard({
       )}
 
       {/* Answer options */}
-      <div className="flex flex-col gap-2.5">
+      <div className="flex flex-col gap-2.5" role="group" aria-labelledby="tt-question-text">
         {!showExplanation && !selectedAnswerId && (
           <p className="text-xs font-medium text-subtle flex items-center gap-1.5 mb-1">
             <span className="inline-block w-3.5 h-3.5 rounded-full border-2 border-[#cbd5e1]" />
@@ -89,6 +91,9 @@ export function TestQuestionCard({
               key={answer.id}
               onClick={() => !showExplanation && onSelect(answer.id)}
               disabled={showExplanation}
+              aria-pressed={!showExplanation ? isSelected : undefined}
+              aria-keyshortcuts={!showExplanation ? String(idx + 1) : undefined}
+              aria-label={t("tt_answer_option", { label: labels[idx] ?? idx + 1, text: answer.text })}
               className={cn(
                 "flex items-start gap-4 w-full text-left p-4 rounded-xl border-2 transition-all duration-150",
                 answerStyles[state]
@@ -97,6 +102,7 @@ export function TestQuestionCard({
               {/* Radio-style indicator */}
               <div className="flex-shrink-0 flex flex-col items-center gap-1.5 pt-0.5">
                 <span
+                  aria-hidden="true"
                   className={cn(
                     "w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold transition-colors",
                     answerLabelStyles[state]
