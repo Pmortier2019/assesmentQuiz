@@ -13,7 +13,7 @@ import {
   ALL_GENERATE_TYPES, ALL_DIFFICULTIES,
   AdminStats, AdminUser,
 } from "@/lib/api";
-import { isAdmin, isLoggedIn } from "@/lib/auth";
+import { useAuth } from "@/lib/useAuth";
 import { ASSESSMENT_TYPE_ICONS } from "@/lib/utils";
 import type { Test } from "@/lib/types";
 
@@ -25,6 +25,7 @@ const DIFF_COLORS: Record<string, string> = {
 
 export default function AdminPage() {
   const router = useRouter();
+  const { status, isAdmin } = useAuth();
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [tests, setTests] = useState<Test[]>([]);
@@ -41,10 +42,12 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!isLoggedIn() || !isAdmin()) {
+    if (status === "unauthenticated") {
+      router.replace("/login");
+    } else if (status === "authenticated" && !isAdmin) {
       router.replace("/dashboard");
     }
-  }, [router]);
+  }, [status, isAdmin, router]);
 
   const refresh = useCallback(async () => {
     const [s, u, t, gs] = await Promise.all([

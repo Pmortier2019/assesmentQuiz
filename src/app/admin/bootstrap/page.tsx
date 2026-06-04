@@ -4,15 +4,16 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Zap, ShieldCheck, AlertCircle } from "lucide-react";
 import { adminBootstrap } from "@/lib/api";
-import { isLoggedIn, isAdmin } from "@/lib/auth";
+import { useAuth } from "@/lib/useAuth";
 
 export default function AdminBootstrapPage() {
   const router = useRouter();
+  const { status: authStatus, isAdmin } = useAuth();
   const [email, setEmail] = useState("");
 
   useEffect(() => {
-    if (isLoggedIn() && isAdmin()) router.replace("/admin");
-  }, [router]);
+    if (authStatus === "authenticated" && isAdmin) router.replace("/admin");
+  }, [authStatus, isAdmin, router]);
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState("");

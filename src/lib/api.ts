@@ -16,7 +16,7 @@ import type {
   PreparationPath,
 } from "./types";
 
-import { getToken, getUserIdFromToken, saveAuth, clearAuth } from "./auth";
+import { getToken, getUserIdFromToken, saveAuth, clearAuth, markUnauthenticated } from "./auth";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
 
@@ -410,7 +410,7 @@ async function performRefresh(): Promise<boolean> {
     });
     if (!res.ok) return false;
     const data = (await res.json()) as AuthResponse;
-    saveAuth(data.token, data.user);
+    saveAuth(data.token);
     return true;
   } catch {
     return false;
@@ -424,6 +424,17 @@ function tryRefresh(): Promise<boolean> {
     });
   }
   return refreshPromise;
+}
+
+/**
+ * Restore the session on app load: if there's no in-memory token yet, attempt a
+ * refresh using the httpOnly cookie. Resolves the auth store to "authenticated"
+ * (via saveAuth) or "unauthenticated". Called once by AuthProvider.
+ */
+export async function bootstrapAuth(): Promise<void> {
+  if (getToken()) return; // already restored (e.g. client-side navigation)
+  const refreshed = await tryRefresh();
+  if (!refreshed) markUnauthenticated();
 }
 
 async function apiFetch<T>(
@@ -789,7 +800,7 @@ export async function login(email: string, password: string): Promise<User> {
     method: "POST",
     body: JSON.stringify({ email, password }),
   });
-  saveAuth(res.token, res.user);
+  saveAuth(res.token);
   return mapUser(res.user);
 }
 
@@ -805,7 +816,7 @@ export async function verifyEmail(token: string): Promise<User> {
     method: "POST",
     body: JSON.stringify({ token }),
   });
-  saveAuth(res.token, res.user);
+  saveAuth(res.token);
   return mapUser(res.user);
 }
 
@@ -821,7 +832,7 @@ export async function adminBootstrap(email: string, password: string): Promise<U
     method: "POST",
     body: JSON.stringify({ email, password }),
   });
-  saveAuth(res.token, res.user);
+  saveAuth(res.token);
   return mapUser(res.user);
 }
 

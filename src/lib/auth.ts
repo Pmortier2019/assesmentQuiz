@@ -1,45 +1,78 @@
-const TOKEN_KEY = "assesspro_token";
-const USER_KEY  = "assesspro_user";
+// In-memory auth store. The access token (a credential) is deliberately NOT
+// persisted to localStorage — that would make it readable by any script on the
+// page (XSS). It lives in module scope for the lifetime of the tab and is
+// restored on load via the httpOnly refresh cookie (see bootstrapAuth in api.ts).
 
-export function saveAuth(token: string, user: object) {
-  localStorage.setItem(TOKEN_KEY, token);
-  localStorage.setItem(USER_KEY, JSON.stringify(user));
+export type AuthStatus = "loading" | "authenticated" | "unauthenticated";
+
+let accessToken: string | null = null;
+// Starts "loading" so the UI can wait for the initial refresh attempt instead
+// of flashing a logged-out state before the session is restored.
+let status: AuthStatus = "loading";
+
+const listeners = new Set<() => void>();
+
+function emit() {
+  for (const l of listeners) l();
+}
+
+/** Subscribe to auth changes (token/status). Returns an unsubscribe fn. */
+export function subscribe(cb: () => void): () => void {
+  listeners.add(cb);
+  return () => {
+    listeners.delete(cb);
+  };
+}
+
+export function getAuthStatus(): AuthStatus {
+  return status;
 }
 
 export function getToken(): string | null {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem(TOKEN_KEY);
+  return accessToken;
 }
 
-export function getStoredUser<T>(): T | null {
-  if (typeof window === "undefined") return null;
-  const raw = localStorage.getItem(USER_KEY);
-  return raw ? (JSON.parse(raw) as T) : null;
+/**
+ * Store the access token in memory and mark the session authenticated. User
+ * data is intentionally not persisted here — it's fetched fresh from the API
+ * (React Query), so callers pass only the token.
+ */
+export function saveAuth(token: string) {
+  accessToken = token;
+  status = "authenticated";
+  emit();
 }
 
 export function clearAuth() {
-  localStorage.removeItem(TOKEN_KEY);
-  localStorage.removeItem(USER_KEY);
+  accessToken = null;
+  status = "unauthenticated";
+  emit();
 }
 
-export function isLoggedIn(): boolean {
-  return !!getToken();
+/** Called by the bootstrap when the initial refresh resolves without a token. */
+export function markUnauthenticated() {
+  if (accessToken) return; // a concurrent login won the race — keep it
+  status = "unauthenticated";
+  emit();
 }
 
 function decodeJwtPayload(): Record<string, unknown> | null {
-  const token = getToken();
-  if (!token) return null;
+  if (!accessToken) return null;
   try {
-    return JSON.parse(atob(token.split(".")[1]));
+    return JSON.parse(atob(accessToken.split(".")[1]));
   } catch {
     return null;
   }
 }
 
-/** Decode userId from JWT payload (no signature verification — backend does that). */
+/** Decode userId from the JWT payload (no signature verification — backend does that). */
 export function getUserIdFromToken(): number | null {
   const payload = decodeJwtPayload();
   return payload ? Number(payload.sub) : null;
+}
+
+export function isLoggedIn(): boolean {
+  return accessToken != null;
 }
 
 export function isAdmin(): boolean {
