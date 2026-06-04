@@ -53,7 +53,14 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className="h-full">
-      <body className="min-h-full flex flex-col bg-white text-[#0D1B2E] antialiased">
+      <body className="min-h-full flex flex-col bg-surface text-default antialiased">
+        {/* Set the theme class before first paint to avoid a white flash for
+            users who prefer dark. Mirrors DarkModeToggle's localStorage key. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}})();`,
+          }}
+        />
         <LanguageProvider>
           <QueryProvider>
             {children}

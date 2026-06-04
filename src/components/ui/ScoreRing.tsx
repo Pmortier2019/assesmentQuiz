@@ -91,13 +91,13 @@ export function ScoreRing({
         </svg>
         {/* Center label */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="font-display font-extrabold text-xl text-[#0D1B2E] leading-none">
+          <span className="font-display font-extrabold text-xl text-default leading-none">
             {displayed}%
           </span>
         </div>
       </div>
-      {label && <p className="text-xs font-semibold text-[#475569] text-center">{label}</p>}
-      {sublabel && <p className="text-[10px] text-[#94a3b8] text-center">{sublabel}</p>}
+      {label && <p className="text-xs font-semibold text-body text-center">{label}</p>}
+      {sublabel && <p className="text-[10px] text-subtle text-center">{sublabel}</p>}
     </div>
   );
 }

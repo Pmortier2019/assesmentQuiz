@@ -37,11 +37,11 @@ export function PaywallCard({
         </div>
 
         <div>
-          <h3 className={cn("font-display font-bold text-[#0D1B2E]", compact ? "text-lg" : "text-2xl")}>
+          <h3 className={cn("font-display font-bold text-default", compact ? "text-lg" : "text-2xl")}>
             {title}
           </h3>
           {!compact && (
-            <p className="mt-2 text-[#64748b] max-w-md text-sm leading-relaxed">
+            <p className="mt-2 text-muted max-w-md text-sm leading-relaxed">
               {description}
             </p>
           )}
@@ -52,14 +52,14 @@ export function PaywallCard({
           {!compact && (
             <Link
               href="/tests"
-              className="px-6 py-3 rounded-xl border border-[#e2e8f0] text-[#475569] font-semibold text-sm hover:border-[#4f46e5]/30 hover:text-[#4f46e5] transition-colors"
+              className="px-6 py-3 rounded-xl border border-line text-body font-semibold text-sm hover:border-[#4f46e5]/30 hover:text-[#4f46e5] transition-colors"
             >
               See all tests
             </Link>
           )}
         </div>
 
-        <p className="text-xs text-[#94a3b8]">No credit card required to start · Cancel anytime</p>
+        <p className="text-xs text-subtle">No credit card required to start · Cancel anytime</p>
       </div>
     </div>
   );
