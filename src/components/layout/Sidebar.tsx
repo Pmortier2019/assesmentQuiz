@@ -40,13 +40,13 @@ export function Sidebar({ streak = 7, userName = "Pierre", isAdmin: isAdminProp 
   ];
 
   return (
-    <aside className="hidden lg:flex flex-col w-60 min-h-screen border-r border-[#e2e8f0] bg-[#fafafa] p-4 gap-2">
+    <aside className="hidden lg:flex flex-col w-60 min-h-screen border-r border-line bg-[#fafafa] p-4 gap-2">
       {/* Logo */}
       <Link href="/dashboard" className="flex items-center gap-2 px-2 py-3 mb-2">
         <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
           <Zap size={14} className="text-white fill-white" />
         </div>
-        <span className="font-display font-bold text-[#0D1B2E] text-lg tracking-tight">
+        <span className="font-display font-bold text-default text-lg tracking-tight">
           Ready to <span className="gradient-text">Ace</span>
         </span>
       </Link>
@@ -67,8 +67,8 @@ export function Sidebar({ streak = 7, userName = "Pierre", isAdmin: isAdminProp 
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all",
                 active
-                  ? "bg-white text-[#4f46e5] shadow-sm border border-[#e2e8f0]"
-                  : "text-[#64748b] hover:bg-white hover:text-[#0D1B2E] hover:shadow-sm"
+                  ? "bg-surface text-[#4f46e5] shadow-sm border border-line"
+                  : "text-muted hover:bg-surface hover:text-default hover:shadow-sm"
               )}
             >
               <Icon size={18} className={active ? "text-[#4f46e5]" : ""} />
@@ -80,7 +80,7 @@ export function Sidebar({ streak = 7, userName = "Pierre", isAdmin: isAdminProp 
       </nav>
 
       {/* Language + User */}
-      <div className="mt-auto border-t border-[#e2e8f0] pt-4 flex flex-col gap-3">
+      <div className="mt-auto border-t border-line pt-4 flex flex-col gap-3">
         <div className="px-2 flex items-center gap-2">
           <DarkModeToggle />
         </div>
@@ -94,21 +94,21 @@ export function Sidebar({ streak = 7, userName = "Pierre", isAdmin: isAdminProp 
             {isAdmin ? <ShieldCheck size={14} /> : userName.charAt(0).toUpperCase()}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-[#0D1B2E] truncate">{userName}</p>
+            <p className="text-sm font-semibold text-default truncate">{userName}</p>
             {isAdmin ? (
               <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded-full">
                 <ShieldCheck size={9} />
                 ADMIN
               </span>
             ) : (
-              <p className="text-xs text-[#94a3b8]">{t("dash_free_plan")}</p>
+              <p className="text-xs text-subtle">{t("dash_free_plan")}</p>
             )}
           </div>
-          <TrendingUp size={14} className="text-[#94a3b8]" />
+          <TrendingUp size={14} className="text-subtle" />
         </div>
         <button
           onClick={handleLogout}
-          className="flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs text-[#94a3b8] hover:text-[#e11d48] hover:bg-rose-50 transition-colors w-full"
+          className="flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs text-subtle hover:text-[#e11d48] hover:bg-rose-50 transition-colors w-full"
         >
           <LogOut size={14} />
           Log out

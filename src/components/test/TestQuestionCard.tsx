@@ -32,21 +32,21 @@ export function TestQuestionCard({
   };
 
   const answerStyles = {
-    default:   "border-[#e2e8f0] bg-white hover:border-[#4f46e5]/50 hover:bg-[#f8faff] hover:shadow-sm cursor-pointer",
+    default:   "border-line bg-surface hover:border-[#4f46e5]/50 hover:bg-[#f8faff] hover:shadow-sm cursor-pointer",
     selected:  "border-[#4f46e5] bg-[#eef2ff] shadow-sm cursor-pointer ring-1 ring-[#4f46e5]/20",
     correct:   "border-[#10b981] bg-[#f0fdf4] cursor-default",
     wrong:     "border-[#f43f5e] bg-[#fff1f2] cursor-default",
   };
 
   const answerLabelStyles = {
-    default:  "bg-[#f1f5f9] text-[#64748b]",
+    default:  "bg-surface-muted text-muted",
     selected: "bg-[#4f46e5] text-white",
     correct:  "bg-[#10b981] text-white",
     wrong:    "bg-[#f43f5e] text-white",
   };
 
   const answerTextStyles = {
-    default:  "text-[#334155]",
+    default:  "text-body",
     selected: "text-[#1e1b4b] font-semibold",
     correct:  "text-[#166534] font-semibold",
     wrong:    "text-[#9f1239]",
@@ -58,10 +58,10 @@ export function TestQuestionCard({
     <div className="flex flex-col gap-6 animate-fade-up">
       {/* Question header */}
       <div>
-        <p className="text-xs font-semibold text-[#94a3b8] uppercase tracking-widest mb-3">
+        <p className="text-xs font-semibold text-subtle uppercase tracking-widest mb-3">
           Question {questionIndex + 1} of {total}
         </p>
-        <h2 className="font-display font-semibold text-[#0D1B2E] text-lg leading-relaxed">
+        <h2 className="font-display font-semibold text-default text-lg leading-relaxed">
           {question.questionText}
         </h2>
       </div>
@@ -74,7 +74,7 @@ export function TestQuestionCard({
       {/* Answer options */}
       <div className="flex flex-col gap-2.5">
         {!showExplanation && !selectedAnswerId && (
-          <p className="text-xs font-medium text-[#94a3b8] flex items-center gap-1.5 mb-1">
+          <p className="text-xs font-medium text-subtle flex items-center gap-1.5 mb-1">
             <span className="inline-block w-3.5 h-3.5 rounded-full border-2 border-[#cbd5e1]" />
             Choose one answer below
           </p>
@@ -132,7 +132,7 @@ export function TestQuestionCard({
       {showExplanation && (
         <div className="rounded-xl border border-[#c7d2fe] bg-[#eef2ff] p-4 animate-fade-in">
           <p className="text-xs font-semibold text-[#4f46e5] uppercase tracking-wide mb-2">Explanation</p>
-          <p className="text-sm text-[#334155] leading-relaxed">{question.explanation}</p>
+          <p className="text-sm text-body leading-relaxed">{question.explanation}</p>
         </div>
       )}
     </div>

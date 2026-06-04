@@ -22,10 +22,10 @@ export function ErrorState({ description, onRetry }: ErrorStateProps) {
         <AlertTriangle size={26} className="text-rose-500" />
       </div>
       <div>
-        <h2 className="font-display font-semibold text-lg text-[#0D1B2E] mb-1">
+        <h2 className="font-display font-semibold text-lg text-default mb-1">
           {t("error_title")}
         </h2>
-        <p className="text-sm text-[#64748b] max-w-xs">
+        <p className="text-sm text-muted max-w-xs">
           {description ?? t("error_desc")}
         </p>
       </div>
@@ -48,7 +48,7 @@ export function ErrorState({ description, onRetry }: ErrorStateProps) {
  */
 export function PageError({ description, onRetry }: ErrorStateProps) {
   return (
-    <div className="flex min-h-screen bg-[#f8fafc] items-center justify-center px-4">
+    <div className="flex min-h-screen bg-surface-subtle items-center justify-center px-4">
       <ErrorState description={description} onRetry={onRetry} />
     </div>
   );

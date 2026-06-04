@@ -34,7 +34,7 @@ export function Navbar({ transparent = false }: NavbarProps) {
         "sticky top-0 z-50 w-full transition-all duration-300",
         transparent
           ? "bg-transparent"
-          : "bg-white/90 backdrop-blur-md border-b border-[#e2e8f0]"
+          : "bg-white/90 backdrop-blur-md border-b border-line"
       )}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -44,7 +44,7 @@ export function Navbar({ transparent = false }: NavbarProps) {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
               <Zap size={16} className="text-white fill-white" />
             </div>
-            <span className="font-display font-bold text-[#0D1B2E] text-lg tracking-tight">
+            <span className="font-display font-bold text-default text-lg tracking-tight">
               Ready to <span className="gradient-text">Ace</span>
             </span>
           </Link>
@@ -60,21 +60,21 @@ export function Navbar({ transparent = false }: NavbarProps) {
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-6">
-            <Link href="/tests" className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E] transition-colors">
+            <Link href="/tests" className="text-sm font-medium text-body hover:text-default transition-colors">
               {t("nav_tests")}
             </Link>
-            <Link href="/pricing" className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E] transition-colors">
+            <Link href="/pricing" className="text-sm font-medium text-body hover:text-default transition-colors">
               {t("nav_pricing")}
             </Link>
             <DarkModeToggle />
             {loggedIn ? (
               <>
-                <Link href="/dashboard" className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E] transition-colors">
+                <Link href="/dashboard" className="text-sm font-medium text-body hover:text-default transition-colors">
                   Dashboard
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-1.5 text-sm font-medium text-[#94a3b8] hover:text-[#e11d48] transition-colors"
+                  className="flex items-center gap-1.5 text-sm font-medium text-subtle hover:text-[#e11d48] transition-colors"
                 >
                   <LogOut size={15} />
                   Log out
@@ -82,7 +82,7 @@ export function Navbar({ transparent = false }: NavbarProps) {
               </>
             ) : (
               <>
-                <Link href="/login" className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E] transition-colors">
+                <Link href="/login" className="text-sm font-medium text-body hover:text-default transition-colors">
                   {t("nav_login")}
                 </Link>
                 <Link
@@ -97,7 +97,7 @@ export function Navbar({ transparent = false }: NavbarProps) {
 
           {/* Mobile toggle */}
           <button
-            className="md:hidden p-2 rounded-lg text-[#475569] hover:bg-[#f1f5f9] transition-colors"
+            className="md:hidden p-2 rounded-lg text-body hover:bg-surface-muted transition-colors"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
@@ -108,12 +108,12 @@ export function Navbar({ transparent = false }: NavbarProps) {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-[#e2e8f0] bg-white animate-fade-in">
+        <div className="md:hidden border-t border-line bg-surface animate-fade-in">
           <div className="px-4 py-4 flex flex-col gap-4">
-            <Link href="/tests" className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E]" onClick={() => setMobileOpen(false)}>
+            <Link href="/tests" className="text-sm font-medium text-body hover:text-default" onClick={() => setMobileOpen(false)}>
               {t("nav_tests")}
             </Link>
-            <Link href="/pricing" className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E]" onClick={() => setMobileOpen(false)}>
+            <Link href="/pricing" className="text-sm font-medium text-body hover:text-default" onClick={() => setMobileOpen(false)}>
               {t("nav_pricing")}
             </Link>
             {loggedIn ? (
@@ -126,7 +126,7 @@ export function Navbar({ transparent = false }: NavbarProps) {
               </button>
             ) : (
               <>
-                <Link href="/login" className="text-sm font-medium text-[#475569] hover:text-[#0D1B2E]" onClick={() => setMobileOpen(false)}>
+                <Link href="/login" className="text-sm font-medium text-body hover:text-default" onClick={() => setMobileOpen(false)}>
                   {t("nav_login")}
                 </Link>
                 <Link

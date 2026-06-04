@@ -9,10 +9,10 @@ export function CareerSetupBanner() {
           <Sparkles size={18} className="text-white" />
         </div>
         <div className="flex-1">
-          <h3 className="font-display font-semibold text-[#0D1B2E] mb-1">
+          <h3 className="font-display font-semibold text-default mb-1">
             Unlock personalised recommendations
           </h3>
-          <p className="text-sm text-[#475569] mb-4 leading-relaxed">
+          <p className="text-sm text-body mb-4 leading-relaxed">
             Tell us the role and industry you&apos;re targeting. We&apos;ll build a preparation plan that matches what employers actually test.
           </p>
           <Link

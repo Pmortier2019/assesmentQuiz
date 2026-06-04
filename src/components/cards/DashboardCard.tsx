@@ -28,12 +28,12 @@ export function DashboardCard({
     <div className={cn("card p-5 flex flex-col gap-3", className)}>
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm font-medium text-[#64748b]">{title}</p>
-          <p className="font-display font-bold text-2xl text-[#0D1B2E] mt-0.5 tracking-tight">
+          <p className="text-sm font-medium text-muted">{title}</p>
+          <p className="font-display font-bold text-2xl text-default mt-0.5 tracking-tight">
             {value}
           </p>
           {subtitle && (
-            <p className="text-xs text-[#94a3b8] mt-0.5">{subtitle}</p>
+            <p className="text-xs text-subtle mt-0.5">{subtitle}</p>
           )}
         </div>
         {Icon && (
@@ -53,7 +53,7 @@ export function DashboardCard({
           >
             {trend.value >= 0 ? "+" : ""}{trend.value}{trend.unit ?? "%"}
           </span>
-          <span className="text-xs text-[#94a3b8]">{trend.label}</span>
+          <span className="text-xs text-subtle">{trend.label}</span>
         </div>
       )}
 

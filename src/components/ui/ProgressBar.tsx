@@ -39,10 +39,10 @@ export function ProgressBar({
       {(label || showValue) && (
         <div className="flex justify-between items-center mb-1.5">
           {label && (
-            <span className="text-sm font-medium text-[#475569]">{label}</span>
+            <span className="text-sm font-medium text-body">{label}</span>
           )}
           {showValue && (
-            <span className="text-sm font-semibold text-[#0D1B2E]">
+            <span className="text-sm font-semibold text-default">
               {Math.round(pct)}%
             </span>
           )}
@@ -50,7 +50,7 @@ export function ProgressBar({
       )}
       <div
         className={cn(
-          "w-full bg-[#e2e8f0] rounded-full overflow-hidden",
+          "w-full bg-line rounded-full overflow-hidden",
           heights[size]
         )}
       >
