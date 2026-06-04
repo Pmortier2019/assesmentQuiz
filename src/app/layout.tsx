@@ -1,7 +1,22 @@
 import type { Metadata, Viewport } from "next";
+import { Bricolage_Grotesque, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/lib/i18n";
 import { QueryProvider } from "@/lib/queryClient";
+
+// Self-hosted at build time (no render-blocking Google Fonts request, no CLS).
+// Both are variable fonts, so the full weight range comes for free.
+const bricolage = Bricolage_Grotesque({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-bricolage",
+});
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  style: ["normal", "italic"],
+  variable: "--font-dm-sans",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -52,7 +67,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className={`h-full ${bricolage.variable} ${dmSans.variable}`}>
       <body className="min-h-full flex flex-col bg-surface text-default antialiased">
         {/* Set the theme class before first paint to avoid a white flash for
             users who prefer dark. Mirrors DarkModeToggle's localStorage key. */}
