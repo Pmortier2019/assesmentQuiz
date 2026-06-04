@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { TestCard } from "@/components/cards/TestCard";
+import { ErrorState } from "@/components/ui/ErrorState";
 import { FilterBar } from "@/components/test/FilterBar";
 import { generateTestOfType, getGenerationStatus, ALL_GENERATE_TYPES, ALL_DIFFICULTIES } from "@/lib/api";
 import { useTestsInfinite, useCurrentUser, queryKeys } from "@/lib/queries";
@@ -42,6 +43,8 @@ export default function TestsPage() {
   const {
     data,
     isPending: loading,
+    isError,
+    refetch,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -233,7 +236,9 @@ export default function TestsPage() {
             />
           </div>
 
-          {loading ? (
+          {isError ? (
+            <ErrorState onRetry={() => refetch()} />
+          ) : loading ? (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="skeleton h-60 rounded-2xl" />

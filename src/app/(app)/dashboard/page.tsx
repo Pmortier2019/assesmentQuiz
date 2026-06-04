@@ -17,6 +17,7 @@ import { ScoreRing } from "@/components/ui/ScoreRing";
 import { XPLevelBar } from "@/components/ui/XPLevelBar";
 import { AchievementBadges } from "@/components/ui/AchievementBadges";
 import { PageLoader } from "@/components/ui/PageLoader";
+import { PageError } from "@/components/ui/ErrorState";
 import { LeaderboardCard } from "@/components/cards/LeaderboardCard";
 import { WeakSpotCard } from "@/components/cards/WeakSpotCard";
 import {
@@ -85,9 +86,9 @@ function RecommendedTestCard({ test, badge }: { test: Test; badge?: string }) {
 
 export default function DashboardPage() {
   const { t } = useT();
-  const { data: user } = useCurrentUser();
-  const { data: testsPage, isPending: testsPending } = useTests();
-  const { data: results = [], isPending: resultsPending } = useUserResults();
+  const { data: user, isError: userError, refetch: refetchUser } = useCurrentUser();
+  const { data: testsPage, isPending: testsPending, isError: testsError, refetch: refetchTests } = useTests();
+  const { data: results = [], isPending: resultsPending, isError: resultsError, refetch: refetchResults } = useUserResults();
 
   // preparationPath/recommended only matter once the user has career targets.
   // Gating both on the same flag lets them fire in parallel the moment the
@@ -95,6 +96,20 @@ export default function DashboardPage() {
   const hasCareerTargets = !!(user?.targetRole || user?.targetIndustry);
   const { data: preparationPath = null } = usePreparationPath(hasCareerTargets);
   const { data: recommendedTests = [] } = useRecommendedTests(hasCareerTargets);
+
+  // Any of the three core fetches failing leaves the dashboard unusable, so we
+  // surface one clear error + retry rather than a half-empty page.
+  if (userError || testsError || resultsError) {
+    return (
+      <PageError
+        onRetry={() => {
+          refetchUser();
+          refetchTests();
+          refetchResults();
+        }}
+      />
+    );
+  }
 
   if (!user || testsPending || resultsPending) {
     return <PageLoader label={t("dash_loading")} />;
