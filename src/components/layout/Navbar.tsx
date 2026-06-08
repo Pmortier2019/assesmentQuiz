@@ -6,7 +6,6 @@ import { Menu, X, Zap, LogOut, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useT } from "@/lib/i18n";
-import { DarkModeToggle } from "@/components/ui/DarkModeToggle";
 import { logout } from "@/lib/api";
 import { useAuth } from "@/lib/useAuth";
 
@@ -64,7 +63,6 @@ export function Navbar({ transparent = false }: NavbarProps) {
             <Link href="/pricing" className="text-sm font-medium text-body hover:text-default transition-colors">
               {t("nav_pricing")}
             </Link>
-            <DarkModeToggle />
             {loggedIn ? (
               <>
                 <Link href="/dashboard" className="text-sm font-medium text-body hover:text-default transition-colors">
