@@ -1,5 +1,13 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import {
+  Calculator, Puzzle, FileText, Shapes, Lightbulb, ScanSearch, Target, Workflow,
+  Box, Cog, Microscope, BarChart3, ListChecks, BookOpen, SpellCheck, PenLine,
+  MessageCircle, Presentation, Smile, Compass, Heart, Waves, Globe, Crown, Scale,
+  Crosshair, ClipboardList, Timer, ShieldAlert, UsersRound, HeartHandshake,
+  Handshake, Headphones, BadgeDollarSign, Wallet, Table2, Code, Gavel, Palette,
+  type LucideIcon,
+} from "lucide-react";
 import type { AssessmentType, Difficulty } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
@@ -70,55 +78,57 @@ export const ASSESSMENT_TYPE_LABELS: Record<AssessmentType, string> = {
   creativity_innovation:  "Creativity & Innovation",
 };
 
-export const ASSESSMENT_TYPE_ICONS: Record<AssessmentType, string> = {
+// Each assessment type maps to a lucide icon (rendered via <AssessmentTypeIcon>)
+// rather than an emoji, so the type tiles match the rest of the icon set.
+export const ASSESSMENT_TYPE_ICONS: Record<AssessmentType, LucideIcon> = {
   // Cognitive & Reasoning
-  numerical_reasoning:    "📊",
-  logical_reasoning:      "🧩",
-  verbal_reasoning:       "📝",
-  abstract_reasoning:     "🔷",
-  critical_thinking:      "💡",
-  inductive_reasoning:    "🔍",
-  deductive_reasoning:    "🎯",
-  diagrammatic_reasoning: "📐",
-  spatial_reasoning:      "🗺️",
-  mechanical_reasoning:   "⚙️",
-  analytical_thinking:    "🔬",
+  numerical_reasoning:    Calculator,
+  logical_reasoning:      Puzzle,
+  verbal_reasoning:       FileText,
+  abstract_reasoning:     Shapes,
+  critical_thinking:      Lightbulb,
+  inductive_reasoning:    ScanSearch,
+  deductive_reasoning:    Target,
+  diagrammatic_reasoning: Workflow,
+  spatial_reasoning:      Box,
+  mechanical_reasoning:   Cog,
+  analytical_thinking:    Microscope,
   // Data & Interpretation
-  data_interpretation:    "📈",
-  error_checking:         "✅",
+  data_interpretation:    BarChart3,
+  error_checking:         ListChecks,
   // Verbal & Written
-  reading_comprehension:  "📖",
-  grammar_spelling:       "🖊️",
-  writing_assessment:     "✍️",
-  communication_skills:   "💬",
-  presentation_skills:    "🎤",
+  reading_comprehension:  BookOpen,
+  grammar_spelling:       SpellCheck,
+  writing_assessment:     PenLine,
+  communication_skills:   MessageCircle,
+  presentation_skills:    Presentation,
   // Personality & Behavioural
-  personality:            "🧠",
-  situational_judgement:  "🤝",
-  emotional_intelligence: "❤️",
-  adaptability:           "🌊",
-  cultural_fit:           "🌍",
+  personality:            Smile,
+  situational_judgement:  Compass,
+  emotional_intelligence: Heart,
+  adaptability:           Waves,
+  cultural_fit:           Globe,
   // Leadership & Management
-  leadership_assessment:  "🏆",
-  decision_making:        "⚖️",
-  strategic_thinking:     "♟️",
-  project_management:     "📋",
-  time_management:        "⏱️",
-  risk_assessment:        "🛡️",
+  leadership_assessment:  Crown,
+  decision_making:        Scale,
+  strategic_thinking:     Crosshair,
+  project_management:     ClipboardList,
+  time_management:        Timer,
+  risk_assessment:        ShieldAlert,
   // Interpersonal & Professional
-  teamwork_collaboration: "👥",
-  conflict_resolution:    "🕊️",
-  negotiation_skills:     "🤜",
-  customer_service:       "🎧",
-  sales_aptitude:         "💼",
+  teamwork_collaboration: UsersRound,
+  conflict_resolution:    HeartHandshake,
+  negotiation_skills:     Handshake,
+  customer_service:       Headphones,
+  sales_aptitude:         BadgeDollarSign,
   // Domain-specific
-  financial_literacy:     "💰",
-  excel_skills:           "📑",
-  coding_challenge:       "💻",
+  financial_literacy:     Wallet,
+  excel_skills:           Table2,
+  coding_challenge:       Code,
   // Values & Ethics
-  ethics_compliance:      "⚖️",
+  ethics_compliance:      Gavel,
   // Creative
-  creativity_innovation:  "🎨",
+  creativity_innovation:  Palette,
 };
 
 export const DIFFICULTY_LABELS: Record<Difficulty, string> = {

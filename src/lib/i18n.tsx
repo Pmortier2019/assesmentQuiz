@@ -144,7 +144,7 @@ const translations = {
 
     // Test-taking
     tt_all_results:     "All results",
-    tt_passed:          "🎉 Passed!",
+    tt_passed:          "Passed!",
     tt_not_passed:      "Not passed yet — keep practising!",
     tt_pass_mark:       "Pass mark: {mark}% · {correct} of {total} correct",
     tt_your_score:      "Your score",
@@ -336,7 +336,7 @@ const translations = {
 
     // Test-taking
     tt_all_results:     "Alle resultaten",
-    tt_passed:          "🎉 Geslaagd!",
+    tt_passed:          "Geslaagd!",
     tt_not_passed:      "Nog niet geslaagd — blijf oefenen!",
     tt_pass_mark:       "Slaaggrens: {mark}% · {correct} van {total} goed",
     tt_your_score:      "Jouw score",

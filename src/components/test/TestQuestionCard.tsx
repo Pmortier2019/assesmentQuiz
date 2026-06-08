@@ -1,5 +1,6 @@
 "use client";
 
+import { Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useT } from "@/lib/i18n";
 import { MediaRenderer } from "./MediaRenderer";
@@ -108,7 +109,7 @@ export function TestQuestionCard({
                     answerLabelStyles[state]
                   )}
                 >
-                  {isCorrect ? "✓" : isWrong ? "✗" : labels[idx] ?? idx + 1}
+                  {isCorrect ? <Check size={15} strokeWidth={3} /> : isWrong ? <X size={15} strokeWidth={3} /> : labels[idx] ?? idx + 1}
                 </span>
                 {!showExplanation && (
                   <span className={cn(

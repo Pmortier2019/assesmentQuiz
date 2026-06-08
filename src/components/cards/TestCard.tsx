@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { Clock, Lock, Sparkles, ChevronRight, Star } from "lucide-react";
+import { Clock, Lock, Sparkles, ChevronRight, Star, Check } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
-import { cn, ASSESSMENT_TYPE_LABELS, ASSESSMENT_TYPE_ICONS, DIFFICULTY_COLORS, DIFFICULTY_LABELS, formatDuration } from "@/lib/utils";
+import { AssessmentTypeIcon } from "@/components/ui/AssessmentTypeIcon";
+import { cn, ASSESSMENT_TYPE_LABELS, DIFFICULTY_COLORS, DIFFICULTY_LABELS, formatDuration } from "@/lib/utils";
 import type { Test } from "@/lib/types";
 
 interface TestCardProps {
@@ -47,8 +48,8 @@ export function TestCard({ test, isLocked = false, onStart, className, showRecom
 
       {/* Icon + type */}
       <div className="flex items-start justify-between gap-2">
-        <div className="w-10 h-10 rounded-xl bg-surface-subtle border border-line flex items-center justify-center text-xl" aria-hidden="true">
-          {ASSESSMENT_TYPE_ICONS[test.type]}
+        <div className="w-10 h-10 rounded-xl bg-surface-subtle border border-line flex items-center justify-center">
+          <AssessmentTypeIcon type={test.type} size={20} />
         </div>
         {locked ? (
           <span className="flex items-center gap-1 text-[10px] font-bold text-[#7c3aed] bg-[#f5f3ff] border border-[#ddd6fe] px-2 py-0.5 rounded-full">
@@ -56,7 +57,7 @@ export function TestCard({ test, isLocked = false, onStart, className, showRecom
             Pro
           </span>
         ) : (
-          <Badge variant="free" size="sm">✓ Free</Badge>
+          <Badge variant="free" size="sm"><Check size={11} strokeWidth={3} /> Free</Badge>
         )}
       </div>
 

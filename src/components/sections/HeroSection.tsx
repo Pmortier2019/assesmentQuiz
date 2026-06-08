@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, Star } from "lucide-react";
 import { HeroDashboardMockup } from "./HeroDashboardMockup";
 
 export function HeroSection() {
@@ -76,7 +76,7 @@ export function HeroSection() {
               <div>
                 <div className="flex items-center gap-0.5">
                   {[1,2,3,4,5].map((s) => (
-                    <span key={s} className="text-amber-400 text-xs">★</span>
+                    <Star key={s} size={13} className="text-amber-400 fill-amber-400" />
                   ))}
                 </div>
                 <p className="text-xs text-[#64748b]">

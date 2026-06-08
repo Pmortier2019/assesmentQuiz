@@ -14,7 +14,7 @@ import {
   AdminStats, AdminUser,
 } from "@/lib/api";
 import { useAuth } from "@/lib/useAuth";
-import { ASSESSMENT_TYPE_ICONS } from "@/lib/utils";
+import { AssessmentTypeIcon } from "@/components/ui/AssessmentTypeIcon";
 import type { Test } from "@/lib/types";
 
 const DIFF_COLORS: Record<string, string> = {
@@ -303,7 +303,7 @@ export default function AdminPage() {
                   <tr key={type}>
                     <td className="py-2.5 pr-4">
                       <div className="flex items-center gap-2">
-                        <span>{ASSESSMENT_TYPE_ICONS[type.toLowerCase() as keyof typeof ASSESSMENT_TYPE_ICONS] ?? "📋"}</span>
+                        <AssessmentTypeIcon type={type} size={16} className="text-[#334155]" />
                         <span className="text-sm font-medium text-[#334155]">{label}</span>
                       </div>
                     </td>
