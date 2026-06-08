@@ -17,6 +17,18 @@ public interface AssessmentTestRepository extends JpaRepository<AssessmentTest, 
 
     List<AssessmentTest> findByIsFreeTrue();
 
+    long countByIsFreeTrue();
+
+    long countByIsGeneratedByAITrue();
+
+    /**
+     * One row per distinct (type, difficulty) pair that exists. Lets the admin
+     * generation-status endpoint resolve coverage in a single query instead of
+     * one findByType per TestType enum value.
+     */
+    @Query("SELECT DISTINCT t.type, t.difficulty FROM AssessmentTest t")
+    List<Object[]> findDistinctTypeAndDifficulty();
+
     List<AssessmentTest> findByType(TestType type);
 
     List<AssessmentTest> findByDifficulty(Difficulty difficulty);
