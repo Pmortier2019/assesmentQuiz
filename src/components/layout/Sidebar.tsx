@@ -7,7 +7,6 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StreakBadge } from "@/components/ui/StreakBadge";
-import { DarkModeToggle } from "@/components/ui/DarkModeToggle";
 import { useT } from "@/lib/i18n";
 import { useAuth } from "@/lib/useAuth";
 import { logout } from "@/lib/api";
@@ -82,9 +81,6 @@ export function Sidebar({ streak = 7, userName = "Pierre", isAdmin: isAdminProp 
 
       {/* Language + User */}
       <div className="mt-auto border-t border-line pt-4 flex flex-col gap-3">
-        <div className="px-2 flex items-center gap-2">
-          <DarkModeToggle />
-        </div>
         <div className="flex items-center gap-3 px-2">
           <div className={cn(
             "w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold",
