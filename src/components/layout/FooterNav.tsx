@@ -14,6 +14,8 @@ export function FooterNav() {
       ) : (
         <Link href="/login" className="hover:text-[#475569] transition-colors">Login</Link>
       )}
+      <Link href="/terms" className="hover:text-[#475569] transition-colors">Terms</Link>
+      <Link href="/privacy" className="hover:text-[#475569] transition-colors">Privacy</Link>
     </div>
   );
 }

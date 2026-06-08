@@ -181,6 +181,30 @@ const translations = {
     tt_all_answered:    "All questions answered",
     tt_submit:          "Submit test",
 
+    // Settings & account
+    nav_settings:       "Settings",
+    settings_title:     "Settings",
+    settings_subtitle:  "Manage your account and data.",
+    settings_data_title:"Your data",
+    settings_data_desc: "Download a copy of all the personal data we hold about you (profile and test results) as a JSON file.",
+    settings_download:  "Download my data",
+    settings_exporting: "Preparing…",
+    settings_danger_title: "Delete account",
+    settings_danger_desc: "Permanently delete your account and all associated data — profile, test results and subscription. This cannot be undone.",
+    settings_delete:    "Delete my account",
+    settings_delete_confirm_title: "Delete your account?",
+    settings_delete_confirm_desc: "This permanently erases your profile, test results and subscription. There is no way to recover it.",
+    settings_delete_confirm_label: "Type {word} to confirm",
+    settings_delete_confirm_word: "DELETE",
+    settings_delete_confirm_cta: "Permanently delete",
+    settings_deleting:  "Deleting…",
+    settings_action_failed: "Something went wrong. Please try again.",
+
+    // Legal
+    legal_home:         "Home",
+    legal_terms:        "Terms of Service",
+    legal_privacy:      "Privacy Policy",
+
     // Common
     free:               "Free",
     pro:                "Pro",
@@ -372,6 +396,30 @@ const translations = {
     tt_submitting:      "Inleveren…",
     tt_all_answered:    "Alle vragen beantwoord",
     tt_submit:          "Test inleveren",
+
+    // Settings & account
+    nav_settings:       "Instellingen",
+    settings_title:     "Instellingen",
+    settings_subtitle:  "Beheer je account en gegevens.",
+    settings_data_title:"Jouw gegevens",
+    settings_data_desc: "Download een kopie van alle persoonsgegevens die we van je bewaren (profiel en testresultaten) als JSON-bestand.",
+    settings_download:  "Mijn gegevens downloaden",
+    settings_exporting: "Voorbereiden…",
+    settings_danger_title: "Account verwijderen",
+    settings_danger_desc: "Verwijder je account en alle bijbehorende gegevens definitief — profiel, testresultaten en abonnement. Dit kan niet ongedaan worden gemaakt.",
+    settings_delete:    "Mijn account verwijderen",
+    settings_delete_confirm_title: "Account verwijderen?",
+    settings_delete_confirm_desc: "Dit wist je profiel, testresultaten en abonnement definitief. Herstellen is niet mogelijk.",
+    settings_delete_confirm_label: "Typ {word} om te bevestigen",
+    settings_delete_confirm_word: "VERWIJDER",
+    settings_delete_confirm_cta: "Definitief verwijderen",
+    settings_deleting:  "Verwijderen…",
+    settings_action_failed: "Er is iets misgegaan. Probeer het opnieuw.",
+
+    // Legal
+    legal_home:         "Home",
+    legal_terms:        "Algemene voorwaarden",
+    legal_privacy:      "Privacybeleid",
 
     // Common
     free:               "Gratis",
