@@ -1,13 +1,15 @@
-# AssessPro — Assessment Training Platform
+# Ready to Ace — Assessment Training Platform
 
 Een full-stack SaaS waar gebruikers psychometrische oefentesten maken ter voorbereiding op sollicitatieprocessen. Het platform voelt als een **persoonlijke assessment coach**: het herkent jouw rol en sector, bouwt een gepersonaliseerd voorbereidingspad en prioriteert de testen die jouw doelwerkgever ook daadwerkelijk gebruikt.
 
+> De codebase gebruikt intern de namespace `assesspro`; het publieke product heet **Ready to Ace**.
+
 **Live URLs**
-- Frontend: https://assesment-quiz.vercel.app
+- Website: https://www.ready-to-ace.com
 - Backend API: https://app-white-shadow-5362.fly.dev
 - GitHub: https://github.com/Pmortier2019/assesmentQuiz
 
-> **Demo proberen?** Maak via de live frontend een gratis account aan (registratie + e-mailverificatie). Je krijgt 5 gratis testen voordat de paywall verschijnt.
+> **Demo proberen?** Maak op [ready-to-ace.com](https://www.ready-to-ace.com) een gratis account aan (registratie + e-mailverificatie). Je krijgt 5 gratis testen voordat de paywall verschijnt.
 
 ---
 
