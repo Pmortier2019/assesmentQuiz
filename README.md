@@ -1,11 +1,28 @@
-# Mortier Asses — Assessment Training Platform
+# Ready to Ace — Assessment Training Platform
 
-Een SaaS platform waar gebruikers psychometrische oefentesten maken ter voorbereiding op sollicitatieprocessen. Het platform voelt als een **persoonlijke assessment coach**: het herkent jouw rol en sector, bouwt een gepersonaliseerd voorbereidingspad en prioriteert de testen die jouw doelwerkgever ook daadwerkelijk gebruikt.
+Een full-stack SaaS waar gebruikers psychometrische oefentesten maken ter voorbereiding op sollicitatieprocessen. Het platform voelt als een **persoonlijke assessment coach**: het herkent jouw rol en sector, bouwt een gepersonaliseerd voorbereidingspad en prioriteert de testen die jouw doelwerkgever ook daadwerkelijk gebruikt.
+
+> De codebase gebruikt intern de namespace `assesspro`; het publieke product heet **Ready to Ace**.
 
 **Live URLs**
-- Frontend: https://assesment-quiz.vercel.app
+- Website: https://www.ready-to-ace.com
 - Backend API: https://app-white-shadow-5362.fly.dev
 - GitHub: https://github.com/Pmortier2019/assesmentQuiz
+
+> **Demo proberen?** Maak op [ready-to-ace.com](https://www.ready-to-ace.com) een gratis account aan (registratie + e-mailverificatie). Je krijgt 5 gratis testen voordat de paywall verschijnt.
+
+---
+
+## Highlights
+
+- **Full-stack** — Next.js/React frontend + Spring Boot REST API
+- **Echte authenticatie** — Spring Security + JWT, access-token in memory, refresh-token via httpOnly-cookie, e-mailverificatie en wachtwoordherstel
+- **Managed Postgres** — Neon (EU Frankfurt) met point-in-time recovery; Flyway-migraties voor schemaversiebeheer
+- **AI-testgeneratie** — live Anthropic Claude-client (`claude-haiku-4-5`) genereert nieuwe testen on-demand
+- **Betalingen** — LemonSqueezy checkout + webhook voor Pro-abonnementen
+- **Productie-infra** — GitHub Actions (CI, CodeQL, security scan, auto-deploy), Sentry error monitoring, UptimeRobot uptime checks
+- **Smart recommendations** — rule-based engine die testen scoort op rol/sector/bedrijf, met een geordend voorbereidingspad
+- **i18n & a11y** — Engels + Nederlands, reduced-motion, aria-labels en toetsenbordnavigatie
 
 ---
 
@@ -13,11 +30,15 @@ Een SaaS platform waar gebruikers psychometrische oefentesten maken ter voorbere
 
 | Laag | Technologie |
 |---|---|
-| Frontend | Next.js 16, React 19, TypeScript, Tailwind CSS |
-| Backend | Java 17, Spring Boot 3.2.5, Spring Data JPA, Lombok |
-| Database | H2 in-memory (dev + cloud) |
+| Frontend | Next.js 16, React 19, TypeScript, Tailwind CSS, TanStack Query |
+| Backend | Java 17, Spring Boot 3.2.5, Spring Data JPA, Spring Security, Lombok |
+| Auth | JWT (jjwt), refresh-cookie, e-mailverificatie |
+| Database | PostgreSQL via Neon (prod) · H2 in-memory (lokale dev) · Flyway-migraties |
+| AI | Anthropic Claude (`claude-haiku-4-5`) via `ClaudeAiClient` |
+| Betalingen | LemonSqueezy (checkout + webhook) |
+| Monitoring | Sentry (frontend + backend), UptimeRobot |
 | Deployment | Vercel (frontend) + Fly.io (backend) |
-| CI/CD | GitHub Actions — auto-deploy bij push naar `main` |
+| CI/CD | GitHub Actions — CI, CodeQL, security scan, auto-deploy bij push naar `main` |
 
 ---
 
@@ -27,9 +48,9 @@ Een SaaS platform waar gebruikers psychometrische oefentesten maken ter voorbere
 assesmentQuiz/
 ├── backend/                              ← Spring Boot API
 │   └── src/main/java/com/assesspro/backend/
-│       ├── ai/                           ← AiClient interface + MockAiClient
-│       ├── config/                       ← CORS, DataInitializer, Jackson
-│       ├── controller/                   ← REST controllers
+│       ├── ai/                           ← AiClient interface + Claude/Gemini/Mock impls
+│       ├── config/                       ← CORS, security, DataInitializer, Jackson
+│       ├── controller/                   ← REST controllers (auth, tests, users, …)
 │       ├── dto/                          ← Request/response objecten
 │       ├── entity/                       ← JPA entiteiten
 │       │   └── enums/                    ← TestType, Difficulty, AssessmentCategory, …
@@ -40,26 +61,23 @@ assesmentQuiz/
 │           ├── TestService.java
 │           ├── UserService.java
 │           └── …
+│   └── src/main/resources/
+│       ├── application-*.properties      ← profielen: dev (H2), railway (Postgres), …
+│       └── db/migration/                 ← Flyway: V1__init … V4__password_changed_at
 ├── src/                                  ← Next.js frontend
 │   ├── app/
-│   │   ├── dashboard/page.tsx
-│   │   ├── onboarding/page.tsx
-│   │   ├── tests/page.tsx
-│   │   ├── tests/[id]/page.tsx
-│   │   ├── results/page.tsx
-│   │   └── pricing/page.tsx
-│   ├── components/
-│   │   ├── cards/                        ← TestCard, DashboardCard, PreparationPathCard, …
-│   │   ├── layout/                       ← Navbar, Sidebar
-│   │   ├── sections/                     ← HeroSection, PricingPreviewSection, …
-│   │   ├── test/                         ← FilterBar, TestQuestionCard, ResultsSummary, …
-│   │   └── ui/                           ← Badge, ProgressBar, StreakBadge, PaywallCard
+│   │   ├── (app)/                        ← dashboard, tests, results, progress, study-plan, pricing
+│   │   ├── login/ · onboarding/          ← auth + career-first onboarding
+│   │   ├── verify-email/ · forgot-password/ · reset-password/
+│   │   └── admin/ · practice/
+│   ├── components/                       ← cards, layout, sections, test, ui
 │   └── lib/
 │       ├── api.ts                        ← Alle backend calls + type mapping
-│       ├── types.ts                      ← Frontend types
-│       └── utils.ts
-├── .github/workflows/fly-deploy.yml
-├── .env.local                            ← NEXT_PUBLIC_API_URL (lokaal)
+│       ├── auth.ts · useAuth.ts          ← token-beheer (in memory)
+│       ├── queries.ts · queryClient.tsx  ← TanStack Query
+│       ├── i18n.tsx                       ← EN/NL vertalingen
+│       └── types.ts · utils.ts
+├── .github/workflows/                    ← ci, codeql, security, fly-deploy, staging-deploy
 └── README.md
 ```
 
@@ -75,12 +93,10 @@ assesmentQuiz/
 ### Frontend
 
 ```bash
-# installeer dependencies
 npm install
 
-# kopieer de environment file
-cp .env.local.example .env.local   # of maak zelf aan met:
-# NEXT_PUBLIC_API_URL=http://localhost:8080
+# environment
+echo "NEXT_PUBLIC_API_URL=http://localhost:8080" > .env.local
 
 npm run dev
 # → http://localhost:3000
@@ -90,45 +106,61 @@ npm run dev
 
 ```bash
 cd backend
-mvn spring-boot:run
+# lokaal draait standaard op het dev-profiel met een H2 in-memory DB
+mvn spring-boot:run "-Dspring-boot.run.profiles=dev"
 # → http://localhost:8080
 ```
 
-Bij opstart seed de `DataInitializer` automatisch:
-- 2 gebruikers (`demo@assesspro.io` FREE, `pro@assesspro.io` PRO)
-- 14 testen met vragen, categorisatie en targeting metadata
-- 1 AI-gegenereerde test via `MockAiClient`
+Bij opstart seed de `DataInitializer` automatisch testdata (gebruikers, 14 testen met
+categorisatie- en targeting-metadata). Voor AI-generatie lokaal heb je geen API-key
+nodig: zonder key valt de `MockAiClient` in.
 
 ---
 
 ## REST API
 
-### Tests
+### Auth (`/api/auth`)
+
+| Method | Endpoint | Beschrijving |
+|---|---|---|
+| `POST` | `/register` | Account aanmaken |
+| `POST` | `/login` | Inloggen → access-token + refresh-cookie |
+| `POST` | `/refresh` | Access-token verversen via refresh-cookie |
+| `POST` | `/logout` | Sessie beëindigen |
+| `POST` | `/verify-email` · `/resend-verification` | E-mailverificatie |
+| `POST` | `/forgot-password` · `/reset-password` | Wachtwoordherstel |
+
+### Tests (`/api/tests`)
 
 | Method | Endpoint | Beschrijving |
 |---|---|---|
 | `GET` | `/api/tests` | Alle testen (filter: `type`, `difficulty`, `access`) |
-| `GET` | `/api/tests/{id}?userId=1` | Test detail met vragen |
+| `GET` | `/api/tests/{id}` | Test detail met vragen |
 | `POST` | `/api/tests/{id}/submit` | Test inleveren, score + uitleg terug |
-| `GET` | `/api/tests/recommended/{userId}` | Testen gerankt op relevantie voor gebruiker |
+| `GET` | `/api/tests/recommended/me` | Testen gerankt op relevantie voor de ingelogde gebruiker |
 
-### Gebruikers
-
-| Method | Endpoint | Beschrijving |
-|---|---|---|
-| `GET` | `/api/users/{id}` | Gebruikersprofiel (incl. career targets) |
-| `GET` | `/api/users/{id}/results` | Alle resultaten van de gebruiker |
-| `GET` | `/api/users/{id}/recommendations` | Aanbevolen testen (op basis van targets + historie) |
-| `PATCH` | `/api/users/{id}/career-targets` | Rol, sector en bedrijf opslaan |
-| `GET` | `/api/users/{id}/preparation-path` | Gepersonaliseerd voorbereidingspad |
-
-### Subscriptions & Admin
+### Gebruikers (`/api/users`)
 
 | Method | Endpoint | Beschrijving |
 |---|---|---|
-| `GET` | `/api/users/{id}/subscription` | Abonnementsstatus |
-| `POST` | `/api/users/{id}/subscription/mock-upgrade` | Upgrade naar Pro (mock, geen Stripe) |
-| `POST` | `/api/admin/tests/generate` | AI-test genereren |
+| `GET` | `/{userId}` | Gebruikersprofiel (incl. career targets) |
+| `GET` | `/{userId}/results` | Alle resultaten van de gebruiker |
+| `GET` | `/{userId}/recommendations` · `/recommended-tests` | Aanbevolen testen |
+| `PATCH` | `/{userId}/career-targets` | Rol, sector en bedrijf opslaan |
+| `GET` | `/{userId}/preparation-path` | Gepersonaliseerd voorbereidingspad |
+| `GET` | `/{userId}/skills-summary` | Skills-overzicht over sessies heen |
+
+### Subscriptions, Admin & Webhooks
+
+| Method | Endpoint | Beschrijving |
+|---|---|---|
+| `GET` | `/api/users/{userId}/subscription` | Abonnementsstatus |
+| `GET` | `/api/users/{userId}/subscription/checkout-url` | LemonSqueezy checkout-URL |
+| `DELETE` | `/api/users/{userId}/subscription` | Abonnement opzeggen |
+| `POST` | `/api/webhooks/lemonsqueezy` | LemonSqueezy betalings-webhook |
+| `POST` | `/api/admin/tests/generate` · `/generate-type/{userId}/{type}` | AI-test genereren |
+| `GET` | `/api/admin/stats` · `/users` · `/tests` | Admin-dashboard data |
+| `GET` | `/api/leaderboard` | Ranglijst |
 
 ---
 
@@ -220,15 +252,6 @@ Wanneer een gebruiker career targets heeft ingesteld, toont het dashboard:
 
 Zonder career targets verschijnt een `CareerSetupBanner` die naar de onboarding wijst.
 
-### Tests pagina (filters)
-
-Naast de bestaande filters (type, niveau, tier) zijn er nu:
-
-- **Rol filter** — dropdown met alle 14 rollen
-- **Sector filter** — dropdown met alle 12 sectoren
-- **Best match sortering** — toont een aparte "Best Matches" sectie bovenaan
-- **Aanbevolen badge** — "Best match" chip op kaarten waar `isRecommended: true`
-
 ---
 
 ## Onboarding flow
@@ -236,21 +259,13 @@ Naast de bestaande filters (type, niveau, tier) zijn er nu:
 4-staps career-first flow:
 
 ```
-Stap 1 — Rol
-  Searchable dropdown + quick-pick cards (top 6 rollen)
-
-Stap 2 — Sector
-  Searchable dropdown + grid van alle 12 sectoren
-
-Stap 3 — Bedrijf (optioneel)
-  Vrij tekstveld + populaire shortcut-knopjes
-
-Stap 4 — Niveau
-  Beginner / Intermediate / Advanced
-  Toont een samenvatting van je profiel
+Stap 1 — Rol        Searchable dropdown + quick-pick cards (top 6 rollen)
+Stap 2 — Sector     Searchable dropdown + grid van alle 12 sectoren
+Stap 3 — Bedrijf    Vrij tekstveld + populaire shortcut-knopjes (optioneel)
+Stap 4 — Niveau     Beginner / Intermediate / Advanced + profiel-samenvatting
 ```
 
-Na voltooiing: POST naar `PATCH /api/users/{id}/career-targets` en redirect naar `/dashboard`.
+Na voltooiing: `PATCH /api/users/{id}/career-targets` en redirect naar `/dashboard`.
 
 ---
 
@@ -259,9 +274,27 @@ Na voltooiing: POST naar `PATCH /api/users/{id}/career-targets` en redirect naar
 | Tier | Toegang |
 |---|---|
 | **Free** | 5 testen, daarna paywall |
-| **Pro** | Onbeperkt + AI-gegenereerde testen (toekomstig) |
+| **Pro** | Onbeperkt + AI-gegenereerde testen |
 
-Upgrade via `POST /api/users/{id}/subscription/mock-upgrade` (mock, Stripe nog niet gekoppeld).
+Upgrade verloopt via LemonSqueezy: de frontend haalt een checkout-URL op
+(`GET /api/users/{id}/subscription/checkout-url`); na betaling bevestigt de
+webhook (`POST /api/webhooks/lemonsqueezy`) het abonnement.
+
+---
+
+## AI-testgeneratie
+
+`AiClient` is een interface met drie implementaties:
+
+```
+AiClient (interface)
+  ├── ClaudeAiClient   ← actief (@Component) — Anthropic claude-haiku-4-5
+  ├── GeminiAiClient   ← uitgeschakeld (alternatieve provider)
+  └── MockAiClient     ← lokale fallback zonder API-key
+```
+
+Wisselen van provider = de actieve Spring-bean wisselen. De gegenereerde JSON wordt
+gevalideerd (`AiTestJson`) en als echte test met vragen opgeslagen.
 
 ---
 
@@ -277,43 +310,33 @@ NEXT_PUBLIC_API_URL=https://app-white-shadow-5362.fly.dev
 
 ### Backend — Fly.io
 
-Auto-deploy via `.github/workflows/fly-deploy.yml` bij push naar `main` of `backend/**`.
+Auto-deploy via `.github/workflows/fly-deploy.yml` bij push naar `main` of wijziging in
+`backend/**`. Het `railway`-profiel draait tegen Neon Postgres met `ddl-auto=validate`;
+Flyway voert migraties uit bij opstart.
 
 ```bash
 # handmatig deployen
 flyctl deploy --config backend/fly.toml
 ```
 
-Vluchtige H2 database: data reset bij elke deploy. De `DataInitializer` zaait alles opnieuw.
+Productie-secrets (datasource, JWT, LemonSqueezy, Sentry) staan als Fly.io-secrets en
+worden nooit in git bewaard — Gitleaks draait in CI.
 
 ---
 
-## Bekende beperkingen
+## Engineering-keuzes & gotchas
 
-| Beperking | Status |
-|---|---|
-| Authenticatie | Hardcoded `CURRENT_USER_ID = 1` in `api.ts` |
-| Database | H2 in-memory — data verdwijnt bij herstart |
-| Streak | Staat altijd op 0, backend telt niet bij |
-| Betaling | Mock upgrade, Stripe niet gekoppeld |
-| AI client | MockAiClient — hardcoded JSON, geen echte LLM |
-| Recommendation | Rule-based, nog geen AI personalisation |
+- **`@Transactional(readOnly = true)`** op service-methodes die lazy relations aanraken (anders `LazyInitializationException`)
+- **Lombok `boolean isXxx` velden** krijgen `@JsonProperty("isXxx")`, anders strippt Jackson de `is`
+- **Connection pooling** — HikariCP `minimum-idle=0` zodat de Neon free-tier compute mag slapen; voorkomt een reconnect-stall na idle (zie issue #77)
+- **Auth zonder localStorage** — access-token in memory + refresh via httpOnly-cookie beperkt XSS-impact
+- **N+1 vermeden** — collections worden batch-gefetcht in de tests-lijst (issue #79)
 
 ---
 
-## Toekomstige AI-uitbreiding
+## Roadmap
 
-De architectuur is klaar voor een echte AI recommendation engine. Zoek op `TODO` in de codebase voor alle inhaakpunten:
-
-- `RecommendationEngine` interface — vervang `RuleBasedRecommendationEngine` met `AiRecommendationEngine`
-- `backend/.../ai/AiClient.java` — vervang `MockAiClient` met een echte Anthropic/OpenAI client
-- Toekomstige AI-features: zwakke skills detecteren, bedrijfsspecifieke testpatronen, adaptieve moeilijkheidsgraad, dagelijkse gepersonaliseerde oefenplannen
-
----
-
-## Technische gotchas
-
-- **`@Transactional(readOnly = true)`** verplicht op alle service-methodes die lazy relations aanraken (anders `LazyInitializationException`)
-- **Lombok `boolean isXxx` velden** moeten `@JsonProperty("isXxx")` hebben, anders serialiseert Jackson als `xxx`
-- **`@ElementCollection(fetch = FetchType.EAGER)`** voor `targetRoles`, `targetIndustries`, `recommendedForCompanies`, `skillsMeasured` op `AssessmentTest`
-- **Dubbele `@Transactional` import** in `TestService.java` was aanwezig — verwijderd
+- `AiRecommendationEngine` die de rule-based engine vervangt (interface ligt klaar)
+- Adaptieve moeilijkheidsgraad en zwakke-skill-detectie
+- Dagelijkse gepersonaliseerde oefenplannen voor Pro-gebruikers
+- Extra talen (DE, FR — `Locale`-type is voorbereid)
