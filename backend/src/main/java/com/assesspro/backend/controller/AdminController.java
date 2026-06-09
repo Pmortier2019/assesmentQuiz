@@ -4,7 +4,6 @@ import com.assesspro.backend.dto.GenerateTestRequest;
 import com.assesspro.backend.dto.ImportTestRequest;
 import com.assesspro.backend.dto.TestResponse;
 import com.assesspro.backend.entity.AssessmentTest;
-import com.assesspro.backend.entity.TestResult;
 import com.assesspro.backend.entity.User;
 import com.assesspro.backend.entity.enums.Difficulty;
 import com.assesspro.backend.entity.enums.TestType;
@@ -17,6 +16,7 @@ import com.assesspro.backend.service.TestService;
 import com.assesspro.backend.service.UserService;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -125,15 +125,11 @@ public class AdminController {
      */
     @GetMapping("/generation-status")
     public ResponseEntity<Map<String, List<String>>> generationStatus() {
-        Map<String, List<String>> existing = new HashMap<>();
-        for (TestType type : TestType.values()) {
-            List<String> difficulties = testRepository.findByType(type).stream()
-                    .map(t -> t.getDifficulty().name())
-                    .distinct()
-                    .toList();
-            if (!difficulties.isEmpty()) {
-                existing.put(type.name(), difficulties);
-            }
+        Map<String, List<String>> existing = new LinkedHashMap<>();
+        for (Object[] row : testRepository.findDistinctTypeAndDifficulty()) {
+            String type = ((TestType) row[0]).name();
+            String difficulty = ((Difficulty) row[1]).name();
+            existing.computeIfAbsent(type, k -> new ArrayList<>()).add(difficulty);
         }
         return ResponseEntity.ok(existing);
     }
@@ -148,8 +144,8 @@ public class AdminController {
         long totalTests   = testRepository.count();
         long totalUsers   = userRepository.count();
         long totalResults = resultRepository.count();
-        long aiTests      = testRepository.findAll().stream().filter(AssessmentTest::isGeneratedByAI).count();
-        long freeTests    = testRepository.findByIsFreeTrue().size();
+        long aiTests      = testRepository.countByIsGeneratedByAITrue();
+        long freeTests    = testRepository.countByIsFreeTrue();
 
         Map<String, Object> stats = new LinkedHashMap<>();
         stats.put("totalTests",   totalTests);
@@ -168,15 +164,25 @@ public class AdminController {
     @Transactional(readOnly = true)
     public ResponseEntity<List<Map<String, Object>>> adminUsers() {
         List<User> users = userRepository.findAll();
+
+        // One grouped query for everyone's result count + average, keyed by user id,
+        // instead of a per-user query in the loop below (was N+1).
+        Map<Long, TestResultRepository.UserResultAggregate> aggByUser =
+                resultRepository.aggregateResultsPerUser().stream()
+                        .collect(Collectors.toMap(
+                                TestResultRepository.UserResultAggregate::getUserId,
+                                Function.identity()));
+
         List<Map<String, Object>> result = users.stream().map(u -> {
-            List<TestResult> results = resultRepository.findByUserIdOrderByCreatedAtDesc(u.getId());
-            double avgScore = results.stream().mapToInt(TestResult::getScore).average().orElse(0);
+            var agg = aggByUser.get(u.getId());
+            long resultCount = agg != null ? agg.getResultCount() : 0;
+            double avgScore = agg != null && agg.getAvgScore() != null ? agg.getAvgScore() : 0;
             Map<String, Object> row = new LinkedHashMap<>();
             row.put("id",          u.getId());
             row.put("name",        u.getName());
             row.put("email",       u.getEmail());
             row.put("targetRole",  u.getTargetRole());
-            row.put("resultCount", results.size());
+            row.put("resultCount", resultCount);
             row.put("avgScore",    (int) Math.round(avgScore));
             row.put("createdAt",   u.getCreatedAt());
             return row;

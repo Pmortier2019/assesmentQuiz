@@ -15,6 +15,24 @@ public interface TestResultRepository extends JpaRepository<TestResult, Long> {
     int countByUserId(Long userId);
 
     /**
+     * Per-user result count and average score in a single grouped query, so the
+     * admin users table no longer fires one query per user (N+1).
+     */
+    @Query("""
+        SELECT r.user.id AS userId, COUNT(r) AS resultCount, AVG(r.score) AS avgScore
+        FROM TestResult r
+        GROUP BY r.user.id
+        """)
+    List<UserResultAggregate> aggregateResultsPerUser();
+
+    /** Projection for {@link #aggregateResultsPerUser()}. */
+    interface UserResultAggregate {
+        Long getUserId();
+        long getResultCount();
+        Double getAvgScore();
+    }
+
+    /**
      * Deletes every result for a user. Select-then-delete (not a bulk JPQL delete)
      * so the {@code userAnswers} orphan-removal cascade fires for each result.
      */
