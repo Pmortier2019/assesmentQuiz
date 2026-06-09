@@ -10,6 +10,8 @@ import com.assesspro.backend.entity.enums.SubscriptionStatus;
 import com.assesspro.backend.entity.enums.TestType;
 import com.assesspro.backend.exception.ResourceNotFoundException;
 import com.assesspro.backend.repository.AssessmentTestRepository;
+import com.assesspro.backend.repository.EmailVerificationTokenRepository;
+import com.assesspro.backend.repository.PasswordResetTokenRepository;
 import com.assesspro.backend.repository.TestResultRepository;
 import com.assesspro.backend.repository.UserRepository;
 import com.assesspro.backend.service.recommendation.RecommendationEngine;
@@ -31,6 +33,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final TestResultRepository resultRepository;
     private final AssessmentTestRepository testRepository;
+    private final EmailVerificationTokenRepository emailVerificationTokenRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final TestService testService;
     private final RecommendationEngine recommendationEngine;
 
@@ -171,6 +175,39 @@ public class UserService {
                 .avgScore(totalAvg)
                 .skills(skills)
                 .build();
+    }
+
+    /**
+     * GDPR art. 15 — assembles a full copy of the user's personal data.
+     */
+    @Transactional(readOnly = true)
+    public UserDataExportResponse exportUserData(Long userId) {
+        User user = findUser(userId);
+        Subscription sub = user.getSubscription();
+        List<UserResultResponse> results = resultRepository.findByUserIdOrderByCreatedAtDesc(userId)
+                .stream()
+                .map(this::toUserResultResponse)
+                .collect(Collectors.toList());
+        return UserDataExportResponse.builder()
+                .exportedAt(java.time.LocalDateTime.now())
+                .profile(toUserResponse(user))
+                .subscriptionStatus(sub != null ? sub.getStatus().name() : "FREE")
+                .testResults(results)
+                .build();
+    }
+
+    /**
+     * GDPR art. 17 — permanently erases the account and every record tied to it.
+     * Test results (and their answers via orphan-removal) and the auth tokens are
+     * removed explicitly; the subscription cascades from the {@code User} delete.
+     */
+    @Transactional
+    public void deleteAccount(Long userId) {
+        User user = findUser(userId);
+        resultRepository.deleteByUserId(userId);
+        emailVerificationTokenRepository.deleteByUserId(userId);
+        passwordResetTokenRepository.deleteByUserId(userId);
+        userRepository.delete(user);
     }
 
     private User findUser(Long userId) {

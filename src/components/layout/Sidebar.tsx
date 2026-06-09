@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  LayoutDashboard, BookOpen, Trophy, TrendingUp, CreditCard, Zap, ChevronRight, BarChart2, LogOut, Calendar, ShieldCheck,
+  LayoutDashboard, BookOpen, Trophy, TrendingUp, CreditCard, Zap, ChevronRight, BarChart2, LogOut, Calendar, ShieldCheck, Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StreakBadge } from "@/components/ui/StreakBadge";
@@ -36,6 +36,7 @@ export function Sidebar({ streak = 7, userName = "Pierre", isAdmin: isAdminProp 
     { href: "/progress",  icon: BarChart2,       label: t("nav_progress") },
     { href: "/study-plan",icon: Calendar,        label: "Study Plan" },
     { href: "/pricing",   icon: CreditCard,      label: t("nav_upgrade") },
+    { href: "/settings",  icon: Settings,        label: t("nav_settings") },
     ...(isAdmin ? [{ href: "/admin", icon: ShieldCheck, label: "Admin" }] : []),
   ];
 

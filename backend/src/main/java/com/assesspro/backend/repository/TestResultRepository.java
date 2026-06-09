@@ -14,6 +14,12 @@ public interface TestResultRepository extends JpaRepository<TestResult, Long> {
     List<TestResult> findByUserIdOrderByCreatedAtDesc(Long userId);
     int countByUserId(Long userId);
 
+    /**
+     * Deletes every result for a user. Select-then-delete (not a bulk JPQL delete)
+     * so the {@code userAnswers} orphan-removal cascade fires for each result.
+     */
+    void deleteByUserId(Long userId);
+
     @Query("SELECT r.createdAt FROM TestResult r WHERE r.user.id = :userId ORDER BY r.createdAt DESC")
     List<LocalDateTime> findCreatedAtByUserIdOrderByDesc(@Param("userId") Long userId);
 

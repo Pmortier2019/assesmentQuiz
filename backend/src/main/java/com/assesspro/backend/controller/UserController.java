@@ -4,6 +4,9 @@ import com.assesspro.backend.dto.*;
 import com.assesspro.backend.exception.AccessDeniedException;
 import com.assesspro.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +19,14 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+
+    // Mirrors the refresh-cookie settings in AuthController so a deleted account
+    // also has its session cookie cleared in the same response.
+    @Value("${app.auth.cookie-secure:true}")
+    private boolean cookieSecure;
+
+    @Value("${app.auth.cookie-same-site:None}")
+    private String cookieSameSite;
 
     /** GET /api/users/{userId} */
     @GetMapping("/{userId}")
@@ -67,6 +78,33 @@ public class UserController {
     public ResponseEntity<SkillsSummaryResponse> getSkillsSummary(@PathVariable Long userId, Authentication auth) {
         requireOwner(auth, userId);
         return ResponseEntity.ok(userService.getSkillsSummary(userId));
+    }
+
+    /** GET /api/users/{userId}/export — GDPR data export (art. 15) */
+    @GetMapping("/{userId}/export")
+    public ResponseEntity<UserDataExportResponse> exportData(@PathVariable Long userId, Authentication auth) {
+        requireOwner(auth, userId);
+        return ResponseEntity.ok(userService.exportUserData(userId));
+    }
+
+    /** DELETE /api/users/{userId} — permanently erases the account (GDPR art. 17) */
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteAccount(@PathVariable Long userId, Authentication auth) {
+        requireOwner(auth, userId);
+        userService.deleteAccount(userId);
+        return ResponseEntity.noContent()
+                .header(HttpHeaders.SET_COOKIE, clearRefreshCookie().toString())
+                .build();
+    }
+
+    private ResponseCookie clearRefreshCookie() {
+        return ResponseCookie.from("refresh_token", "")
+                .httpOnly(true)
+                .secure(cookieSecure)
+                .sameSite(cookieSameSite)
+                .path("/api/auth")
+                .maxAge(0)
+                .build();
     }
 
     /**
