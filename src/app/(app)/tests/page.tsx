@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Sparkles, PackageOpen, Wand2, Lock } from "lucide-react";
+import { Sparkles, PackageOpen, Wand2, Lock, Library } from "lucide-react";
 import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { Sidebar } from "@/components/layout/Sidebar";
@@ -132,7 +132,10 @@ export default function TestsPage() {
           {/* Header */}
           <div className="animate-fade-up flex items-start justify-between gap-4 flex-wrap">
             <div>
-              <h1 className="font-display font-bold text-2xl text-default mb-1">📚 {t("tests_library_title")}</h1>
+              <h1 className="flex items-center gap-2 font-display font-bold text-2xl text-default mb-1">
+                <Library size={22} className="text-[#4f46e5]" />
+                {t("tests_library_title")}
+              </h1>
               <p className="text-muted text-sm">
                 <span className="font-semibold text-default">{t("tests_n_total", { n: total })}</span>
               </p>

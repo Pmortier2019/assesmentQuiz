@@ -34,7 +34,7 @@ export function DashboardHeader({
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 animate-fade-up">
       <div>
         <h1 className="font-display font-bold text-2xl text-default">
-          {t(greeting())}, {userName.split(" ")[0]} 👋
+          {t(greeting())}, {userName.split(" ")[0]}
         </h1>
         {hasCareerTargets ? (
           <p className="text-muted text-sm mt-1">

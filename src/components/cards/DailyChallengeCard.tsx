@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Zap, Clock, ChevronRight, Timer } from "lucide-react";
 import type { Test } from "@/lib/types";
-import { ASSESSMENT_TYPE_LABELS, ASSESSMENT_TYPE_ICONS, formatDuration } from "@/lib/utils";
+import { AssessmentTypeIcon } from "@/components/ui/AssessmentTypeIcon";
+import { ASSESSMENT_TYPE_LABELS, formatDuration } from "@/lib/utils";
 
 function useCountdownToMidnight() {
   const [timeLeft, setTimeLeft] = useState({ h: 0, m: 0, s: 0 });
@@ -63,7 +64,9 @@ export function DailyChallengeCard({ test }: DailyChallengeCardProps) {
         </div>
 
         <div className="flex items-center gap-3 mb-3">
-          <span className="text-2xl">{ASSESSMENT_TYPE_ICONS[test.type]}</span>
+          <div className="w-11 h-11 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center flex-shrink-0">
+            <AssessmentTypeIcon type={test.type} size={22} className="text-white" />
+          </div>
           <div>
             <p className="text-xs text-white/50 font-medium mb-0.5">{ASSESSMENT_TYPE_LABELS[test.type]}</p>
             <h3 className="font-display font-bold text-lg leading-tight">{test.title}</h3>

@@ -5,7 +5,8 @@ import { TrendingUp, TrendingDown, Minus, BarChart2, Target, Trophy, AlertCircle
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Navbar } from "@/components/layout/Navbar";
 import { getSkillsSummary, type SkillsSummary, type SkillEntry } from "@/lib/api";
-import { ASSESSMENT_TYPE_LABELS, ASSESSMENT_TYPE_ICONS } from "@/lib/utils";
+import { AssessmentTypeIcon } from "@/components/ui/AssessmentTypeIcon";
+import { ASSESSMENT_TYPE_LABELS } from "@/lib/utils";
 import type { AssessmentType } from "@/lib/types";
 import Link from "next/link";
 
@@ -30,11 +31,6 @@ function TrendIcon({ trend }: { trend: SkillEntry["trend"] }) {
 function typeLabel(type: string): string {
   const key = type.toLowerCase() as AssessmentType;
   return ASSESSMENT_TYPE_LABELS[key] ?? type.replace(/_/g, " ");
-}
-
-function typeIcon(type: string): string {
-  const key = type.toLowerCase() as AssessmentType;
-  return ASSESSMENT_TYPE_ICONS[key] ?? "📋";
 }
 
 export default function ProgressPage() {
@@ -141,7 +137,7 @@ export default function ProgressPage() {
                 <div className="flex flex-col divide-y divide-[#f1f5f9]">
                   {sorted.map((skill) => (
                     <div key={skill.type} className="py-3 flex items-center gap-4">
-                      <div className="w-8 text-lg flex-shrink-0 text-center">{typeIcon(skill.type)}</div>
+                      <div className="w-8 flex-shrink-0 flex items-center justify-center"><AssessmentTypeIcon type={skill.type} size={18} /></div>
                       <div className="w-44 flex-shrink-0 min-w-0">
                         <p className="text-sm font-medium text-[#0D1B2E] truncate">{typeLabel(skill.type)}</p>
                         <p className="text-xs text-[#94a3b8]">{skill.count} attempt{skill.count !== 1 ? "s" : ""}</p>

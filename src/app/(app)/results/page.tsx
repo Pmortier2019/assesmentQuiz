@@ -3,14 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, ChevronLeft, Sparkles, ClipboardList, CheckCircle, XCircle, Trophy } from "lucide-react";
+import { ArrowRight, ChevronLeft, Sparkles, ClipboardList, CheckCircle, XCircle, Trophy, Check, X, Circle } from "lucide-react";
 import { getResultById, getUserResults, getCurrentUser, getTests, getRecommendedTests } from "@/lib/api";
 import { ResultsSummary } from "@/components/test/ResultsSummary";
 import { FeedbackCard } from "@/components/cards/FeedbackCard";
 import { TestCard } from "@/components/cards/TestCard";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Navbar } from "@/components/layout/Navbar";
-import { ASSESSMENT_TYPE_LABELS, ASSESSMENT_TYPE_ICONS, getScoreColor, formatTime } from "@/lib/utils";
+import { AssessmentTypeIcon } from "@/components/ui/AssessmentTypeIcon";
+import { ASSESSMENT_TYPE_LABELS, getScoreColor, formatTime } from "@/lib/utils";
 import { useT } from "@/lib/i18n";
 import type { TestResult, Test } from "@/lib/types";
 import { Suspense } from "react";
@@ -176,8 +177,12 @@ function ResultsContent() {
                         }
                         return (
                           <div key={opt.id} className={cls}>
-                            <span className="flex-shrink-0 mt-px">
-                              {isCorrectOpt ? "✓" : isSelected ? "✗" : "○"}
+                            <span className="flex-shrink-0 mt-0.5">
+                              {isCorrectOpt
+                                ? <Check size={14} className="text-[#16a34a]" strokeWidth={3} />
+                                : isSelected
+                                ? <X size={14} className="text-[#991b1b]" strokeWidth={3} />
+                                : <Circle size={14} className="text-[#cbd5e1]" />}
                             </span>
                             <span>{opt.text}</span>
                           </div>
@@ -230,8 +235,8 @@ function ResultsContent() {
                     href={`/tests/${t.id}`}
                     className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#f8fafc] transition-colors group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-[#f1f5f9] flex items-center justify-center text-base flex-shrink-0">
-                      {ASSESSMENT_TYPE_ICONS[t.type] ?? "📋"}
+                    <div className="w-8 h-8 rounded-lg bg-[#f1f5f9] flex items-center justify-center flex-shrink-0">
+                      <AssessmentTypeIcon type={t.type} size={16} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-[#0D1B2E] truncate">{t.title}</p>

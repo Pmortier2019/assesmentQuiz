@@ -587,6 +587,29 @@ export async function getSkillsSummary(): Promise<SkillsSummary> {
   return apiFetch<SkillsSummary>(`/api/users/${currentUserId()}/skills-summary`);
 }
 
+/** GDPR export — returns the raw JSON copy of the user's data for download. */
+export async function exportMyData(): Promise<unknown> {
+  return apiFetch<unknown>(`/api/users/${currentUserId()}/export`);
+}
+
+/**
+ * Permanently deletes the current account, then clears local auth and the
+ * refresh cookie. The caller is responsible for redirecting afterwards.
+ */
+export async function deleteMyAccount(): Promise<void> {
+  await apiFetch(`/api/users/${currentUserId()}`, { method: "DELETE" });
+  clearAuth();
+  try {
+    await fetch(`${BASE_URL}/api/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+      cache: "no-store",
+    });
+  } catch {
+    // ignore — the account is already gone and local state is cleared
+  }
+}
+
 export async function getPreparationPath(): Promise<PreparationPath> {
   return apiFetch<PreparationPath>(
     `/api/users/${currentUserId()}/preparation-path`

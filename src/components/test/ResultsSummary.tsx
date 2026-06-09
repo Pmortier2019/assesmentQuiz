@@ -1,4 +1,4 @@
-import { Trophy, Clock, TrendingUp, AlertCircle } from "lucide-react";
+import { Trophy, Clock, TrendingUp, AlertCircle, Check, ArrowRight } from "lucide-react";
 import { cn, formatTime, getScoreColor, getScoreLabel } from "@/lib/utils";
 import type { TestResult } from "@/lib/types";
 
@@ -74,7 +74,7 @@ export function ResultsSummary({ result, className }: ResultsSummaryProps) {
           <ul className="flex flex-col gap-2">
             {result.strengths.map((s) => (
               <li key={s} className="flex items-start gap-2 text-sm text-[#166534]">
-                <span className="text-[#16a34a] font-bold mt-0.5">✓</span>
+                <Check size={15} strokeWidth={3} className="text-[#16a34a] mt-0.5 flex-shrink-0" />
                 {s}
               </li>
             ))}
@@ -89,7 +89,7 @@ export function ResultsSummary({ result, className }: ResultsSummaryProps) {
           <ul className="flex flex-col gap-2">
             {result.weakPoints.map((w) => (
               <li key={w} className="flex items-start gap-2 text-sm text-[#9f1239]">
-                <span className="text-[#f43f5e] font-bold mt-0.5">→</span>
+                <ArrowRight size={15} className="text-[#f43f5e] mt-0.5 flex-shrink-0" />
                 {w}
               </li>
             ))}
