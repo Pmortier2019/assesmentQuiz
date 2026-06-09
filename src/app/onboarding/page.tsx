@@ -6,6 +6,10 @@ import Link from "next/link";
 import {
   ArrowRight, ArrowLeft, Check, Zap, Search, Building2,
   ChevronDown, Briefcase, Target, X,
+  Code, BarChart3, Puzzle, LineChart, Megaphone, Speech, Crown, Rocket,
+  UsersRound, Cog, Palette, Scale, Headphones, Laptop, Landmark, Hospital,
+  Building, ShoppingBag, Tv, GraduationCap, SatelliteDish, Truck, Factory,
+  Sprout, TrendingUp, Trophy, type LucideIcon,
 } from "lucide-react";
 import { saveOnboarding } from "@/lib/api";
 import { useAuth } from "@/lib/useAuth";
@@ -13,42 +17,42 @@ import type { RoleCategory, IndustryCategory } from "@/lib/types";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
-const ROLES: { value: RoleCategory; emoji: string; description: string }[] = [
-  { value: "Software Engineering",    emoji: "💻", description: "Developer, Engineer, Architect" },
-  { value: "Data & Analytics",        emoji: "📊", description: "Analyst, Data Scientist, BI" },
-  { value: "Consulting",              emoji: "🧩", description: "Strategy, Management, Advisory" },
-  { value: "Finance",                 emoji: "💹", description: "Investment, Banking, Accounting" },
-  { value: "Marketing",               emoji: "📣", description: "Brand, Growth, Digital" },
-  { value: "Communication & PR",      emoji: "🗣️", description: "PR, Corporate Comms, Media" },
-  { value: "Management & Leadership", emoji: "🏆", description: "Director, Manager, Executive" },
-  { value: "Product Management",      emoji: "🚀", description: "Product Owner, PM, Strategy" },
-  { value: "HR",                      emoji: "🤝", description: "Talent, People Ops, Recruitment" },
-  { value: "Sales",                   emoji: "🎯", description: "Account Exec, BDR, Sales Manager" },
-  { value: "Operations",              emoji: "⚙️", description: "Ops, Process, Supply Chain" },
-  { value: "Design & Creative",       emoji: "🎨", description: "UX, Graphic Design, Creative" },
-  { value: "Legal",                   emoji: "⚖️", description: "Lawyer, Paralegal, Compliance" },
-  { value: "Customer Support",        emoji: "🌟", description: "Support, Success, Service" },
+const ROLES: { value: RoleCategory; icon: LucideIcon; description: string }[] = [
+  { value: "Software Engineering",    icon: Code,        description: "Developer, Engineer, Architect" },
+  { value: "Data & Analytics",        icon: BarChart3,   description: "Analyst, Data Scientist, BI" },
+  { value: "Consulting",              icon: Puzzle,      description: "Strategy, Management, Advisory" },
+  { value: "Finance",                 icon: LineChart,   description: "Investment, Banking, Accounting" },
+  { value: "Marketing",               icon: Megaphone,   description: "Brand, Growth, Digital" },
+  { value: "Communication & PR",      icon: Speech,      description: "PR, Corporate Comms, Media" },
+  { value: "Management & Leadership", icon: Crown,       description: "Director, Manager, Executive" },
+  { value: "Product Management",      icon: Rocket,      description: "Product Owner, PM, Strategy" },
+  { value: "HR",                      icon: UsersRound,  description: "Talent, People Ops, Recruitment" },
+  { value: "Sales",                   icon: Target,      description: "Account Exec, BDR, Sales Manager" },
+  { value: "Operations",              icon: Cog,         description: "Ops, Process, Supply Chain" },
+  { value: "Design & Creative",       icon: Palette,     description: "UX, Graphic Design, Creative" },
+  { value: "Legal",                   icon: Scale,       description: "Lawyer, Paralegal, Compliance" },
+  { value: "Customer Support",        icon: Headphones,  description: "Support, Success, Service" },
 ];
 
-const INDUSTRIES: { value: IndustryCategory; emoji: string }[] = [
-  { value: "Technology",       emoji: "💻" },
-  { value: "Finance",          emoji: "🏦" },
-  { value: "Consulting",       emoji: "🧩" },
-  { value: "Healthcare",       emoji: "🏥" },
-  { value: "Government",       emoji: "🏛️" },
-  { value: "Retail",           emoji: "🛍️" },
-  { value: "Media",            emoji: "📺" },
-  { value: "Energy",           emoji: "⚡" },
-  { value: "Education",        emoji: "🎓" },
-  { value: "Telecommunications", emoji: "📡" },
-  { value: "Logistics",        emoji: "🚚" },
-  { value: "Manufacturing",    emoji: "🏭" },
+const INDUSTRIES: { value: IndustryCategory; icon: LucideIcon }[] = [
+  { value: "Technology",         icon: Laptop },
+  { value: "Finance",            icon: Landmark },
+  { value: "Consulting",         icon: Puzzle },
+  { value: "Healthcare",         icon: Hospital },
+  { value: "Government",         icon: Building },
+  { value: "Retail",             icon: ShoppingBag },
+  { value: "Media",              icon: Tv },
+  { value: "Energy",             icon: Zap },
+  { value: "Education",          icon: GraduationCap },
+  { value: "Telecommunications", icon: SatelliteDish },
+  { value: "Logistics",          icon: Truck },
+  { value: "Manufacturing",      icon: Factory },
 ];
 
 const LEVELS = [
-  { value: "beginner" as const,     emoji: "🌱", label: "Getting started", description: "I'm new to formal assessments" },
-  { value: "intermediate" as const, emoji: "📈", label: "Building skills",  description: "I've done some tests and want to improve" },
-  { value: "advanced" as const,     emoji: "🏆", label: "Peak performance", description: "I regularly prepare and want to excel" },
+  { value: "beginner" as const,     icon: Sprout,     label: "Getting started", description: "I'm new to formal assessments" },
+  { value: "intermediate" as const, icon: TrendingUp, label: "Building skills",  description: "I've done some tests and want to improve" },
+  { value: "advanced" as const,     icon: Trophy,     label: "Peak performance", description: "I regularly prepare and want to excel" },
 ];
 
 const TOTAL_STEPS = 4;
@@ -96,7 +100,7 @@ function SearchableSelect<T extends string>({
   onChange,
   placeholder,
 }: {
-  options: { value: T; emoji: string; label?: string; description?: string }[];
+  options: { value: T; icon: LucideIcon; label?: string; description?: string }[];
   value: T | null;
   onChange: (v: T) => void;
   placeholder: string;
@@ -132,7 +136,7 @@ function SearchableSelect<T extends string>({
       >
         {selected ? (
           <>
-            <span className="text-lg">{selected.emoji}</span>
+            <selected.icon size={18} className="text-[#4f46e5] flex-shrink-0" />
             <span className="flex-1 font-semibold text-[#0D1B2E] text-sm">{selected.label ?? selected.value}</span>
           </>
         ) : (
@@ -173,7 +177,7 @@ function SearchableSelect<T extends string>({
                   value === o.value ? "bg-[#eef2ff]" : ""
                 }`}
               >
-                <span className="text-base">{o.emoji}</span>
+                <o.icon size={16} className="text-[#64748b] flex-shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-[#0D1B2E]">{o.label ?? o.value}</p>
                   {o.description && <p className="text-xs text-[#94a3b8] truncate">{o.description}</p>}
@@ -223,8 +227,8 @@ export default function OnboardingPage() {
     router.push("/dashboard");
   };
 
-  const roleOptions = ROLES.map((r) => ({ value: r.value, emoji: r.emoji, description: r.description }));
-  const industryOptions = INDUSTRIES.map((i) => ({ value: i.value, emoji: i.emoji }));
+  const roleOptions = ROLES.map((r) => ({ value: r.value, icon: r.icon, description: r.description }));
+  const industryOptions = INDUSTRIES.map((i) => ({ value: i.value, icon: i.icon }));
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f0f4ff] flex flex-col">
@@ -283,7 +287,7 @@ export default function OnboardingPage() {
                         : "border-[#e2e8f0] bg-white hover:border-[#4f46e5]/40 hover:bg-[#f8faff]"
                     }`}
                   >
-                    <span className="text-xl">{r.emoji}</span>
+                    <r.icon size={20} className="text-[#4f46e5] flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-semibold text-[#0D1B2E] leading-tight truncate">{r.value}</p>
                     </div>
@@ -346,7 +350,7 @@ export default function OnboardingPage() {
                         : "border-[#e2e8f0] bg-white hover:border-[#4f46e5]/40 hover:bg-[#f8faff]"
                     }`}
                   >
-                    <span className="text-2xl">{ind.emoji}</span>
+                    <ind.icon size={24} className="text-[#4f46e5]" />
                     <p className="text-xs font-semibold text-[#0D1B2E] leading-tight">{ind.value}</p>
                     {industry === ind.value && (
                       <div className="w-4 h-4 rounded-full bg-[#4f46e5] flex items-center justify-center">
@@ -473,7 +477,7 @@ export default function OnboardingPage() {
                         : "border-[#e2e8f0] bg-white hover:border-[#4f46e5]/40 hover:bg-[#f8faff]"
                     }`}
                   >
-                    <span className="text-2xl">{l.emoji}</span>
+                    <l.icon size={24} className="text-[#4f46e5] flex-shrink-0" />
                     <div className="flex-1">
                       <p className="font-semibold text-[#0D1B2E]">{l.label}</p>
                       <p className="text-sm text-[#64748b] mt-0.5">{l.description}</p>
@@ -492,19 +496,25 @@ export default function OnboardingPage() {
                 <div className="mb-5 p-4 rounded-xl bg-[#f8fafc] border border-[#e2e8f0]">
                   <p className="text-xs font-semibold text-[#94a3b8] uppercase tracking-widest mb-2">Your profile</p>
                   <div className="flex flex-wrap gap-2">
-                    {role && (
-                      <span className="flex items-center gap-1.5 text-xs font-semibold text-[#4f46e5] bg-[#eef2ff] px-2.5 py-1 rounded-full">
-                        {ROLES.find(r => r.value === role)?.emoji} {role}
-                      </span>
-                    )}
-                    {industry && (
-                      <span className="flex items-center gap-1.5 text-xs font-semibold text-[#0891b2] bg-[#ecfeff] px-2.5 py-1 rounded-full">
-                        {INDUSTRIES.find(i => i.value === industry)?.emoji} {industry}
-                      </span>
-                    )}
+                    {role && (() => {
+                      const RoleIcon = ROLES.find(r => r.value === role)?.icon;
+                      return (
+                        <span className="flex items-center gap-1.5 text-xs font-semibold text-[#4f46e5] bg-[#eef2ff] px-2.5 py-1 rounded-full">
+                          {RoleIcon && <RoleIcon size={12} />} {role}
+                        </span>
+                      );
+                    })()}
+                    {industry && (() => {
+                      const IndustryIcon = INDUSTRIES.find(i => i.value === industry)?.icon;
+                      return (
+                        <span className="flex items-center gap-1.5 text-xs font-semibold text-[#0891b2] bg-[#ecfeff] px-2.5 py-1 rounded-full">
+                          {IndustryIcon && <IndustryIcon size={12} />} {industry}
+                        </span>
+                      );
+                    })()}
                     {company && (
                       <span className="flex items-center gap-1.5 text-xs font-semibold text-[#7c3aed] bg-[#f5f3ff] px-2.5 py-1 rounded-full">
-                        🏢 {company}
+                        <Building2 size={12} /> {company}
                       </span>
                     )}
                   </div>

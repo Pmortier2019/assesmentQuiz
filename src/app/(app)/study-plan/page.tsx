@@ -5,6 +5,7 @@ import { Calendar, BookOpen, ChevronRight, Zap, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Navbar } from "@/components/layout/Navbar";
+import { AssessmentTypeIcon } from "@/components/ui/AssessmentTypeIcon";
 
 interface DayPlan {
   day: number;
@@ -16,11 +17,11 @@ interface DayPlan {
 }
 
 const TEST_TYPES = [
-  { type: "numerical_reasoning",    label: "Numerical Reasoning",    icon: "📊" },
-  { type: "logical_reasoning",      label: "Logical Reasoning",      icon: "🧩" },
-  { type: "verbal_reasoning",       label: "Verbal Reasoning",       icon: "📝" },
-  { type: "situational_judgement",  label: "Situational Judgement",  icon: "👥" },
-  { type: "personality",            label: "Personality Assessment", icon: "😊" },
+  { type: "numerical_reasoning",    label: "Numerical Reasoning" },
+  { type: "logical_reasoning",      label: "Logical Reasoning" },
+  { type: "verbal_reasoning",       label: "Verbal Reasoning" },
+  { type: "situational_judgement",  label: "Situational Judgement" },
+  { type: "personality",            label: "Personality Assessment" },
 ];
 
 const TIPS = [
@@ -176,7 +177,7 @@ export default function StudyPlanPage() {
                       </div>
 
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-lg">{meta.icon}</span>
+                        <AssessmentTypeIcon type={meta.type} size={18} />
                         <p className="text-sm font-semibold text-[#0D1B2E] leading-tight">{day.focus}</p>
                       </div>
 

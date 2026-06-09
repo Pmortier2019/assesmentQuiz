@@ -1,6 +1,6 @@
 "use client";
 
-import { Brain, ArrowRight } from "lucide-react";
+import { Brain, ArrowRight, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import type { TestResult, Test } from "@/lib/types";
 import { ASSESSMENT_TYPE_LABELS } from "@/lib/utils";
@@ -82,8 +82,9 @@ export function WeakSpotCard({ results, tests }: WeakSpotCardProps) {
       </div>
 
       {strengths.length > 0 && (
-        <p className="text-xs text-[#10b981] font-medium mb-3">
-          💪 Strong in {strengths[0].label} ({strengths[0].avgScore}%)
+        <p className="flex items-center gap-1.5 text-xs text-[#10b981] font-medium mb-3">
+          <TrendingUp size={13} className="flex-shrink-0" />
+          Strong in {strengths[0].label} ({strengths[0].avgScore}%)
         </p>
       )}
 

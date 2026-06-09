@@ -5,7 +5,13 @@ import { Trophy, Medal } from "lucide-react";
 import { getLeaderboard, LeaderboardEntry } from "@/lib/api";
 import { InlineLoader } from "@/components/ui/PageLoader";
 
-const MEDALS = ["🥇", "🥈", "🥉"];
+// Top-3 ranks get a coloured medal/trophy; everyone else a muted medal.
+function RankIcon({ rank }: { rank: number }) {
+  if (rank === 1) return <Trophy size={15} className="text-[#f59e0b]" />;
+  if (rank === 2) return <Medal size={15} className="text-[#94a3b8]" />;
+  if (rank === 3) return <Medal size={15} className="text-[#b45309]" />;
+  return <Medal size={14} className="text-subtle" />;
+}
 
 interface LeaderboardCardProps {
   type?: string;
@@ -45,8 +51,8 @@ export function LeaderboardCard({ type }: LeaderboardCardProps) {
               key={e.rank}
               className="flex items-center gap-3 px-3 py-2 rounded-xl bg-surface-subtle hover:bg-surface-muted transition-colors"
             >
-              <span className="text-base w-7 text-center flex-shrink-0">
-                {e.rank <= 3 ? MEDALS[e.rank - 1] : <Medal size={14} className="text-subtle" />}
+              <span className="w-7 flex items-center justify-center flex-shrink-0">
+                <RankIcon rank={e.rank} />
               </span>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-default truncate">{e.displayName}</p>

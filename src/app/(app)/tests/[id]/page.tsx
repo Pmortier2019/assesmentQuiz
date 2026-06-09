@@ -6,6 +6,7 @@ import Link from "next/link";
 import {
   ChevronLeft, ChevronRight, Clock, CheckCircle2, Flag,
   Trophy, TrendingUp, AlertCircle, ChevronDown, ArrowRight, Lightbulb, Lock,
+  Check, X,
 } from "lucide-react";
 import { getTestById, submitTest, getCurrentUser, ApiError } from "@/lib/api";
 import { PageLoader } from "@/components/ui/PageLoader";
@@ -215,17 +216,18 @@ function QuestionReviewCard({
           "w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold text-white flex-shrink-0",
           qr.isCorrect ? "bg-emerald-500" : "bg-rose-400"
         )}>
-          {qr.isCorrect ? "✓" : "✗"}
+          {qr.isCorrect ? <Check size={14} strokeWidth={3} /> : <X size={14} strokeWidth={3} />}
         </div>
         <p className="flex-1 text-sm font-medium text-default line-clamp-1">{qr.questionText}</p>
         <div className="flex items-center gap-2 flex-shrink-0">
           <span className={cn(
-            "text-xs font-semibold px-2 py-0.5 rounded-full",
+            "inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full",
             qr.isCorrect
               ? "text-emerald-700 bg-emerald-50 border border-emerald-200"
               : "text-rose-600 bg-rose-50 border border-rose-200"
           )}>
-            {qr.isCorrect ? `✓ ${t("tt_correct")}` : `✗ ${t("tt_incorrect")}`}
+            {qr.isCorrect ? <Check size={11} strokeWidth={3} /> : <X size={11} strokeWidth={3} />}
+            {qr.isCorrect ? t("tt_correct") : t("tt_incorrect")}
           </span>
           <ChevronDown size={14} className={cn("text-subtle transition-transform", open && "rotate-180")} />
         </div>
@@ -250,8 +252,8 @@ function QuestionReviewCard({
                       : "border-transparent text-body"
                   )}
                 >
-                  <span className="text-xs font-bold w-4 flex-shrink-0">
-                    {isCorrectAnswer ? "✓" : isSelected ? "✗" : ""}
+                  <span className="w-4 flex-shrink-0 flex items-center justify-center">
+                    {isCorrectAnswer ? <Check size={13} strokeWidth={3} className="text-emerald-600" /> : isSelected ? <X size={13} strokeWidth={3} className="text-rose-500" /> : null}
                   </span>
                   {opt.text}
                 </div>
