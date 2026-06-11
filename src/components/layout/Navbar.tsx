@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, Zap, LogOut, ShieldCheck } from "lucide-react";
+import { Menu, X, Zap, LogOut, ShieldCheck, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useT } from "@/lib/i18n";
@@ -24,6 +24,9 @@ export function Navbar({ transparent = false }: NavbarProps) {
     setMobileOpen(false);
     router.replace("/login");
   };
+
+  // Read on the client only; the kbd element suppresses the hydration warning.
+  const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.userAgent);
 
   return (
     <header
@@ -57,6 +60,19 @@ export function Navbar({ transparent = false }: NavbarProps) {
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-6">
+            {loggedIn && (
+              <button
+                onClick={() => window.dispatchEvent(new Event("command-palette:open"))}
+                className="flex items-center gap-2 pl-2.5 pr-2 py-1.5 rounded-lg border border-line bg-surface-muted text-subtle hover:text-default hover:border-[#4f46e5]/40 transition-colors"
+                aria-label="Open command palette"
+              >
+                <Search size={14} />
+                <span className="text-xs font-medium">Search</span>
+                <kbd suppressHydrationWarning className="text-[10px] font-semibold text-subtle bg-surface border border-line rounded px-1 py-0.5">
+                  {isMac ? "⌘" : "Ctrl"} K
+                </kbd>
+              </button>
+            )}
             <Link href="/tests" className="text-sm font-medium text-body hover:text-default transition-colors">
               {t("nav_tests")}
             </Link>

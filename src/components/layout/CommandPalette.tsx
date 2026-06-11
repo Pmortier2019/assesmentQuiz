@@ -39,7 +39,8 @@ export function CommandPalette() {
   const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Global Ctrl/Cmd+K toggles the palette.
+  // Global Ctrl/Cmd+K toggles the palette; a custom event (from the navbar
+  // hint) opens it.
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
@@ -49,8 +50,17 @@ export function CommandPalette() {
         setActive(0);
       }
     }
+    function onOpenEvent() {
+      setOpen(true);
+      setQuery("");
+      setActive(0);
+    }
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    window.addEventListener("command-palette:open", onOpenEvent);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      window.removeEventListener("command-palette:open", onOpenEvent);
+    };
   }, []);
 
   // Focus the input when the palette opens (DOM side-effect only).
