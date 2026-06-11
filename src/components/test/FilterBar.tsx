@@ -1,7 +1,11 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Search, SlidersHorizontal, Star, Layers, Tag, Briefcase, Building2, CornerDownLeft } from "lucide-react";
+import {
+  Search, SlidersHorizontal, Star, Layers, Tag, Briefcase, Building2, CornerDownLeft,
+  Brain, HeartHandshake, MessageSquare, Crown, Target, LineChart, Code, Palette,
+  type LucideIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { AssessmentType, Difficulty, RoleCategory, IndustryCategory } from "@/lib/types";
 
@@ -48,6 +52,7 @@ interface FilterBarProps {
   sortBy?: SortOption;
   onSortChange?: (v: SortOption) => void;
   showRoleFilter?: boolean;
+  showCategoryTiles?: boolean;
 }
 
 const TYPE_GROUPS: { label: string; options: { value: AssessmentType; label: string }[] }[] = [
@@ -138,15 +143,15 @@ const ALL_TYPE_OPTIONS = TYPE_GROUPS.flatMap((g) => g.options);
 // Category groups map to the backend AssessmentCategory.forType() map. The
 // `term` is the keyword the search query matches to return the whole group,
 // so picking a category suggestion just sets the search box to that term.
-const CATEGORIES: { label: string; term: string }[] = [
-  { label: "Cognitive & Reasoning",    term: "cognitive" },
-  { label: "Personality & Behavioural", term: "personality" },
-  { label: "Communication & Written",  term: "communication" },
-  { label: "Leadership & Management",  term: "leadership" },
-  { label: "Sales & Customer",         term: "sales" },
-  { label: "Finance & Consulting",     term: "finance" },
-  { label: "IT & Engineering",         term: "engineering" },
-  { label: "Creative & Values",        term: "creative" },
+const CATEGORIES: { label: string; term: string; icon: LucideIcon }[] = [
+  { label: "Cognitive & Reasoning",     term: "cognitive",     icon: Brain },
+  { label: "Personality & Behavioural", term: "personality",   icon: HeartHandshake },
+  { label: "Communication & Written",   term: "communication", icon: MessageSquare },
+  { label: "Leadership & Management",    term: "leadership",    icon: Crown },
+  { label: "Sales & Customer",          term: "sales",         icon: Target },
+  { label: "Finance & Consulting",      term: "finance",       icon: LineChart },
+  { label: "IT & Engineering",          term: "engineering",   icon: Code },
+  { label: "Creative & Values",         term: "creative",      icon: Palette },
 ];
 
 const DIFFICULTY_OPTIONS: { value: Difficulty | "all"; label: string }[] = [
@@ -171,11 +176,17 @@ export function FilterBar({
   selectedIndustry = "all", onIndustryChange,
   sortBy = "default", onSortChange,
   showRoleFilter = true,
+  showCategoryTiles = false,
 }: FilterBarProps) {
   const hasActiveCareerFilters = selectedRole !== "all" || selectedIndustry !== "all" || sortBy === "best_match";
 
   return (
     <div className="flex flex-col gap-4">
+      {/* Browse by category */}
+      {showCategoryTiles && (
+        <CategoryTiles search={search} onSearchChange={onSearchChange} />
+      )}
+
       {/* Search with autocomplete */}
       <SmartSearch
         search={search}
@@ -290,6 +301,51 @@ export function FilterBar({
           )}
         </div>
       )}
+    </div>
+  );
+}
+
+// ── Category tiles (browse by group) ─────────────────────────────────────────
+
+function CategoryTiles({
+  search,
+  onSearchChange,
+}: {
+  search: string;
+  onSearchChange: (v: string) => void;
+}) {
+  const activeTerm = search.trim().toLowerCase();
+
+  return (
+    <div>
+      <div className="flex items-center gap-1.5 text-xs text-subtle font-medium mb-2">
+        <Layers size={13} />
+        Browse by category
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+        {CATEGORIES.map((c) => {
+          const isActive = activeTerm === c.term;
+          // Clicking the active tile clears it; otherwise filter to that group.
+          return (
+            <button
+              key={c.term}
+              onClick={() => onSearchChange(isActive ? "" : c.term)}
+              aria-pressed={isActive}
+              className={cn(
+                "flex items-center gap-2.5 px-3 py-2.5 rounded-xl border text-left transition-all",
+                isActive
+                  ? "border-[#4f46e5] bg-[#eef2ff] shadow-sm"
+                  : "border-line bg-surface hover:border-[#4f46e5]/40 hover:bg-surface-subtle"
+              )}
+            >
+              <c.icon size={16} className={cn("flex-shrink-0", isActive ? "text-[#4f46e5]" : "text-muted")} />
+              <span className={cn("text-xs font-semibold leading-tight", isActive ? "text-[#4f46e5]" : "text-default")}>
+                {c.label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
