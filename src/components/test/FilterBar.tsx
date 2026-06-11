@@ -137,13 +137,14 @@ const TYPE_GROUPS: { label: string; options: { value: AssessmentType; label: str
   },
 ];
 
-// Flattened list of every type option, for search autocomplete.
-const ALL_TYPE_OPTIONS = TYPE_GROUPS.flatMap((g) => g.options);
+// Flattened list of every type option, for search autocomplete and the
+// command palette.
+export const ALL_TYPE_OPTIONS = TYPE_GROUPS.flatMap((g) => g.options);
 
 // Category groups map to the backend AssessmentCategory.forType() map. The
 // `term` is the keyword the search query matches to return the whole group,
 // so picking a category suggestion just sets the search box to that term.
-const CATEGORIES: { label: string; term: string; icon: LucideIcon }[] = [
+export const CATEGORIES: { label: string; term: string; icon: LucideIcon }[] = [
   { label: "Cognitive & Reasoning",     term: "cognitive",     icon: Brain },
   { label: "Personality & Behavioural", term: "personality",   icon: HeartHandshake },
   { label: "Communication & Written",   term: "communication", icon: MessageSquare },

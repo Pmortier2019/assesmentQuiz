@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { Sparkles, PackageOpen, Wand2, Lock, Library } from "lucide-react";
 import Link from "next/link";
@@ -17,20 +18,26 @@ import { FREE_TEST_LIMIT } from "@/lib/constants";
 import { useT } from "@/lib/i18n";
 import type { AssessmentType, Difficulty, RoleCategory, IndustryCategory } from "@/lib/types";
 
-export default function TestsPage() {
+function TestsContent() {
   const { t, plural } = useT();
   const queryClient = useQueryClient();
+  // Filters can be deep-linked via the URL (e.g. the command palette opens
+  // /tests?search=cognitive or /tests?type=numerical_reasoning).
+  const searchParams = useSearchParams();
   const [generating, setGenerating] = useState(false);
   const [generateProgress, setGenerateProgress] = useState<{ current: number; total: number; label: string } | null>(null);
   const [generateError, setGenerateError] = useState("");
   const [generateAsFree, setGenerateAsFree] = useState(true);
   const adminMode = useClientValue(() => isAdmin(), false);
-  const [search, setSearch] = useState("");
-  const [selectedType, setSelectedType] = useState<AssessmentType | "all">("all");
+  const [search, setSearch] = useState(() => searchParams.get("search") ?? "");
+  const [selectedType, setSelectedType] = useState<AssessmentType | "all">(
+    () => (searchParams.get("type") as AssessmentType | null) ?? "all");
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | "all">("all");
   const [selectedTier, setSelectedTier] = useState<"free" | "pro" | "all">("all");
-  const [selectedRole, setSelectedRole] = useState<RoleCategory | "all">("all");
-  const [selectedIndustry, setSelectedIndustry] = useState<IndustryCategory | "all">("all");
+  const [selectedRole, setSelectedRole] = useState<RoleCategory | "all">(
+    () => (searchParams.get("role") as RoleCategory | null) ?? "all");
+  const [selectedIndustry, setSelectedIndustry] = useState<IndustryCategory | "all">(
+    () => (searchParams.get("industry") as IndustryCategory | null) ?? "all");
 
   // AuthGuard guarantees we're logged in here; user data is shared with the
   // dashboard's cache, so this is free on second visit.
@@ -309,5 +316,13 @@ export default function TestsPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function TestsPage() {
+  return (
+    <Suspense>
+      <TestsContent />
+    </Suspense>
   );
 }
