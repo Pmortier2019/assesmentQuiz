@@ -64,7 +64,11 @@ public interface AssessmentTestRepository extends JpaRepository<AssessmentTest, 
         WHERE (:type IS NULL OR t.type = :type)
           AND (:difficulty IS NULL OR t.difficulty = :difficulty)
           AND (:isFree IS NULL OR t.isFree = :isFree)
-          AND (:search IS NULL OR LOWER(t.title) LIKE :search OR LOWER(t.description) LIKE :search)
+          AND (:search IS NULL
+               OR LOWER(t.title) LIKE :search
+               OR LOWER(t.description) LIKE :search
+               OR (:hasTypeMatch = TRUE AND t.type IN :typeMatches)
+               OR EXISTS (SELECT 1 FROM t.skillsMeasured s WHERE LOWER(s) LIKE :search))
           AND (:role IS NULL OR EXISTS (SELECT 1 FROM t.targetRoles r WHERE LOWER(r) LIKE :role))
           AND (:industry IS NULL OR EXISTS (SELECT 1 FROM t.targetIndustries i WHERE LOWER(i) LIKE :industry))
     """,
@@ -73,7 +77,11 @@ public interface AssessmentTestRepository extends JpaRepository<AssessmentTest, 
         WHERE (:type IS NULL OR t.type = :type)
           AND (:difficulty IS NULL OR t.difficulty = :difficulty)
           AND (:isFree IS NULL OR t.isFree = :isFree)
-          AND (:search IS NULL OR LOWER(t.title) LIKE :search OR LOWER(t.description) LIKE :search)
+          AND (:search IS NULL
+               OR LOWER(t.title) LIKE :search
+               OR LOWER(t.description) LIKE :search
+               OR (:hasTypeMatch = TRUE AND t.type IN :typeMatches)
+               OR EXISTS (SELECT 1 FROM t.skillsMeasured s WHERE LOWER(s) LIKE :search))
           AND (:role IS NULL OR EXISTS (SELECT 1 FROM t.targetRoles r WHERE LOWER(r) LIKE :role))
           AND (:industry IS NULL OR EXISTS (SELECT 1 FROM t.targetIndustries i WHERE LOWER(i) LIKE :industry))
     """)
@@ -82,6 +90,8 @@ public interface AssessmentTestRepository extends JpaRepository<AssessmentTest, 
             @Param("difficulty") Difficulty difficulty,
             @Param("isFree") Boolean isFree,
             @Param("search") String search,
+            @Param("hasTypeMatch") boolean hasTypeMatch,
+            @Param("typeMatches") List<TestType> typeMatches,
             @Param("role") String role,
             @Param("industry") String industry,
             Pageable pageable
