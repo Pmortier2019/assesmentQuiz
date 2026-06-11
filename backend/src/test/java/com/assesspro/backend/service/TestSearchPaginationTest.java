@@ -91,6 +91,26 @@ class TestSearchPaginationTest {
     }
 
     @Test
+    void search_matchesCategoryGroupViaType() {
+        // "cognitive" is a category, not a word in any title — both NUMERICAL and
+        // VERBAL reasoning belong to it, so all 8 seeded tests should match.
+        PagedResponse<TestResponse> result =
+                testService.searchTests(null, null, null, "cognitive", null, null, 0, 20);
+
+        assertThat(result.getTotal()).isEqualTo(8);
+    }
+
+    @Test
+    void search_categoryWithNoTests_returnsEmpty() {
+        // "leadership" is a valid category but no leadership tests are seeded;
+        // also exercises the empty-IN gating path.
+        PagedResponse<TestResponse> result =
+                testService.searchTests(null, null, null, "leadership", null, null, 0, 20);
+
+        assertThat(result.getTotal()).isZero();
+    }
+
+    @Test
     void roleFilter_matchesTargetRolesServerSide() {
         PagedResponse<TestResponse> result =
                 testService.searchTests(null, null, null, null, "finance", null, 0, 20);

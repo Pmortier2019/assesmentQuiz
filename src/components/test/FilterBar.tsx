@@ -1,6 +1,7 @@
 "use client";
 
-import { Search, SlidersHorizontal, Star } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Search, SlidersHorizontal, Star, Layers, Tag, Briefcase, Building2, CornerDownLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { AssessmentType, Difficulty, RoleCategory, IndustryCategory } from "@/lib/types";
 
@@ -131,6 +132,23 @@ const TYPE_GROUPS: { label: string; options: { value: AssessmentType; label: str
   },
 ];
 
+// Flattened list of every type option, for search autocomplete.
+const ALL_TYPE_OPTIONS = TYPE_GROUPS.flatMap((g) => g.options);
+
+// Category groups map to the backend AssessmentCategory.forType() map. The
+// `term` is the keyword the search query matches to return the whole group,
+// so picking a category suggestion just sets the search box to that term.
+const CATEGORIES: { label: string; term: string }[] = [
+  { label: "Cognitive & Reasoning",    term: "cognitive" },
+  { label: "Personality & Behavioural", term: "personality" },
+  { label: "Communication & Written",  term: "communication" },
+  { label: "Leadership & Management",  term: "leadership" },
+  { label: "Sales & Customer",         term: "sales" },
+  { label: "Finance & Consulting",     term: "finance" },
+  { label: "IT & Engineering",         term: "engineering" },
+  { label: "Creative & Values",        term: "creative" },
+];
+
 const DIFFICULTY_OPTIONS: { value: Difficulty | "all"; label: string }[] = [
   { value: "all",          label: "All levels" },
   { value: "beginner",     label: "Beginner" },
@@ -158,17 +176,14 @@ export function FilterBar({
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Search */}
-      <div className="relative">
-        <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-subtle" />
-        <input
-          type="text"
-          placeholder="Search tests..."
-          value={search}
-          onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 rounded-xl border border-line bg-surface text-sm text-default placeholder-[#94a3b8] focus:outline-none focus:border-[#4f46e5] focus:ring-2 focus:ring-[#4f46e5]/10 transition-all"
-        />
-      </div>
+      {/* Search with autocomplete */}
+      <SmartSearch
+        search={search}
+        onSearchChange={onSearchChange}
+        onTypeChange={onTypeChange}
+        onRoleChange={onRoleChange}
+        onIndustryChange={onIndustryChange}
+      />
 
       {/* Sort + type + difficulty + tier */}
       <div className="flex flex-wrap gap-2 items-center">
@@ -273,6 +288,145 @@ export function FilterBar({
               Clear career filters
             </button>
           )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Smart search with autocomplete ──────────────────────────────────────────
+
+type Suggestion = {
+  kind: "category" | "type" | "role" | "industry";
+  label: string;
+  sublabel: string;
+  apply: () => void;
+};
+
+function SmartSearch({
+  search,
+  onSearchChange,
+  onTypeChange,
+  onRoleChange,
+  onIndustryChange,
+}: {
+  search: string;
+  onSearchChange: (v: string) => void;
+  onTypeChange: (v: AssessmentType | "all") => void;
+  onRoleChange?: (v: RoleCategory | "all") => void;
+  onIndustryChange?: (v: IndustryCategory | "all") => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const q = search.trim().toLowerCase();
+  const match = (s: string) => s.toLowerCase().includes(q);
+
+  // Selecting a non-search filter clears the text box so results aren't
+  // double-filtered by the leftover query; the new filter chip stands in for it.
+  const pick = (apply: () => void) => {
+    apply();
+    setOpen(false);
+  };
+
+  const suggestions: Suggestion[] = q.length === 0 ? [] : [
+    ...CATEGORIES
+      .filter((c) => match(c.label) || match(c.term))
+      .slice(0, 3)
+      .map((c): Suggestion => ({
+        kind: "category", label: c.label, sublabel: "Category",
+        apply: () => onSearchChange(c.term),
+      })),
+    ...ALL_TYPE_OPTIONS
+      .filter((t) => match(t.label))
+      .slice(0, 4)
+      .map((t): Suggestion => ({
+        kind: "type", label: t.label, sublabel: "Test type",
+        apply: () => { onTypeChange(t.value); onSearchChange(""); },
+      })),
+    ...(onRoleChange ? ROLE_OPTIONS
+      .filter((r) => r.value !== "all" && match(r.label))
+      .slice(0, 3)
+      .map((r): Suggestion => ({
+        kind: "role", label: r.label, sublabel: "Role",
+        apply: () => { onRoleChange(r.value as RoleCategory); onSearchChange(""); },
+      })) : []),
+    ...(onIndustryChange ? INDUSTRY_OPTIONS
+      .filter((i) => i.value !== "all" && match(i.label))
+      .slice(0, 3)
+      .map((i): Suggestion => ({
+        kind: "industry", label: i.label, sublabel: "Industry",
+        apply: () => { onIndustryChange(i.value as IndustryCategory); onSearchChange(""); },
+      })) : []),
+  ];
+
+  useEffect(() => {
+    function handle(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handle);
+    return () => document.removeEventListener("mousedown", handle);
+  }, []);
+
+  const showDropdown = open && suggestions.length > 0;
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (!showDropdown) return;
+    if (e.key === "ArrowDown") { e.preventDefault(); setActive((a) => (a + 1) % suggestions.length); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); setActive((a) => (a - 1 + suggestions.length) % suggestions.length); }
+    else if (e.key === "Enter") { e.preventDefault(); const sel = suggestions[active]; if (sel) pick(sel.apply); }
+    else if (e.key === "Escape") { setOpen(false); }
+  };
+
+  const kindIcon = (kind: Suggestion["kind"]) =>
+    kind === "category" ? Layers : kind === "type" ? Tag : kind === "role" ? Briefcase : Building2;
+
+  return (
+    <div ref={ref} className="relative">
+      <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-subtle" />
+      <input
+        type="text"
+        placeholder="Search tests, categories, roles..."
+        value={search}
+        onChange={(e) => { onSearchChange(e.target.value); setOpen(true); setActive(0); }}
+        onFocus={() => setOpen(true)}
+        onKeyDown={onKeyDown}
+        role="combobox"
+        aria-expanded={showDropdown}
+        aria-controls="search-suggestions"
+        aria-autocomplete="list"
+        className="w-full pl-10 pr-4 py-3 rounded-xl border border-line bg-surface text-sm text-default placeholder-[#94a3b8] focus:outline-none focus:border-[#4f46e5] focus:ring-2 focus:ring-[#4f46e5]/10 transition-all"
+      />
+
+      {showDropdown && (
+        <div
+          id="search-suggestions"
+          role="listbox"
+          className="absolute top-full left-0 right-0 mt-2 bg-surface rounded-xl border border-line shadow-xl z-20 overflow-hidden py-1"
+        >
+          {suggestions.map((s, i) => {
+            const Icon = kindIcon(s.kind);
+            return (
+              <button
+                key={`${s.kind}-${s.label}`}
+                type="button"
+                role="option"
+                aria-selected={i === active}
+                onMouseEnter={() => setActive(i)}
+                onClick={() => pick(s.apply)}
+                className={cn(
+                  "w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors",
+                  i === active ? "bg-[#eef2ff]" : "hover:bg-surface-subtle"
+                )}
+              >
+                <Icon size={15} className="text-[#4f46e5] flex-shrink-0" />
+                <span className="flex-1 text-sm font-medium text-default truncate">{s.label}</span>
+                <span className="text-[10px] font-semibold uppercase tracking-wide text-subtle flex-shrink-0">{s.sublabel}</span>
+                {i === active && <CornerDownLeft size={13} className="text-subtle flex-shrink-0" />}
+              </button>
+            );
+          })}
         </div>
       )}
     </div>

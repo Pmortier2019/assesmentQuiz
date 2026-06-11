@@ -2,6 +2,7 @@ package com.assesspro.backend.service;
 
 import com.assesspro.backend.dto.*;
 import com.assesspro.backend.entity.*;
+import com.assesspro.backend.entity.enums.AssessmentCategory;
 import com.assesspro.backend.entity.enums.Difficulty;
 import com.assesspro.backend.entity.enums.Language;
 import com.assesspro.backend.entity.enums.SubscriptionStatus;
@@ -77,13 +78,22 @@ public class TestService {
         String roleParam     = toLikeParam(role);
         String industryParam = toLikeParam(industry);
 
+        // Let a search term match a whole category group ("cognitive", "leadership")
+        // by deriving the category from each type — the stored category column is
+        // often null on AI-generated tests, but the type is always present.
+        List<TestType> typeMatches = matchingTypesForSearch(search);
+        boolean hasTypeMatch = !typeMatches.isEmpty();
+        // JPQL needs a non-empty IN list to bind even when the flag gates it off.
+        if (!hasTypeMatch) typeMatches = List.of(TestType.NUMERICAL_REASONING);
+
         // Defensive bounds: never let a client request an unbounded page.
         int safePage = Math.max(0, page);
         int safeSize = Math.min(Math.max(1, size), 100);
         Pageable pageable = PageRequest.of(safePage, safeSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 
         Page<AssessmentTest> result = testRepository.searchWithFilters(
-                testType, diff, isFree, searchParam, roleParam, industryParam, pageable);
+                testType, diff, isFree, searchParam, hasTypeMatch, typeMatches,
+                roleParam, industryParam, pageable);
 
         List<TestResponse> data = result.getContent().stream()
                 .map(this::toTestResponse)
@@ -102,6 +112,23 @@ public class TestService {
     private String toLikeParam(String value) {
         if (value == null || value.isBlank()) return null;
         return "%" + value.toLowerCase() + "%";
+    }
+
+    /**
+     * Types whose category name or label contains the search term, so a group
+     * search like "cognitive" or "leadership" returns every test in that group.
+     * Returns an empty list when the term matches no category.
+     */
+    private List<TestType> matchingTypesForSearch(String search) {
+        if (search == null || search.isBlank()) return List.of();
+        String q = search.toLowerCase().trim();
+        return java.util.Arrays.stream(TestType.values())
+                .filter(t -> {
+                    AssessmentCategory cat = AssessmentCategory.forType(t);
+                    String haystack = (cat.name() + " " + cat.getLabel()).toLowerCase();
+                    return haystack.contains(q);
+                })
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
