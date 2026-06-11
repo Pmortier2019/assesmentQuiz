@@ -236,6 +236,7 @@ export default function TestsPage() {
               selectedIndustry={selectedIndustry}
               onIndustryChange={setSelectedIndustry}
               showRoleFilter
+              showCategoryTiles
             />
           </div>
 
