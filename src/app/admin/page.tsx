@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   Zap, Users, BookOpen, BarChart3, Sparkles, Trash2, Lock, Unlock,
-  RefreshCw, Upload, AlertCircle, CheckCircle2, ChevronRight, Plus, Search,
+  RefreshCw, Upload, AlertCircle, CheckCircle2, ChevronRight, Plus, Search, Crown,
 } from "lucide-react";
 import {
   getAdminStats, getAdminUsers, getAdminTests, getGenerationStatus,
-  generateTestOfType, deleteTest, setTestFree,
+  generateTestOfType, deleteTest, setTestFree, setUserPro,
   ALL_GENERATE_TYPES, ALL_DIFFICULTIES,
   AdminStats, AdminUser,
 } from "@/lib/api";
@@ -35,6 +35,7 @@ export default function AdminPage() {
   const [defaultFree, setDefaultFree] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [togglingFree, setTogglingFree] = useState<string | null>(null);
+  const [togglingPro, setTogglingPro] = useState<number | null>(null);
   const [genError, setGenError] = useState<string | null>(null);
   const [bulkGenerating, setBulkGenerating] = useState(false);
   const [bulkProgress, setBulkProgress] = useState<{ done: number; total: number; current: string } | null>(null);
@@ -142,6 +143,17 @@ export default function AdminPage() {
     }
   }
 
+  async function handleTogglePro(id: number, currentPro: boolean) {
+    setTogglingPro(id);
+    try {
+      await setUserPro(id, !currentPro);
+      setUsers((prev) => prev.map((u) => u.id === id ? { ...u, isPro: !currentPro } : u));
+      setStats((prev) => prev ? { ...prev, proUsers: prev.proUsers + (currentPro ? -1 : 1) } : prev);
+    } finally {
+      setTogglingPro(null);
+    }
+  }
+
   const filteredTests = tests.filter((t) =>
     t.title.toLowerCase().includes(search.toLowerCase()) ||
     t.type.toLowerCase().includes(search.toLowerCase())
@@ -192,13 +204,14 @@ export default function AdminPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-8">
 
         {/* Stats row */}
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
           {[
             { label: "Total tests",   value: stats?.totalTests,   icon: BookOpen, color: "text-[#4f46e5]", bg: "bg-[#eef2ff]" },
             { label: "Free tests",    value: stats?.freeTests,    icon: Unlock,   color: "text-emerald-600", bg: "bg-emerald-50" },
             { label: "AI generated",  value: stats?.aiTests,      icon: Sparkles, color: "text-[#7c3aed]", bg: "bg-[#f5f3ff]" },
             { label: "Users",         value: stats?.totalUsers,   icon: Users,    color: "text-[#0891b2]", bg: "bg-cyan-50" },
-            { label: "Results",       value: stats?.totalResults, icon: BarChart3,color: "text-amber-600", bg: "bg-amber-50" },
+            { label: "Pro users",     value: stats?.proUsers,     icon: Crown,    color: "text-amber-600", bg: "bg-amber-50" },
+            { label: "Results",       value: stats?.totalResults, icon: BarChart3,color: "text-[#475569]", bg: "bg-slate-100" },
           ].map(({ label, value, icon: Icon, color, bg }) => (
             <div key={label} className="bg-white rounded-2xl border border-[#e2e8f0] p-4 flex items-center gap-3">
               <div className={`w-10 h-10 rounded-xl ${bg} flex items-center justify-center flex-shrink-0`}>
@@ -442,7 +455,7 @@ export default function AdminPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-[#f1f5f9]">
-                  {["Name", "Email", "Role target", "Tests done", "Avg score", "Joined"].map((h) => (
+                  {["Name", "Email", "Role target", "Tests done", "Avg score", "Plan", "Joined"].map((h) => (
                     <th key={h} className="text-left text-xs font-semibold text-[#94a3b8] pb-3 pr-4">{h}</th>
                   ))}
                 </tr>
@@ -463,6 +476,21 @@ export default function AdminPage() {
                         <span className="text-[#94a3b8]">—</span>
                       )}
                     </td>
+                    <td className="py-3 pr-4">
+                      <button
+                        onClick={() => handleTogglePro(u.id, u.isPro)}
+                        disabled={togglingPro === u.id}
+                        title={u.isPro ? "Click to revoke Pro" : "Click to grant Pro"}
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border transition-colors disabled:opacity-50 ${
+                          u.isPro
+                            ? "bg-amber-50 border-amber-300 text-amber-700 hover:bg-amber-100"
+                            : "bg-white border-[#e2e8f0] text-[#64748b] hover:border-[#4f46e5]/40 hover:text-[#4f46e5]"
+                        }`}
+                      >
+                        {u.isPro ? <Crown size={11} /> : <Plus size={11} />}
+                        {togglingPro === u.id ? "…" : u.isPro ? "Pro" : "Free"}
+                      </button>
+                    </td>
                     <td className="py-3 text-xs text-[#94a3b8]">
                       {new Date(u.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                     </td>
@@ -470,7 +498,7 @@ export default function AdminPage() {
                 ))}
                 {users.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="py-8 text-center text-sm text-[#94a3b8]">No users yet</td>
+                    <td colSpan={7} className="py-8 text-center text-sm text-[#94a3b8]">No users yet</td>
                   </tr>
                 )}
               </tbody>

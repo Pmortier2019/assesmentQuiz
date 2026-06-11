@@ -4,10 +4,13 @@ import com.assesspro.backend.dto.GenerateTestRequest;
 import com.assesspro.backend.dto.ImportTestRequest;
 import com.assesspro.backend.dto.TestResponse;
 import com.assesspro.backend.entity.AssessmentTest;
+import com.assesspro.backend.entity.Subscription;
 import com.assesspro.backend.entity.User;
 import com.assesspro.backend.entity.enums.Difficulty;
+import com.assesspro.backend.entity.enums.SubscriptionStatus;
 import com.assesspro.backend.entity.enums.TestType;
 import com.assesspro.backend.repository.AssessmentTestRepository;
+import com.assesspro.backend.repository.SubscriptionRepository;
 import com.assesspro.backend.repository.TestResultRepository;
 import com.assesspro.backend.repository.UserRepository;
 import com.assesspro.backend.service.AiTestGenerationService;
@@ -15,6 +18,7 @@ import com.assesspro.backend.service.ImportTestService;
 import com.assesspro.backend.service.TestService;
 import com.assesspro.backend.service.UserService;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -37,6 +41,7 @@ public class AdminController {
     private final AssessmentTestRepository testRepository;
     private final TestResultRepository resultRepository;
     private final UserRepository userRepository;
+    private final SubscriptionRepository subscriptionRepository;
 
     /**
      * POST /api/admin/tests/generate
@@ -146,6 +151,7 @@ public class AdminController {
         long totalResults = resultRepository.count();
         long aiTests      = testRepository.countByIsGeneratedByAITrue();
         long freeTests    = testRepository.countByIsFreeTrue();
+        long proUsers     = subscriptionRepository.countByStatus(SubscriptionStatus.ACTIVE);
 
         Map<String, Object> stats = new LinkedHashMap<>();
         stats.put("totalTests",   totalTests);
@@ -153,6 +159,7 @@ public class AdminController {
         stats.put("totalResults", totalResults);
         stats.put("aiTests",      aiTests);
         stats.put("freeTests",    freeTests);
+        stats.put("proUsers",     proUsers);
         return ResponseEntity.ok(stats);
     }
 
@@ -173,6 +180,13 @@ public class AdminController {
                                 TestResultRepository.UserResultAggregate::getUserId,
                                 Function.identity()));
 
+        // One query for everyone's subscription status, keyed by user id (no N+1).
+        Map<Long, SubscriptionStatus> statusByUser = subscriptionRepository
+                .findByUserIdIn(users.stream().map(User::getId).collect(Collectors.toList()))
+                .stream()
+                .filter(s -> s.getUser() != null)
+                .collect(Collectors.toMap(s -> s.getUser().getId(), Subscription::getStatus, (a, b) -> a));
+
         List<Map<String, Object>> result = users.stream().map(u -> {
             var agg = aggByUser.get(u.getId());
             long resultCount = agg != null ? agg.getResultCount() : 0;
@@ -184,10 +198,43 @@ public class AdminController {
             row.put("targetRole",  u.getTargetRole());
             row.put("resultCount", resultCount);
             row.put("avgScore",    (int) Math.round(avgScore));
+            row.put("isPro",       statusByUser.get(u.getId()) == SubscriptionStatus.ACTIVE);
             row.put("createdAt",   u.getCreatedAt());
             return row;
         }).collect(Collectors.toList());
         return ResponseEntity.ok(result);
+    }
+
+    /**
+     * PATCH /api/admin/users/{id}/pro?pro=true|false
+     * Manually grants or revokes Pro. Bypasses LemonSqueezy: uses plan
+     * "PRO_MANUAL" for traceability and preserves any LemonSqueezy IDs, so a
+     * real paid subscription is never overwritten or cancelled here.
+     */
+    @PatchMapping("/users/{id}/pro")
+    @Transactional
+    public ResponseEntity<Map<String, Object>> setUserPro(
+            @PathVariable Long id,
+            @RequestParam boolean pro) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) return ResponseEntity.notFound().build();
+
+        Subscription sub = subscriptionRepository.findByUserId(id)
+                .orElseGet(() -> Subscription.builder().user(user).build());
+        if (pro) {
+            sub.setStatus(SubscriptionStatus.ACTIVE);
+            sub.setPlan("PRO_MANUAL");
+            if (sub.getStartedAt() == null) sub.setStartedAt(LocalDateTime.now());
+        } else {
+            sub.setStatus(SubscriptionStatus.FREE);
+            sub.setPlan("FREE");
+        }
+        subscriptionRepository.save(sub);
+
+        Map<String, Object> row = new LinkedHashMap<>();
+        row.put("id",    user.getId());
+        row.put("isPro", pro);
+        return ResponseEntity.ok(row);
     }
 
     /**
