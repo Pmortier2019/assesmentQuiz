@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { StreakBadge } from "@/components/ui/StreakBadge";
 import { useT } from "@/lib/i18n";
 import { useAuth } from "@/lib/useAuth";
+import { useCurrentUser } from "@/lib/queries";
 import { logout } from "@/lib/api";
 
 interface SidebarProps {
@@ -17,9 +18,16 @@ interface SidebarProps {
   isAdmin?: boolean;
 }
 
-export function Sidebar({ streak = 7, userName = "Pierre", isAdmin: isAdminProp }: SidebarProps) {
+export function Sidebar({ streak: streakProp, userName: userNameProp, isAdmin: isAdminProp }: SidebarProps = {}) {
   const { isAdmin: authIsAdmin } = useAuth();
-  const isAdmin = isAdminProp ?? authIsAdmin;
+  // Source the signed-in user here so every page gets the right name/streak
+  // without each one having to pass props. React Query dedupes by key, so this
+  // shares the cache with any page that also reads useCurrentUser(). Props still
+  // win when explicitly provided (e.g. the dashboard passing freshly loaded data).
+  const { data: user } = useCurrentUser();
+  const userName = userNameProp ?? user?.name ?? "";
+  const streak = streakProp ?? user?.streak ?? 0;
+  const isAdmin = isAdminProp ?? user?.isAdmin ?? authIsAdmin;
   const pathname = usePathname();
   const router = useRouter();
   const { t } = useT();

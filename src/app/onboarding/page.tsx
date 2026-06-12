@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
-  ArrowRight, ArrowLeft, Check, Zap, Search, Building2,
-  ChevronDown, Briefcase, Target, X,
+  ArrowRight, ArrowLeft, Check, Zap, Building2,
+  Briefcase, Target, X,
   Code, BarChart3, Puzzle, LineChart, Megaphone, Speech, Crown, Rocket,
   UsersRound, Cog, Palette, Scale, Headphones, Laptop, Landmark, Hospital,
   Building, ShoppingBag, Tv, GraduationCap, SatelliteDish, Truck, Factory,
@@ -92,109 +92,6 @@ function Stepper({ current }: { current: number }) {
   );
 }
 
-// ─── Searchable select ────────────────────────────────────────────────────────
-
-function SearchableSelect<T extends string>({
-  options,
-  value,
-  onChange,
-  placeholder,
-}: {
-  options: { value: T; icon: LucideIcon; label?: string; description?: string }[];
-  value: T | null;
-  onChange: (v: T) => void;
-  placeholder: string;
-}) {
-  const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const ref = useRef<HTMLDivElement>(null);
-
-  const filtered = options.filter((o) =>
-    (o.label ?? o.value).toLowerCase().includes(query.toLowerCase())
-  );
-
-  const selected = options.find((o) => o.value === value);
-
-  useEffect(() => {
-    function handle(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    }
-    document.addEventListener("mousedown", handle);
-    return () => document.removeEventListener("mousedown", handle);
-  }, []);
-
-  return (
-    <div ref={ref} className="relative">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl border-2 text-left transition-all ${
-          value
-            ? "border-[#4f46e5] bg-[#eef2ff]"
-            : "border-[#e2e8f0] bg-white hover:border-[#4f46e5]/40"
-        }`}
-      >
-        {selected ? (
-          <>
-            <selected.icon size={18} className="text-[#4f46e5] flex-shrink-0" />
-            <span className="flex-1 font-semibold text-[#0D1B2E] text-sm">{selected.label ?? selected.value}</span>
-          </>
-        ) : (
-          <>
-            <Search size={16} className="text-[#94a3b8]" />
-            <span className="flex-1 text-[#94a3b8] text-sm">{placeholder}</span>
-          </>
-        )}
-        <ChevronDown size={16} className={`text-[#94a3b8] transition-transform ${open ? "rotate-180" : ""}`} />
-      </button>
-
-      {open && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl border border-[#e2e8f0] shadow-xl z-10 overflow-hidden">
-          <div className="p-2 border-b border-[#f1f5f9]">
-            <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-[#f8fafc]">
-              <Search size={14} className="text-[#94a3b8] flex-shrink-0" />
-              <input
-                autoFocus
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search..."
-                className="flex-1 bg-transparent text-sm text-[#0D1B2E] outline-none placeholder:text-[#94a3b8]"
-              />
-              {query && (
-                <button onClick={() => setQuery("")}>
-                  <X size={12} className="text-[#94a3b8]" />
-                </button>
-              )}
-            </div>
-          </div>
-          <div className="max-h-60 overflow-y-auto">
-            {filtered.map((o) => (
-              <button
-                key={o.value}
-                type="button"
-                onClick={() => { onChange(o.value); setOpen(false); setQuery(""); }}
-                className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-[#f8fafc] transition-colors text-left ${
-                  value === o.value ? "bg-[#eef2ff]" : ""
-                }`}
-              >
-                <o.icon size={16} className="text-[#64748b] flex-shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-[#0D1B2E]">{o.label ?? o.value}</p>
-                  {o.description && <p className="text-xs text-[#94a3b8] truncate">{o.description}</p>}
-                </div>
-                {value === o.value && <Check size={14} className="text-[#4f46e5] flex-shrink-0" />}
-              </button>
-            ))}
-            {filtered.length === 0 && (
-              <p className="py-8 text-center text-sm text-[#94a3b8]">No results for &quot;{query}&quot;</p>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function OnboardingPage() {
@@ -226,9 +123,6 @@ export default function OnboardingPage() {
     }
     router.push("/dashboard");
   };
-
-  const roleOptions = ROLES.map((r) => ({ value: r.value, icon: r.icon, description: r.description }));
-  const industryOptions = INDUSTRIES.map((i) => ({ value: i.value, icon: i.icon }));
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] to-[#f0f4ff] flex flex-col">
@@ -265,19 +159,9 @@ export default function OnboardingPage() {
                 </p>
               </div>
 
-              {/* Searchable dropdown */}
-              <div className="mb-4">
-                <SearchableSelect
-                  options={roleOptions}
-                  value={role}
-                  onChange={setRole}
-                  placeholder="Search or select a role..."
-                />
-              </div>
-
-              {/* Quick-pick cards — show top 6 */}
+              {/* Role cards */}
               <div className="grid grid-cols-2 gap-2 mb-6">
-                {ROLES.slice(0, 6).map((r) => (
+                {ROLES.map((r) => (
                   <button
                     key={r.value}
                     onClick={() => setRole(r.value)}
@@ -326,16 +210,6 @@ export default function OnboardingPage() {
                 <p className="text-[#64748b]">
                   Different sectors test different skills. We&apos;ll match you to the right preparation.
                 </p>
-              </div>
-
-              {/* Searchable dropdown */}
-              <div className="mb-4">
-                <SearchableSelect
-                  options={industryOptions}
-                  value={industry}
-                  onChange={setIndustry}
-                  placeholder="Search or select an industry..."
-                />
               </div>
 
               {/* Grid of industry cards */}
