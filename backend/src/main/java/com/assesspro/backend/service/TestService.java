@@ -167,17 +167,22 @@ public class TestService {
         TestResult result = TestResult.builder()
                 .user(user)
                 .assessmentTest(test)
-                .totalQuestions(questions.size())
                 .timeTakenSeconds(request.getTimeTakenSeconds() != null ? request.getTimeTakenSeconds() : 0)
                 .userAnswers(new ArrayList<>())
                 .build();
 
         int correct = 0;
+        // Only the served subset is answered (selectQuestions shows displayQuestionCount
+        // of the pool), so the score must be out of the questions the user actually got —
+        // not the whole pool, which would cap a perfect attempt below 100%. We also
+        // dedupe by question id so a repeated submission can't be scored twice.
+        java.util.Set<Long> answeredQuestionIds = new java.util.HashSet<>();
         List<SubmitTestResponse.QuestionResultDetail> details = new ArrayList<>();
 
         for (SubmitTestRequest.AnswerSubmission submission : request.getAnswers()) {
             Question question = questionMap.get(submission.getQuestionId());
             if (question == null) continue;
+            if (!answeredQuestionIds.add(question.getId())) continue;
 
             AnswerOption selected = question.getAnswerOptions().stream()
                     .filter(a -> a.getId().equals(submission.getSelectedAnswerOptionId()))
@@ -212,8 +217,10 @@ public class TestService {
                     .build());
         }
 
-        int score = questions.isEmpty() ? 0 : (correct * 100) / questions.size();
+        int answered = answeredQuestionIds.size();
+        int score = answered == 0 ? 0 : (correct * 100) / answered;
         result.setScore(score);
+        result.setTotalQuestions(answered);
         result.setCorrectAnswers(correct);
         result.setFeedback(buildFeedback(score));
 
