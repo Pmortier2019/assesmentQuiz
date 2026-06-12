@@ -13,6 +13,7 @@ import { PageLoader } from "@/components/ui/PageLoader";
 import { haptics } from "@/lib/haptics";
 import { isLoggedIn } from "@/lib/auth";
 import { FREE_TEST_LIMIT } from "@/lib/constants";
+import { freeLimitReached, isTestBlocked, paywallReasonFor } from "@/lib/paywall";
 import { loadProgress, saveProgress, clearProgress } from "@/lib/testProgress";
 import { useT } from "@/lib/i18n";
 import { TestQuestionCard } from "@/components/test/TestQuestionCard";
@@ -327,7 +328,7 @@ export default function TestPage() {
       }
 
       // Pre-check: free limit reached → every test is blocked, skip network call
-      if (!userIsPro && userFreeUsed >= FREE_TEST_LIMIT) {
+      if (freeLimitReached({ isAdmin: userIsAdmin, isPro: userIsPro, freeTestsUsed: userFreeUsed })) {
         setAccessDenied(true);
         setLoading(false);
         return;
@@ -415,9 +416,9 @@ export default function TestPage() {
 
   // Paywall guard: Pro test for non-pro user, free limit reached, or backend 403
   // Must come before the !test check so 403 shows paywall instead of "not available"
-  const blocked = !isAdmin && !isPro && test != null && (!test.isFree || freeTestsUsed >= FREE_TEST_LIMIT);
+  const blocked = test != null && isTestBlocked({ isAdmin, isPro, isFree: test.isFree, freeTestsUsed });
   if (blocked || accessDenied) {
-    const paywallReason = freeTestsUsed >= FREE_TEST_LIMIT ? "free_limit" : "pro_test";
+    const paywallReason = paywallReasonFor(freeTestsUsed);
 
     return (
       <div className="min-h-screen bg-surface-subtle flex flex-col">
