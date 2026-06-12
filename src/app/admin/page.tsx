@@ -37,6 +37,7 @@ export default function AdminPage() {
   const [togglingFree, setTogglingFree] = useState<string | null>(null);
   const [togglingPro, setTogglingPro] = useState<number | null>(null);
   const [genError, setGenError] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [bulkGenerating, setBulkGenerating] = useState(false);
   const [bulkProgress, setBulkProgress] = useState<{ done: number; total: number; current: string } | null>(null);
   const [perCombo, setPerCombo] = useState(5);
@@ -51,17 +52,34 @@ export default function AdminPage() {
   }, [status, isAdmin, router]);
 
   const refresh = useCallback(async () => {
-    const [s, u, t, gs] = await Promise.all([
-      getAdminStats(),
-      getAdminUsers(),
-      getAdminTests(),
-      getGenerationStatus(),
-    ]);
-    setStats(s);
-    setUsers(u);
-    setTests(t);
-    setGenStatus(gs);
-    setLoading(false);
+    // Settle each call independently: one failing endpoint must not block the
+    // whole page. Previously a single 500 rejected Promise.all, so setLoading
+    // was never reached and the page span forever on its spinner.
+    setLoadError(null);
+    try {
+      const [s, u, t, gs] = await Promise.allSettled([
+        getAdminStats(),
+        getAdminUsers(),
+        getAdminTests(),
+        getGenerationStatus(),
+      ]);
+      if (s.status === "fulfilled") setStats(s.value);
+      if (u.status === "fulfilled") setUsers(u.value);
+      if (t.status === "fulfilled") setTests(t.value);
+      if (gs.status === "fulfilled") setGenStatus(gs.value);
+
+      const failed = [
+        s.status === "rejected" && "stats",
+        u.status === "rejected" && "users",
+        t.status === "rejected" && "tests",
+        gs.status === "rejected" && "generation status",
+      ].filter(Boolean);
+      if (failed.length > 0) {
+        setLoadError(`Couldn't load: ${failed.join(", ")}. The rest is shown below — hit Refresh to retry.`);
+      }
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -206,6 +224,13 @@ export default function AdminPage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-8">
+
+        {loadError && (
+          <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 flex items-center gap-2 text-sm text-red-700">
+            <AlertCircle size={16} className="flex-shrink-0" />
+            {loadError}
+          </div>
+        )}
 
         {/* Stats row */}
         <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">

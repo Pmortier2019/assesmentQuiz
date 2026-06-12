@@ -1,5 +1,6 @@
 package com.assesspro.backend.repository;
 
+import com.assesspro.backend.dto.AdminTestRow;
 import com.assesspro.backend.entity.AssessmentTest;
 import com.assesspro.backend.entity.enums.Difficulty;
 import com.assesspro.backend.entity.enums.Language;
@@ -28,6 +29,26 @@ public interface AssessmentTestRepository extends JpaRepository<AssessmentTest, 
      */
     @Query("SELECT DISTINCT t.type, t.difficulty FROM AssessmentTest t")
     List<Object[]> findDistinctTypeAndDifficulty();
+
+    /**
+     * All tests as lightweight admin rows in a single query. A LEFT JOIN + COUNT
+     * yields the question count without lazily loading each test's questions, and
+     * selecting only scalar columns avoids hydrating the eager element collections
+     * (target roles/industries/companies/skills) the admin table never shows —
+     * eliminating the N+1 that made GET /api/admin/tests slow.
+     */
+    @Query("""
+            SELECT new com.assesspro.backend.dto.AdminTestRow(
+                t.id, t.title, t.description, t.type, t.difficulty, t.language,
+                t.isFree, t.isGeneratedByAI, t.estimatedTimeMinutes, COUNT(q),
+                t.displayQuestionCount, t.createdAt)
+            FROM AssessmentTest t LEFT JOIN t.questions q
+            GROUP BY t.id, t.title, t.description, t.type, t.difficulty, t.language,
+                     t.isFree, t.isGeneratedByAI, t.estimatedTimeMinutes,
+                     t.displayQuestionCount, t.createdAt
+            ORDER BY t.createdAt DESC
+            """)
+    List<AdminTestRow> findAdminTestRows();
 
     List<AssessmentTest> findByType(TestType type);
 
