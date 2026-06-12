@@ -69,7 +69,9 @@ export default function AdminPage() {
     // these calls while auth is still "loading" sends them without a token,
     // producing spurious 401s before the bootstrap refresh has run.
     if (status !== "authenticated" || !isAdmin) return;
-    void refresh();
+    void (async () => {
+      await refresh();
+    })();
   }, [status, isAdmin, refresh]);
 
   async function handleGenerate(type: string, difficulty: string, isFree = defaultFree) {
