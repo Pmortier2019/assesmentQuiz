@@ -49,7 +49,7 @@ export function Sidebar({ streak: streakProp, userName: userNameProp, isAdmin: i
   ];
 
   return (
-    <aside className="hidden lg:flex flex-col w-60 min-h-screen border-r border-line bg-[#fafafa] p-4 gap-2">
+    <aside className="hidden lg:flex flex-col w-60 h-screen sticky top-0 overflow-hidden border-r border-line bg-[#fafafa] p-4 gap-2">
       {/* Logo */}
       <Link href="/dashboard" className="flex items-center gap-2 px-2 py-3 mb-2">
         <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
@@ -65,8 +65,8 @@ export function Sidebar({ streak: streakProp, userName: userNameProp, isAdmin: i
         <StreakBadge count={streak} size="sm" />
       </div>
 
-      {/* Nav */}
-      <nav className="flex flex-col gap-1 flex-1">
+      {/* Nav — scrolls internally on short screens so the user/logout block below stays pinned */}
+      <nav className="flex flex-col gap-1 flex-1 min-h-0 overflow-y-auto">
         {NAV_ITEMS.map(({ href, icon: Icon, label }) => {
           const active = pathname === href || pathname.startsWith(href + "/");
           return (
