@@ -10,15 +10,20 @@ on:
     paths:
       - "backend/**"
 
-# Nooit twee productie-deploys tegelijk.
+# Nooit twee productie-deploys tegelijk. cancel-in-progress: true zorgt dat een
+# nieuwe push naar main een oudere, nog niet-goedgekeurde run (die op de
+# production-approval-gate wacht) automatisch annuleert. Zonder dit blokkeerde
+# een blijvend "waiting"/"queued" run ALLE latere deploys (concurrency-lock).
+# We deployen toch altijd de nieuwste main, dus de oudere run cancellen is veilig.
 concurrency:
   group: deploy-production
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   test:
     name: Build & test
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     defaults:
       run:
         working-directory: backend
@@ -38,6 +43,7 @@ jobs:
     name: Deploy
     needs: test # deployt alleen als de tests groen zijn
     runs-on: ubuntu-latest
+    timeout-minutes: 15 # vangnet: een vastlopende flyctl deploy hangt niet eindeloos
     # Koppelt aan de GitHub "production" environment.
     # Zet daar een required reviewer -> dan moet jij eerst op "Approve" klikken.
     environment:
