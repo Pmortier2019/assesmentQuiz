@@ -54,7 +54,7 @@ public class AuthController {
     @Value("${RESEND_API_KEY:}")
     private String resendApiKey;
 
-    @Value("${FRONTEND_URL:https://ready-to-ace.vercel.app}")
+    @Value("${FRONTEND_URL:https://www.ready-to-ace.com}")
     private String frontendUrl;
 
     // ── Refresh-cookie configuration ─────────────────────────────────────────

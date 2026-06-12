@@ -6,6 +6,9 @@ primary_region = "ams"
 
 [env]
   SPRING_PROFILES_ACTIVE = "railway"
+  # Base URL for links in transactional emails (verification, password reset).
+  # Must be the live frontend domain — the old *.vercel.app alias is gone.
+  FRONTEND_URL = "https://www.ready-to-ace.com"
 
 [http_service]
   internal_port = 8080
