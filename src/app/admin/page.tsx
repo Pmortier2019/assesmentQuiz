@@ -65,10 +65,14 @@ export default function AdminPage() {
   }, []);
 
   useEffect(() => {
+    // Wait until the session is confirmed (and admin) before fetching. Firing
+    // these calls while auth is still "loading" sends them without a token,
+    // producing spurious 401s before the bootstrap refresh has run.
+    if (status !== "authenticated" || !isAdmin) return;
     void (async () => {
       await refresh();
     })();
-  }, [refresh]);
+  }, [status, isAdmin, refresh]);
 
   async function handleGenerate(type: string, difficulty: string, isFree = defaultFree) {
     const key = `${type}__${difficulty}`;
