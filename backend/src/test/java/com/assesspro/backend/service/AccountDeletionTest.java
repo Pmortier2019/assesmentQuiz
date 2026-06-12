@@ -83,6 +83,31 @@ class AccountDeletionTest {
         assertThat(passwordResetTokenRepository.findByToken("reset-tok")).isEmpty();
     }
 
+    @Test
+    void exportUserData_returnsProfileSubscriptionAndResults() {
+        // Seed a user with Pro subscription and one completed result.
+        User user = userRepository.save(User.builder()
+                .email("export-me@example.com").name("Export Me")
+                .emailVerified(true).role(Role.USER).build());
+        Long userId = user.getId();
+
+        subscriptionRepository.save(Subscription.builder()
+                .user(user).status(SubscriptionStatus.ACTIVE).plan("PRO_MONTHLY").build());
+
+        AssessmentTest test = testRepository.save(buildTest());
+        resultRepository.save(TestResult.builder()
+                .user(user).assessmentTest(test)
+                .score(80).totalQuestions(1).correctAnswers(1).build());
+
+        var export = userService.exportUserData(userId);
+
+        assertThat(export.getExportedAt()).isNotNull();
+        assertThat(export.getProfile().getEmail()).isEqualTo("export-me@example.com");
+        assertThat(export.getSubscriptionStatus()).isEqualTo(SubscriptionStatus.ACTIVE.name());
+        assertThat(export.getTestResults()).hasSize(1);
+        assertThat(export.getTestResults().get(0).getScore()).isEqualTo(80);
+    }
+
     private AssessmentTest buildTest() {
         AssessmentTest test = AssessmentTest.builder()
                 .title("Deletion Test").type(TestType.NUMERICAL_REASONING)
