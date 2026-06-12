@@ -40,7 +40,9 @@ class AiTestGenerationModelTierTest {
                   "mediaItems": [],
                   "answerOptions": [
                     { "answerText": "2", "isCorrect": true,  "orderIndex": 1 },
-                    { "answerText": "3", "isCorrect": false, "orderIndex": 2 }
+                    { "answerText": "3", "isCorrect": false, "orderIndex": 2 },
+                    { "answerText": "4", "isCorrect": false, "orderIndex": 3 },
+                    { "answerText": "1", "isCorrect": false, "orderIndex": 4 }
                   ]
                 }
               ]
