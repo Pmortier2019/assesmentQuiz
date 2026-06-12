@@ -129,9 +129,11 @@ public class AdminController {
      * Used by the frontend to skip already-generated combinations.
      */
     @GetMapping("/generation-status")
+    @Transactional(readOnly = true)
     public ResponseEntity<Map<String, List<String>>> generationStatus() {
         Map<String, List<String>> existing = new LinkedHashMap<>();
         for (Object[] row : testRepository.findDistinctTypeAndDifficulty()) {
+            if (row[0] == null || row[1] == null) continue;
             String type = ((TestType) row[0]).name();
             String difficulty = ((Difficulty) row[1]).name();
             existing.computeIfAbsent(type, k -> new ArrayList<>()).add(difficulty);
@@ -243,13 +245,8 @@ public class AdminController {
      */
     @GetMapping("/tests")
     @Transactional(readOnly = true)
-    public ResponseEntity<List<TestResponse>> adminTests() {
-        return ResponseEntity.ok(
-            testRepository.findAll().stream()
-                .sorted(Comparator.comparing(AssessmentTest::getCreatedAt).reversed())
-                .map(testService::toTestResponse)
-                .collect(Collectors.toList())
-        );
+    public ResponseEntity<List<com.assesspro.backend.dto.AdminTestRow>> adminTests() {
+        return ResponseEntity.ok(testRepository.findAdminTestRows());
     }
 
     /**
