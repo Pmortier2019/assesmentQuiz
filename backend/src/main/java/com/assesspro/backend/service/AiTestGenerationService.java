@@ -2,6 +2,7 @@ package com.assesspro.backend.service;
 
 import com.assesspro.backend.ai.AiClient;
 import com.assesspro.backend.ai.AiTestJson;
+import com.assesspro.backend.ai.ModelTier;
 import com.assesspro.backend.entity.*;
 import com.assesspro.backend.entity.enums.Difficulty;
 import com.assesspro.backend.entity.enums.Language;
@@ -42,13 +43,14 @@ public class AiTestGenerationService {
     public AssessmentTest generateAndSave(TestType type, Difficulty difficulty, int numberOfQuestions,
                                           String targetRole, String targetIndustry, boolean isFree, Language language) {
         String prompt = buildPrompt(type, difficulty, numberOfQuestions, targetRole, targetIndustry, language);
-        log.info("Generating AI test: type={} difficulty={} language={} role={} industry={} isFree={}", type, difficulty, language, targetRole, targetIndustry, isFree);
+        ModelTier tier = modelTierFor(type);
+        log.info("Generating AI test: type={} difficulty={} language={} role={} industry={} isFree={} tier={}", type, difficulty, language, targetRole, targetIndustry, isFree, tier);
 
         int maxAttempts = 3;
         Exception lastError = null;
         for (int attempt = 1; attempt <= maxAttempts; attempt++) {
             try {
-                String rawJson = aiClient.generateTest(prompt);
+                String rawJson = aiClient.generateTest(prompt, tier);
                 AiTestJson.TestJson testJson = parseJson(rawJson);
                 validateTestJson(testJson);
 
@@ -96,6 +98,26 @@ public class AiTestGenerationService {
     public AssessmentTest generateForUserOfType(com.assesspro.backend.entity.User user, TestType type, Difficulty difficulty, boolean isFree) {
         int poolSize = 12;
         return generateAndSave(type, difficulty, poolSize, user.getTargetRole(), user.getTargetIndustry(), isFree, Language.EN);
+    }
+
+    /**
+     * Tests whose correctness hinges on accurate maths, logic, data or language
+     * rules — a reasoning slip here marks a factually wrong answer as correct, so
+     * these warrant the stronger model. Behavioural tests (personality, situational
+     * judgement, leadership, …) have no single objective answer and stay on the
+     * cheaper default tier.
+     */
+    private static final java.util.EnumSet<TestType> REASONING_TYPES = java.util.EnumSet.of(
+            TestType.NUMERICAL_REASONING, TestType.LOGICAL_REASONING, TestType.VERBAL_REASONING,
+            TestType.ABSTRACT_REASONING, TestType.CRITICAL_THINKING, TestType.INDUCTIVE_REASONING,
+            TestType.DEDUCTIVE_REASONING, TestType.DIAGRAMMATIC_REASONING, TestType.SPATIAL_REASONING,
+            TestType.MECHANICAL_REASONING, TestType.ANALYTICAL_THINKING, TestType.DATA_INTERPRETATION,
+            TestType.ERROR_CHECKING, TestType.READING_COMPREHENSION, TestType.GRAMMAR_SPELLING,
+            TestType.FINANCIAL_LITERACY, TestType.EXCEL_SKILLS, TestType.CODING_CHALLENGE,
+            TestType.RISK_ASSESSMENT);
+
+    private ModelTier modelTierFor(TestType type) {
+        return REASONING_TYPES.contains(type) ? ModelTier.REASONING : ModelTier.STANDARD;
     }
 
     private TestType inferTestType(String targetRole) {
