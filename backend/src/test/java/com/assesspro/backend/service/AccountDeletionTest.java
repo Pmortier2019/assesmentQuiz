@@ -19,6 +19,7 @@ import com.assesspro.backend.repository.PasswordResetTokenRepository;
 import com.assesspro.backend.repository.SubscriptionRepository;
 import com.assesspro.backend.repository.TestResultRepository;
 import com.assesspro.backend.repository.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,6 +45,22 @@ class AccountDeletionTest {
     @Autowired private AssessmentTestRepository testRepository;
     @Autowired private EmailVerificationTokenRepository emailVerificationTokenRepository;
     @Autowired private PasswordResetTokenRepository passwordResetTokenRepository;
+
+    /**
+     * These tests commit real rows (not {@code @Transactional}), so they must
+     * clean up after themselves — a leftover result referencing a test would
+     * make a later suite's {@code testRepository.deleteAll()} fail on the FK.
+     * Order matters: children before parents.
+     */
+    @AfterEach
+    void cleanup() {
+        resultRepository.deleteAll();
+        emailVerificationTokenRepository.deleteAll();
+        passwordResetTokenRepository.deleteAll();
+        subscriptionRepository.deleteAll();
+        userRepository.deleteAll();
+        testRepository.deleteAll();
+    }
 
     @Test
     void deleteAccount_removesUserAndAllAssociatedData() {
