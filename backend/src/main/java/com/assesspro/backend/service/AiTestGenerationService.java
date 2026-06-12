@@ -36,15 +36,15 @@ public class AiTestGenerationService {
      */
     @Transactional
     public AssessmentTest generateAndSave(TestType type, Difficulty difficulty, Language language, int numberOfQuestions) {
-        return generateAndSave(type, difficulty, numberOfQuestions, null, null, true);
+        return generateAndSave(type, difficulty, numberOfQuestions, null, null, true, language);
     }
 
     @Transactional
     public AssessmentTest generateAndSave(TestType type, Difficulty difficulty, int numberOfQuestions,
-                                          String targetRole, String targetIndustry, boolean isFree) {
-        String prompt = buildPrompt(type, difficulty, numberOfQuestions, targetRole, targetIndustry);
+                                          String targetRole, String targetIndustry, boolean isFree, Language language) {
+        String prompt = buildPrompt(type, difficulty, numberOfQuestions, targetRole, targetIndustry, language);
         ModelTier tier = modelTierFor(type);
-        log.info("Generating AI test: type={} difficulty={} role={} industry={} isFree={} tier={}", type, difficulty, targetRole, targetIndustry, isFree, tier);
+        log.info("Generating AI test: type={} difficulty={} language={} role={} industry={} isFree={} tier={}", type, difficulty, language, targetRole, targetIndustry, isFree, tier);
 
         int maxAttempts = 3;
         Exception lastError = null;
@@ -56,8 +56,14 @@ public class AiTestGenerationService {
 
                 AssessmentTest test = mapToEntity(testJson);
                 test.setType(type);
+                // Force the requested language onto the entity rather than trusting the
+                // model's echo, so a test is always stored in the language it was asked for.
+                test.setLanguage(language);
                 test.setGeneratedByAI(true);
                 test.setFree(isFree);
+                // Derive the shown-per-attempt count from the questions actually returned,
+                // guaranteeing displayQuestionCount < pool regardless of the model's value.
+                test.setDisplayQuestionCount(displayCountFor(test.getQuestions().size()));
 
                 AssessmentTest saved = testRepository.save(test);
                 log.info("AI-generated test saved with id={} (attempt {})", saved.getId(), attempt);
@@ -75,7 +81,7 @@ public class AiTestGenerationService {
         TestType type = inferTestType(user.getTargetRole());
         Difficulty difficulty = Difficulty.MEDIUM;
         int poolSize = 12;
-        return generateAndSave(type, difficulty, poolSize, user.getTargetRole(), user.getTargetIndustry(), true);
+        return generateAndSave(type, difficulty, poolSize, user.getTargetRole(), user.getTargetIndustry(), true, Language.EN);
     }
 
     @Transactional
@@ -91,7 +97,7 @@ public class AiTestGenerationService {
     @Transactional
     public AssessmentTest generateForUserOfType(com.assesspro.backend.entity.User user, TestType type, Difficulty difficulty, boolean isFree) {
         int poolSize = 12;
-        return generateAndSave(type, difficulty, poolSize, user.getTargetRole(), user.getTargetIndustry(), isFree);
+        return generateAndSave(type, difficulty, poolSize, user.getTargetRole(), user.getTargetIndustry(), isFree, Language.EN);
     }
 
     /**
@@ -177,12 +183,35 @@ public class AiTestGenerationService {
         };
     }
 
+    /**
+     * Number of questions shown per attempt — always strictly less than the pool so
+     * {@code selectQuestions} serves a rotating subset. Clamped for small pools.
+     */
+    private int displayCountFor(int poolSize) {
+        if (poolSize <= 1) return poolSize;
+        int target = poolSize >= 20 ? 10 : Math.max(5, poolSize - 4);
+        return Math.min(target, poolSize - 1);
+    }
+
+    /** Human-readable language name for the prompt, e.g. EN -> "English". */
+    private String languageName(Language language) {
+        return switch (language) {
+            case EN -> "English";
+            case NL -> "Dutch";
+            case DE -> "German";
+            case FR -> "French";
+            case ES -> "Spanish";
+        };
+    }
+
     private String buildPrompt(TestType type, Difficulty difficulty, int count,
-                                String targetRole, String targetIndustry) {
+                                String targetRole, String targetIndustry, Language language) {
         String role     = targetRole     != null ? targetRole     : "business professional";
         String industry = targetIndustry != null ? targetIndustry : "Finance and Consulting";
-        int displayCount = count >= 20 ? 10 : Math.max(5, count - 4);
+        int displayCount = displayCountFor(count);
         String typeFocus = typeDescription(type);
+        String languageName = languageName(language);
+        String languageCode = language.name();
 
         return """
                 You are an assessment generation engine for a professional job interview preparation platform.
@@ -193,7 +222,7 @@ public class AiTestGenerationService {
 
                 Requirements:
                 - Difficulty: %s
-                - Language: English
+                - Language: %s (write every question, answer and explanation in this language)
                 - Pool size: %d questions (store all of these)
                 - displayQuestionCount: %d (shown per attempt — must be less than pool size)
 
@@ -203,7 +232,7 @@ public class AiTestGenerationService {
                   "description": "1-2 sentences describing what this test measures",
                   "type": "%s",
                   "difficulty": "%s",
-                  "language": "EN",
+                  "language": "%s",
                   "estimatedTimeMinutes": <integer>,
                   "displayQuestionCount": %d,
                   "questions": [
@@ -232,8 +261,8 @@ public class AiTestGenerationService {
                 7. Return ONLY the JSON object — nothing else. Do not truncate.
                 """.formatted(
                 type.name(), typeFocus, role, industry,
-                difficulty.name(), count, displayCount,
-                type.name(), difficulty.name(), displayCount,
+                difficulty.name(), languageName, count, displayCount,
+                type.name(), difficulty.name(), languageCode, displayCount,
                 count
         );
     }
@@ -263,11 +292,30 @@ public class AiTestGenerationService {
             throw new AiGenerationException("Generated test has no questions");
         }
 
+        // Catch duplicate scenarios the model sometimes repeats despite the prompt.
+        java.util.Set<String> seenQuestions = new java.util.HashSet<>();
+
         for (int i = 0; i < test.getQuestions().size(); i++) {
             AiTestJson.QuestionJson q = test.getQuestions().get(i);
 
+            if (q.getQuestionText() == null || q.getQuestionText().isBlank()) {
+                throw new AiGenerationException("Question at index " + i + " has no text");
+            }
+            if (!seenQuestions.add(q.getQuestionText().trim().toLowerCase())) {
+                throw new AiGenerationException("Question at index " + i + " duplicates an earlier question");
+            }
+
             if (q.getAnswerOptions() == null || q.getAnswerOptions().isEmpty()) {
                 throw new AiGenerationException("Question at index " + i + " has no answer options");
+            }
+            // The whole platform renders and scores four-option questions; reject anything else.
+            if (q.getAnswerOptions().size() != 4) {
+                throw new AiGenerationException("Question at index " + i + " must have exactly 4 answer options but has " + q.getAnswerOptions().size());
+            }
+            for (AiTestJson.AnswerOptionJson opt : q.getAnswerOptions()) {
+                if (opt.getAnswerText() == null || opt.getAnswerText().isBlank()) {
+                    throw new AiGenerationException("Question at index " + i + " has a blank answer option");
+                }
             }
 
             long correctCount = q.getAnswerOptions().stream().filter(AiTestJson.AnswerOptionJson::isCorrect).count();

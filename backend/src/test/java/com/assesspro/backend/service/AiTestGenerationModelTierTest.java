@@ -4,6 +4,7 @@ import com.assesspro.backend.ai.AiClient;
 import com.assesspro.backend.ai.ModelTier;
 import com.assesspro.backend.entity.AssessmentTest;
 import com.assesspro.backend.entity.enums.Difficulty;
+import com.assesspro.backend.entity.enums.Language;
 import com.assesspro.backend.entity.enums.TestType;
 import com.assesspro.backend.repository.AssessmentTestRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -66,7 +67,7 @@ class AiTestGenerationModelTierTest {
 
         AiTestGenerationService service =
                 new AiTestGenerationService(client, repo, new ObjectMapper());
-        service.generateAndSave(type, Difficulty.MEDIUM, 12, "Analyst", "Finance", true);
+        service.generateAndSave(type, Difficulty.MEDIUM, 12, "Analyst", "Finance", true, Language.EN);
         return client.lastTier;
     }
 
