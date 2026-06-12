@@ -774,6 +774,7 @@ export interface AdminStats {
   totalResults: number;
   aiTests: number;
   freeTests: number;
+  proUsers: number;
 }
 
 export interface AdminUser {
@@ -783,6 +784,7 @@ export interface AdminUser {
   targetRole: string | null;
   resultCount: number;
   avgScore: number;
+  isPro: boolean;
   createdAt: string;
 }
 
@@ -809,6 +811,10 @@ export async function setTestFree(id: string, isFree: boolean): Promise<Test> {
     { method: "PATCH" }
   );
   return mapTestListItem(result);
+}
+
+export async function setUserPro(id: number, pro: boolean): Promise<void> {
+  await apiFetch(`/api/admin/users/${id}/pro?pro=${pro}`, { method: "PATCH" });
 }
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
