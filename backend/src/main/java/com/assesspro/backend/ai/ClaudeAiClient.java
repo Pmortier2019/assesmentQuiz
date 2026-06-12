@@ -17,7 +17,11 @@ import java.time.Duration;
 public class ClaudeAiClient implements AiClient {
 
     private static final String ENDPOINT = "https://api.anthropic.com/v1/messages";
-    private static final String MODEL = "claude-haiku-4-5-20251001";
+    // Cheaper/faster default for behavioural tests with no single correct answer.
+    private static final String STANDARD_MODEL = "claude-haiku-4-5-20251001";
+    // Stronger model for maths/logic/data tests, where a reasoning slip yields a
+    // wrong "correct" answer. Worth the extra cost on those categories only.
+    private static final String REASONING_MODEL = "claude-sonnet-4-6";
     private static final String ANTHROPIC_VERSION = "2023-06-01";
 
     @Value("${ANTHROPIC_API_KEY:}")
@@ -31,9 +35,16 @@ public class ClaudeAiClient implements AiClient {
 
     @Override
     public String generateTest(String prompt) {
+        return generateTest(prompt, ModelTier.STANDARD);
+    }
+
+    @Override
+    public String generateTest(String prompt, ModelTier tier) {
         if (apiKey == null || apiKey.isBlank()) {
             throw new RuntimeException("ANTHROPIC_API_KEY is not configured. Add it as an environment variable.");
         }
+
+        String model = tier == ModelTier.REASONING ? REASONING_MODEL : STANDARD_MODEL;
 
         try {
             String escapedPrompt = objectMapper.writeValueAsString(prompt);
@@ -43,7 +54,7 @@ public class ClaudeAiClient implements AiClient {
                       "max_tokens": 8192,
                       "messages": [{"role": "user", "content": %s}]
                     }
-                    """.formatted(MODEL, escapedPrompt);
+                    """.formatted(model, escapedPrompt);
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(ENDPOINT))

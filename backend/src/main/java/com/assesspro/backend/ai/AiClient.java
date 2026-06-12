@@ -17,4 +17,17 @@ public interface AiClient {
      * @return raw JSON string matching the AssessmentTest structure
      */
     String generateTest(String prompt);
+
+    /**
+     * As {@link #generateTest(String)}, but lets the caller signal how much
+     * reasoning power the test needs so the client can pick an appropriate model.
+     * Defaults to ignoring the tier; clients that support multiple models override it.
+     *
+     * @param prompt structured prompt describing the test to generate
+     * @param tier   how reasoning-heavy this test is
+     * @return raw JSON string matching the AssessmentTest structure
+     */
+    default String generateTest(String prompt, ModelTier tier) {
+        return generateTest(prompt);
+    }
 }
