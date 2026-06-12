@@ -35,7 +35,7 @@ function currentUserId(): number {
 
 // ─── Type mappers ─────────────────────────────────────────────────────────────
 
-function mapTestType(backend: string): AssessmentType {
+export function mapTestType(backend: string): AssessmentType {
   const map: Record<string, AssessmentType> = {
     // Cognitive & Reasoning
     NUMERICAL_REASONING:    "numerical_reasoning",
@@ -89,7 +89,7 @@ function mapTestType(backend: string): AssessmentType {
   return map[backend] ?? "numerical_reasoning";
 }
 
-function mapDifficulty(backend: string): Difficulty {
+export function mapDifficulty(backend: string): Difficulty {
   const map: Record<string, Difficulty> = {
     EASY: "beginner",
     MEDIUM: "intermediate",
@@ -98,7 +98,7 @@ function mapDifficulty(backend: string): Difficulty {
   return map[backend] ?? "beginner";
 }
 
-function mapTestTypeToBackend(type: AssessmentType): string {
+export function mapTestTypeToBackend(type: AssessmentType): string {
   const map: Record<AssessmentType, string> = {
     // Cognitive & Reasoning
     numerical_reasoning:    "NUMERICAL_REASONING",
@@ -152,7 +152,7 @@ function mapTestTypeToBackend(type: AssessmentType): string {
   return map[type];
 }
 
-function mapDifficultyToBackend(diff: Difficulty): string {
+export function mapDifficultyToBackend(diff: Difficulty): string {
   const map: Record<Difficulty, string> = {
     beginner: "EASY",
     intermediate: "MEDIUM",
@@ -263,7 +263,7 @@ interface BackendSubmitResponse {
 
 // ─── Entity mappers ───────────────────────────────────────────────────────────
 
-function mapTestListItem(b: BackendTestListItem): Test {
+export function mapTestListItem(b: BackendTestListItem): Test {
   return {
     id: String(b.id),
     title: b.title,
@@ -339,7 +339,7 @@ function mapUserResult(r: BackendUserResult): TestResult {
   };
 }
 
-function mapSubmitResponse(r: BackendSubmitResponse): TestResult {
+export function mapSubmitResponse(r: BackendSubmitResponse): TestResult {
   const questionResults: QuestionResult[] = (r.questionResults ?? []).map((q) => ({
     questionId: String(q.questionId),
     questionText: q.questionText,
