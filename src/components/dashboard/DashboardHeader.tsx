@@ -39,12 +39,12 @@ export function DashboardHeader({
         {hasCareerTargets ? (
           <p className="text-muted text-sm mt-1">
             {t("dash_preparing_for")}{" "}
-            <span className="font-semibold text-[#4f46e5]">{targetRole}</span>
+            <span className="font-semibold text-primary">{targetRole}</span>
             {targetIndustry && (
-              <> {t("dash_in")} <span className="font-semibold text-[#0891b2]">{targetIndustry}</span></>
+              <> {t("dash_in")} <span className="font-semibold text-cyan">{targetIndustry}</span></>
             )}
             {targetCompany && (
-              <> · <span className="font-semibold text-[#7c3aed]">{targetCompany}</span></>
+              <> · <span className="font-semibold text-violet">{targetCompany}</span></>
             )}
           </p>
         ) : (
@@ -57,7 +57,7 @@ export function DashboardHeader({
       </div>
       <div className="flex items-center gap-3">
         {hasCareerTargets && (
-          <Link href="/onboarding" className="text-xs font-semibold text-[#4f46e5] hover:underline">
+          <Link href="/onboarding" className="text-xs font-semibold text-primary hover:underline">
             {t("dash_edit_targets")}
           </Link>
         )}

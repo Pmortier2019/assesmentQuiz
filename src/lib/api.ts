@@ -89,6 +89,19 @@ export function mapTestType(backend: string): AssessmentType {
   return map[backend] ?? "numerical_reasoning";
 }
 
+/**
+ * Normalises any assessment-type string to the canonical frontend
+ * {@link AssessmentType}. Backend enums are upper-case (`PERSONALITY_WORK_STYLE`)
+ * and frontend types are lower-case (`personality`); a naïve `.toLowerCase()`
+ * silently breaks for the one type whose names differ. Use this wherever a type
+ * may arrive in either form (e.g. raw enum names from the skills-summary API).
+ */
+export function normalizeAssessmentType(value: string): AssessmentType {
+  return value === value.toLowerCase()
+    ? (value as AssessmentType)
+    : mapTestType(value);
+}
+
 export function mapDifficulty(backend: string): Difficulty {
   const map: Record<string, Difficulty> = {
     EASY: "beginner",
@@ -633,8 +646,10 @@ export interface LeaderboardEntry {
   timeTakenSeconds: number;
 }
 
-export async function getLeaderboard(type?: string): Promise<LeaderboardEntry[]> {
-  const url = type ? `/api/leaderboard?type=${type.toUpperCase()}` : "/api/leaderboard";
+export async function getLeaderboard(type?: AssessmentType): Promise<LeaderboardEntry[]> {
+  const url = type
+    ? `/api/leaderboard?type=${mapTestTypeToBackend(type)}`
+    : "/api/leaderboard";
   return apiFetch<LeaderboardEntry[]>(url);
 }
 

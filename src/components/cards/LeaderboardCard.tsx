@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Trophy, Medal } from "lucide-react";
 import { getLeaderboard, LeaderboardEntry } from "@/lib/api";
+import type { AssessmentType } from "@/lib/types";
 import { InlineLoader } from "@/components/ui/PageLoader";
 
 // Top-3 ranks get a coloured medal/trophy; everyone else a muted medal.
@@ -14,7 +15,7 @@ function RankIcon({ rank }: { rank: number }) {
 }
 
 interface LeaderboardCardProps {
-  type?: string;
+  type?: AssessmentType;
 }
 
 export function LeaderboardCard({ type }: LeaderboardCardProps) {
