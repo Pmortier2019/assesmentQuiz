@@ -3,8 +3,9 @@
 import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Zap, Eye, EyeOff, CheckCircle2 } from "lucide-react";
+import { Eye, EyeOff, CheckCircle2 } from "lucide-react";
 import { resetPassword, ApiError } from "@/lib/api";
+import { LogoMark } from "@/components/ui/Logo";
 
 function ResetPasswordForm() {
   const router = useRouter();
@@ -22,7 +23,7 @@ function ResetPasswordForm() {
     return (
       <div className="bg-white rounded-2xl border border-[#e2e8f0] shadow-lg p-8 text-center">
         <p className="text-sm text-[#64748b] mb-4">Ongeldige of verlopen resetlink.</p>
-        <Link href="/forgot-password" className="text-sm text-[#4f46e5] font-semibold hover:underline">
+        <Link href="/forgot-password" className="text-sm text-[#2D7BFF] font-semibold hover:underline">
           Vraag een nieuwe aan
         </Link>
       </div>
@@ -79,7 +80,7 @@ function ResetPasswordForm() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
-                  className="w-full px-4 py-3 pr-12 rounded-xl border border-[#e2e8f0] text-sm text-[#0D1B2E] placeholder-[#94a3b8] focus:outline-none focus:border-[#4f46e5] focus:ring-2 focus:ring-[#4f46e5]/10 transition-all"
+                  className="w-full px-4 py-3 pr-12 rounded-xl border border-[#e2e8f0] text-sm text-[#0D1B2E] placeholder-[#94a3b8] focus:outline-none focus:border-[#2D7BFF] focus:ring-2 focus:ring-[#2D7BFF]/10 transition-all"
                 />
                 <button
                   type="button"
@@ -99,7 +100,7 @@ function ResetPasswordForm() {
                 onChange={(e) => setConfirm(e.target.value)}
                 placeholder="••••••••"
                 required
-                className="w-full px-4 py-3 rounded-xl border border-[#e2e8f0] text-sm text-[#0D1B2E] placeholder-[#94a3b8] focus:outline-none focus:border-[#4f46e5] focus:ring-2 focus:ring-[#4f46e5]/10 transition-all"
+                className="w-full px-4 py-3 rounded-xl border border-[#e2e8f0] text-sm text-[#0D1B2E] placeholder-[#94a3b8] focus:outline-none focus:border-[#2D7BFF] focus:ring-2 focus:ring-[#2D7BFF]/10 transition-all"
               />
             </div>
 
@@ -112,7 +113,7 @@ function ResetPasswordForm() {
             <button
               type="submit"
               disabled={loading}
-              className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white font-semibold text-sm shadow-lg hover:opacity-90 disabled:opacity-60 transition-opacity mt-2"
+              className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold text-sm shadow-lg hover:opacity-90 disabled:opacity-60 transition-opacity mt-2"
             >
               {loading ? "Opslaan…" : "Wachtwoord opslaan"}
             </button>
@@ -129,9 +130,7 @@ export default function ResetPasswordPage() {
       <header className="bg-white border-b border-[#e2e8f0]">
         <div className="max-w-xl mx-auto px-4 py-4">
           <Link href="/" className="flex items-center gap-2 w-fit">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
-              <Zap size={13} className="text-white fill-white" />
-            </div>
+            <LogoMark size={30} className="shrink-0" />
             <span className="font-display font-bold text-[#0D1B2E]">
               Ready to <span className="gradient-text">Ace</span>
             </span>

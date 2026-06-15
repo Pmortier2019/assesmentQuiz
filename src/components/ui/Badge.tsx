@@ -9,8 +9,8 @@ interface BadgeProps {
 
 const variants = {
   default: "bg-surface-muted text-body border-line",
-  pro:     "bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white border-transparent",
-  ai:      "bg-[#f0f0ff] text-[#4f46e5] border-[#c7d2fe]",
+  pro:     "bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white border-transparent",
+  ai:      "bg-[#f0f0ff] text-[#2D7BFF] border-[#BFD6FF]",
   free:    "bg-[#f0fdf4] text-[#16a34a] border-[#bbf7d0]",
   success: "bg-[#f0fdf4] text-[#16a34a] border-[#bbf7d0]",
   warning: "bg-[#fffbeb] text-[#d97706] border-[#fde68a]",

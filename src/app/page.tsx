@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
+import { LogoMark } from "@/components/ui/Logo";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -13,7 +14,6 @@ import { PricingPreviewSection } from "@/components/sections/PricingPreviewSecti
 import { FinalCTASection } from "@/components/sections/FinalCTASection";
 import { FooterNav } from "@/components/layout/FooterNav";
 import Link from "next/link";
-import { Zap } from "lucide-react";
 
 function Footer() {
   return (
@@ -21,9 +21,7 @@ function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
-              <Zap size={13} className="text-white fill-white" />
-            </div>
+            <LogoMark size={30} className="shrink-0" />
             <span className="font-display font-bold text-[#0D1B2E]">
               Ready to <span className="gradient-text">Ace</span>
             </span>

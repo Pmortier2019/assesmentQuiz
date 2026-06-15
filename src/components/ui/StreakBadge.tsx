@@ -21,7 +21,7 @@ export function StreakBadge({ count, size = "md", className }: StreakBadgeProps)
   const iconSizes = { sm: 12, md: 16, lg: 20 };
 
   const badgeCls = isBlue
-    ? "bg-[#ede9fe] text-[#5b21b6] border-[#c4b5fd] streak-badge-blue"
+    ? "bg-[#D6E4FF] text-[#15275C] border-[#BFD6FF] streak-badge-blue"
     : isHot
     ? "bg-amber-50 text-amber-700 border-amber-200 streak-badge-hot"
     : "bg-amber-50 text-amber-700 border-amber-200";

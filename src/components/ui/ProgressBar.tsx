@@ -28,10 +28,10 @@ export function ProgressBar({
   const heights = { sm: "h-1.5", md: "h-2.5", lg: "h-4" };
 
   const fills = {
-    default: "bg-[#4f46e5]",
+    default: "bg-[#2D7BFF]",
     success: "bg-[#10b981]",
     warning: "bg-[#f59e0b]",
-    gradient: "bg-gradient-to-r from-[#4f46e5] to-[#7c3aed]",
+    gradient: "bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6]",
   };
 
   return (

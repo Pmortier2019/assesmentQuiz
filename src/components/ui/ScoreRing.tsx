@@ -19,7 +19,7 @@ export function ScoreRing({
   strokeWidth = 8,
   label,
   sublabel,
-  color = "#4f46e5",
+  color = "#2D7BFF",
   trackColor = "#e2e8f0",
   animate = true,
 }: ScoreRingProps) {

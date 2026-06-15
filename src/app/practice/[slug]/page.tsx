@@ -5,6 +5,7 @@ import { CheckCircle2, Zap, ArrowRight, ChevronDown } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { FooterNav } from "@/components/layout/FooterNav";
 import { PRACTICE_PAGES } from "./config";
+import { LogoMark } from "@/components/ui/Logo";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -55,7 +56,7 @@ export default async function PracticePage({ params }: Props) {
       <Navbar />
       <main>
         {/* Hero */}
-        <section className="bg-gradient-to-br from-[#0D1B2E] to-[#1e1b4b] text-white py-20 px-4">
+        <section className="bg-gradient-to-br from-[#0D1B2E] to-[#15275C] text-white py-20 px-4">
           <div className="max-w-3xl mx-auto text-center">
             <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-xs font-semibold tracking-wide uppercase mb-4">
               {page.category}
@@ -69,7 +70,7 @@ export default async function PracticePage({ params }: Props) {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 href="/onboarding"
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white font-semibold text-base shadow-lg hover:opacity-90 transition-opacity"
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold text-base shadow-lg hover:opacity-90 transition-opacity"
               >
                 <Zap size={18} className="fill-white" />
                 Start Free — No Sign-Up Required
@@ -94,7 +95,7 @@ export default async function PracticePage({ params }: Props) {
             <ul className="grid sm:grid-cols-2 gap-4">
               {page.bullets.map((bullet) => (
                 <li key={bullet} className="flex items-start gap-3 p-4 rounded-xl border border-[#e2e8f0] bg-[#f8fafc]">
-                  <CheckCircle2 size={20} className="text-[#4f46e5] mt-0.5 shrink-0" />
+                  <CheckCircle2 size={20} className="text-[#2D7BFF] mt-0.5 shrink-0" />
                   <span className="text-[#374151] font-medium">{bullet}</span>
                 </li>
               ))}
@@ -113,7 +114,7 @@ export default async function PracticePage({ params }: Props) {
             </p>
             <Link
               href="/onboarding"
-              className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white font-semibold shadow hover:opacity-90 transition-opacity"
+              className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold shadow hover:opacity-90 transition-opacity"
             >
               Get Started Free
               <ArrowRight size={16} />
@@ -142,14 +143,14 @@ export default async function PracticePage({ params }: Props) {
         </section>
 
         {/* Footer CTA */}
-        <section className="py-16 px-4 bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] text-white text-center">
+        <section className="py-16 px-4 bg-gradient-to-br from-[#2D7BFF] to-[#1D63E6] text-white text-center">
           <h2 className="text-2xl font-bold mb-3">Ready to start practising?</h2>
           <p className="text-white/80 mb-6">Join thousands of candidates preparing for their job assessments.</p>
           <Link
             href="/onboarding"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white text-[#4f46e5] font-bold shadow hover:shadow-lg transition-shadow"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white text-[#2D7BFF] font-bold shadow hover:shadow-lg transition-shadow"
           >
-            <Zap size={18} className="fill-[#4f46e5]" />
+            <Zap size={18} className="fill-[#2D7BFF]" />
             Start Free Today
           </Link>
         </section>
@@ -158,10 +159,8 @@ export default async function PracticePage({ params }: Props) {
       <footer className="bg-white border-t border-[#e2e8f0] py-8 px-4">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
-              <Zap size={13} className="text-white fill-white" />
-            </div>
-            <span className="font-bold text-[#0D1B2E]">Ready to <span className="text-[#4f46e5]">Ace</span></span>
+            <LogoMark size={30} className="shrink-0" />
+            <span className="font-bold text-[#0D1B2E]">Ready to <span className="text-[#2D7BFF]">Ace</span></span>
           </Link>
           <FooterNav />
           <p className="text-xs text-[#94a3b8]">© 2026 Ready to Ace. All rights reserved.</p>

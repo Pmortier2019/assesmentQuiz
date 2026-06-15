@@ -38,7 +38,7 @@ function TableRenderer({ data }: { data: { headers: string[]; rows: string[][] }
 
 function ChartRenderer({ data }: { data: { labels: string[]; datasets: { label: string; values: number[] }[] } }) {
   const maxVal = Math.max(...data.datasets.flatMap((d) => d.values));
-  const colors = ["bg-[#4f46e5]", "bg-[#7c3aed]", "bg-[#2563eb]", "bg-[#10b981]"];
+  const colors = ["bg-[#2D7BFF]", "bg-[#1D63E6]", "bg-[#2563eb]", "bg-[#10b981]"];
 
   return (
     <div className="rounded-xl border border-[#e2e8f0] p-4 bg-[#fafafa]">
