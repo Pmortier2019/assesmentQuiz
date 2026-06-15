@@ -14,6 +14,7 @@ import {
 import { saveOnboarding } from "@/lib/api";
 import { useAuth } from "@/lib/useAuth";
 import type { RoleCategory, IndustryCategory } from "@/lib/types";
+import { LogoMark } from "@/components/ui/Logo";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -69,9 +70,9 @@ function Stepper({ current }: { current: number }) {
             <div
               className={`flex items-center justify-center w-8 h-8 rounded-full text-xs font-bold transition-all duration-300 ${
                 i < current
-                  ? "bg-[#4f46e5] text-white shadow-sm"
+                  ? "bg-[#2D7BFF] text-white shadow-sm"
                   : i === current
-                  ? "bg-[#0D1B2E] text-white ring-2 ring-[#4f46e5]/30"
+                  ? "bg-[#0D1B2E] text-white ring-2 ring-[#2D7BFF]/30"
                   : "bg-[#f1f5f9] text-[#94a3b8]"
               }`}
             >
@@ -83,7 +84,7 @@ function Stepper({ current }: { current: number }) {
           </div>
           {i < labels.length - 1 && (
             <div className={`h-px w-8 sm:w-12 mb-4 mx-1 transition-all duration-300 ${
-              i < current ? "bg-[#4f46e5]" : "bg-[#e2e8f0]"
+              i < current ? "bg-[#2D7BFF]" : "bg-[#e2e8f0]"
             }`} />
           )}
         </div>
@@ -135,9 +136,7 @@ export default function OnboardingPage() {
       <header className="bg-white/80 backdrop-blur border-b border-[#e2e8f0]">
         <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
-              <Zap size={13} className="text-white fill-white" />
-            </div>
+            <LogoMark size={30} className="shrink-0" />
             <span className="font-display font-bold text-[#0D1B2E]">
               Ready to <span className="gradient-text">Ace</span>
             </span>
@@ -153,7 +152,7 @@ export default function OnboardingPage() {
           {step === 0 && (
             <div className="animate-fade-up">
               <div className="text-center mb-8">
-                <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#4f46e5] uppercase tracking-widest bg-[#eef2ff] px-3 py-1.5 rounded-full mb-4">
+                <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#2D7BFF] uppercase tracking-widest bg-[#EAF1FF] px-3 py-1.5 rounded-full mb-4">
                   <Briefcase size={12} /> Step 1 of {TOTAL_STEPS}
                 </div>
                 <h1 className="font-display font-bold text-3xl text-[#0D1B2E] mb-3">
@@ -172,16 +171,16 @@ export default function OnboardingPage() {
                     onClick={() => setRole(r.value)}
                     className={`flex items-center gap-3 p-3 rounded-xl border-2 text-left transition-all ${
                       role === r.value
-                        ? "border-[#4f46e5] bg-[#eef2ff]"
-                        : "border-[#e2e8f0] bg-white hover:border-[#4f46e5]/40 hover:bg-[#f8faff]"
+                        ? "border-[#2D7BFF] bg-[#EAF1FF]"
+                        : "border-[#e2e8f0] bg-white hover:border-[#2D7BFF]/40 hover:bg-[#f8faff]"
                     }`}
                   >
-                    <r.icon size={20} className="text-[#4f46e5] flex-shrink-0" />
+                    <r.icon size={20} className="text-[#2D7BFF] flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-semibold text-[#0D1B2E] leading-tight truncate">{r.value}</p>
                     </div>
                     {role === r.value && (
-                      <div className="w-4 h-4 rounded-full bg-[#4f46e5] flex items-center justify-center flex-shrink-0">
+                      <div className="w-4 h-4 rounded-full bg-[#2D7BFF] flex items-center justify-center flex-shrink-0">
                         <Check size={9} className="text-white" strokeWidth={3} />
                       </div>
                     )}
@@ -192,7 +191,7 @@ export default function OnboardingPage() {
               <button
                 onClick={() => setStep(1)}
                 disabled={!role}
-                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
+                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
               >
                 Continue <ArrowRight size={16} />
               </button>
@@ -206,7 +205,7 @@ export default function OnboardingPage() {
           {step === 1 && (
             <div className="animate-fade-up">
               <div className="text-center mb-8">
-                <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#4f46e5] uppercase tracking-widest bg-[#eef2ff] px-3 py-1.5 rounded-full mb-4">
+                <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#2D7BFF] uppercase tracking-widest bg-[#EAF1FF] px-3 py-1.5 rounded-full mb-4">
                   <Target size={12} /> Step 2 of {TOTAL_STEPS}
                 </div>
                 <h1 className="font-display font-bold text-3xl text-[#0D1B2E] mb-3">
@@ -225,14 +224,14 @@ export default function OnboardingPage() {
                     onClick={() => setIndustry(ind.value)}
                     className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 text-center transition-all ${
                       industry === ind.value
-                        ? "border-[#4f46e5] bg-[#eef2ff]"
-                        : "border-[#e2e8f0] bg-white hover:border-[#4f46e5]/40 hover:bg-[#f8faff]"
+                        ? "border-[#2D7BFF] bg-[#EAF1FF]"
+                        : "border-[#e2e8f0] bg-white hover:border-[#2D7BFF]/40 hover:bg-[#f8faff]"
                     }`}
                   >
-                    <ind.icon size={24} className="text-[#4f46e5]" />
+                    <ind.icon size={24} className="text-[#2D7BFF]" />
                     <p className="text-xs font-semibold text-[#0D1B2E] leading-tight">{ind.value}</p>
                     {industry === ind.value && (
-                      <div className="w-4 h-4 rounded-full bg-[#4f46e5] flex items-center justify-center">
+                      <div className="w-4 h-4 rounded-full bg-[#2D7BFF] flex items-center justify-center">
                         <Check size={9} className="text-white" strokeWidth={3} />
                       </div>
                     )}
@@ -250,7 +249,7 @@ export default function OnboardingPage() {
                 <button
                   onClick={() => setStep(2)}
                   disabled={!industry}
-                  className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
+                  className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
                 >
                   Continue <ArrowRight size={16} />
                 </button>
@@ -262,7 +261,7 @@ export default function OnboardingPage() {
           {step === 2 && (
             <div className="animate-fade-up">
               <div className="text-center mb-8">
-                <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#4f46e5] uppercase tracking-widest bg-[#eef2ff] px-3 py-1.5 rounded-full mb-4">
+                <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#2D7BFF] uppercase tracking-widest bg-[#EAF1FF] px-3 py-1.5 rounded-full mb-4">
                   <Building2 size={12} /> Step 3 of {TOTAL_STEPS}
                 </div>
                 <h1 className="font-display font-bold text-3xl text-[#0D1B2E] mb-3">
@@ -280,7 +279,7 @@ export default function OnboardingPage() {
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
                   placeholder="e.g. McKinsey, Deloitte, Google..."
-                  className="w-full pl-10 pr-4 py-3.5 rounded-xl border-2 border-[#e2e8f0] bg-white text-[#0D1B2E] text-sm outline-none focus:border-[#4f46e5] focus:ring-2 focus:ring-[#4f46e5]/10 transition-all placeholder:text-[#94a3b8]"
+                  className="w-full pl-10 pr-4 py-3.5 rounded-xl border-2 border-[#e2e8f0] bg-white text-[#0D1B2E] text-sm outline-none focus:border-[#2D7BFF] focus:ring-2 focus:ring-[#2D7BFF]/10 transition-all placeholder:text-[#94a3b8]"
                 />
                 {company && (
                   <button
@@ -302,8 +301,8 @@ export default function OnboardingPage() {
                       onClick={() => setCompany(c)}
                       className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border ${
                         company === c
-                          ? "bg-[#4f46e5] text-white border-[#4f46e5]"
-                          : "bg-white text-[#475569] border-[#e2e8f0] hover:border-[#4f46e5]/40 hover:text-[#4f46e5]"
+                          ? "bg-[#2D7BFF] text-white border-[#2D7BFF]"
+                          : "bg-white text-[#475569] border-[#e2e8f0] hover:border-[#2D7BFF]/40 hover:text-[#2D7BFF]"
                       }`}
                     >
                       {c}
@@ -321,7 +320,7 @@ export default function OnboardingPage() {
                 </button>
                 <button
                   onClick={() => setStep(3)}
-                  className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white font-semibold hover:opacity-90 transition-opacity"
+                  className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold hover:opacity-90 transition-opacity"
                 >
                   {company.trim() ? "Continue" : "Skip for now"}
                   <ArrowRight size={16} />
@@ -334,7 +333,7 @@ export default function OnboardingPage() {
           {step === 3 && (
             <div className="animate-fade-up">
               <div className="text-center mb-8">
-                <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#4f46e5] uppercase tracking-widest bg-[#eef2ff] px-3 py-1.5 rounded-full mb-4">
+                <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#2D7BFF] uppercase tracking-widest bg-[#EAF1FF] px-3 py-1.5 rounded-full mb-4">
                   <Zap size={12} /> Step 4 of {TOTAL_STEPS}
                 </div>
                 <h1 className="font-display font-bold text-3xl text-[#0D1B2E] mb-3">
@@ -352,17 +351,17 @@ export default function OnboardingPage() {
                     onClick={() => setLevel(l.value)}
                     className={`flex items-center gap-4 p-5 rounded-xl border-2 text-left transition-all ${
                       level === l.value
-                        ? "border-[#4f46e5] bg-[#eef2ff]"
-                        : "border-[#e2e8f0] bg-white hover:border-[#4f46e5]/40 hover:bg-[#f8faff]"
+                        ? "border-[#2D7BFF] bg-[#EAF1FF]"
+                        : "border-[#e2e8f0] bg-white hover:border-[#2D7BFF]/40 hover:bg-[#f8faff]"
                     }`}
                   >
-                    <l.icon size={24} className="text-[#4f46e5] flex-shrink-0" />
+                    <l.icon size={24} className="text-[#2D7BFF] flex-shrink-0" />
                     <div className="flex-1">
                       <p className="font-semibold text-[#0D1B2E]">{l.label}</p>
                       <p className="text-sm text-[#64748b] mt-0.5">{l.description}</p>
                     </div>
                     {level === l.value && (
-                      <div className="w-5 h-5 rounded-full bg-[#4f46e5] flex items-center justify-center flex-shrink-0">
+                      <div className="w-5 h-5 rounded-full bg-[#2D7BFF] flex items-center justify-center flex-shrink-0">
                         <Check size={11} className="text-white" strokeWidth={3} />
                       </div>
                     )}
@@ -378,7 +377,7 @@ export default function OnboardingPage() {
                     {role && (() => {
                       const RoleIcon = ROLES.find(r => r.value === role)?.icon;
                       return (
-                        <span className="flex items-center gap-1.5 text-xs font-semibold text-[#4f46e5] bg-[#eef2ff] px-2.5 py-1 rounded-full">
+                        <span className="flex items-center gap-1.5 text-xs font-semibold text-[#2D7BFF] bg-[#EAF1FF] px-2.5 py-1 rounded-full">
                           {RoleIcon && <RoleIcon size={12} />} {role}
                         </span>
                       );
@@ -392,7 +391,7 @@ export default function OnboardingPage() {
                       );
                     })()}
                     {company && (
-                      <span className="flex items-center gap-1.5 text-xs font-semibold text-[#7c3aed] bg-[#f5f3ff] px-2.5 py-1 rounded-full">
+                      <span className="flex items-center gap-1.5 text-xs font-semibold text-[#1D63E6] bg-[#EAF1FF] px-2.5 py-1 rounded-full">
                         <Building2 size={12} /> {company}
                       </span>
                     )}
@@ -418,7 +417,7 @@ export default function OnboardingPage() {
                 <button
                   onClick={handleFinish}
                   disabled={!level || saving}
-                  className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
+                  className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
                 >
                   {saving ? "Building your plan..." : "Launch my preparation"}
                   {!saving && <ArrowRight size={16} />}

@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Zap } from "lucide-react";
 import { useT } from "@/lib/i18n";
+import { LogoMark } from "@/components/ui/Logo";
 
 /**
  * Public shell for the legal pages (Terms, Privacy). Renders a minimal header
@@ -23,9 +23,7 @@ export function LegalShell({
       <header className="border-b border-line">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4">
           <Link href="/" className="inline-flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
-              <Zap size={14} className="text-white fill-white" />
-            </div>
+            <LogoMark size={30} className="shrink-0" />
             <span className="font-display font-bold text-default text-lg tracking-tight">
               Ready to <span className="gradient-text">Ace</span>
             </span>

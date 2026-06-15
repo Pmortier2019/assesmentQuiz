@@ -59,7 +59,7 @@ export function WeakSpotCard({ results, tests }: WeakSpotCardProps) {
           <h3 className="font-display font-semibold text-default text-sm">Weak spot detected</h3>
           <p className="text-xs text-subtle mt-0.5">Based on your last {results.length} test results</p>
         </div>
-        <span className="ml-auto text-[10px] font-semibold text-[#4f46e5] bg-[#eef2ff] px-2 py-0.5 rounded-full">Smart</span>
+        <span className="ml-auto text-[10px] font-semibold text-[#2D7BFF] bg-[#EAF1FF] px-2 py-0.5 rounded-full">Smart</span>
       </div>
 
       <div className="flex flex-col gap-3 mb-4">
@@ -90,7 +90,7 @@ export function WeakSpotCard({ results, tests }: WeakSpotCardProps) {
 
       <Link
         href={`/tests?type=${weakSpots[0].type}`}
-        className="flex items-center gap-2 text-xs font-semibold text-[#4f46e5] hover:underline"
+        className="flex items-center gap-2 text-xs font-semibold text-[#2D7BFF] hover:underline"
       >
         Practice {weakSpots[0].label}
         <ArrowRight size={12} />

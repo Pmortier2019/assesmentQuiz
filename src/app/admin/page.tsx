@@ -3,10 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import {
-  Zap, Users, BookOpen, BarChart3, Sparkles, Trash2, Lock, Unlock,
-  RefreshCw, Upload, AlertCircle, CheckCircle2, ChevronRight, Plus, Search, Crown,
-} from "lucide-react";
+import { Users, BookOpen, BarChart3, Sparkles, Trash2, Lock, Unlock, RefreshCw, Upload, AlertCircle, CheckCircle2, ChevronRight, Plus, Search, Crown } from "lucide-react";
 import {
   getAdminStats, getAdminUsers, getAdminTests, getGenerationStatus,
   generateTestOfType, deleteTest, setTestFree, setUserPro,
@@ -16,6 +13,7 @@ import {
 import { useAuth } from "@/lib/useAuth";
 import { AssessmentTypeIcon } from "@/components/ui/AssessmentTypeIcon";
 import type { Test } from "@/lib/types";
+import { LogoMark } from "@/components/ui/Logo";
 
 const DIFF_COLORS: Record<string, string> = {
   EASY:   "bg-emerald-100 text-emerald-700",
@@ -184,7 +182,7 @@ export default function AdminPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-[#4f46e5] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[#2D7BFF] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -196,13 +194,11 @@ export default function AdminPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
-                <Zap size={13} className="text-white fill-white" />
-              </div>
+              <LogoMark size={30} className="shrink-0" />
               <span className="font-display font-bold text-[#0D1B2E]">Ready to Ace</span>
             </Link>
             <ChevronRight size={14} className="text-[#94a3b8]" />
-            <span className="text-sm font-semibold text-[#4f46e5]">Admin</span>
+            <span className="text-sm font-semibold text-[#2D7BFF]">Admin</span>
           </div>
           <div className="flex items-center gap-3">
             <Link
@@ -214,7 +210,7 @@ export default function AdminPage() {
             </Link>
             <button
               onClick={refresh}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#4f46e5] text-white text-sm font-semibold hover:bg-[#4338ca] transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#2D7BFF] text-white text-sm font-semibold hover:bg-[#1D63E6] transition-colors"
             >
               <RefreshCw size={14} />
               Refresh
@@ -235,9 +231,9 @@ export default function AdminPage() {
         {/* Stats row */}
         <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
           {[
-            { label: "Total tests",   value: stats?.totalTests,   icon: BookOpen, color: "text-[#4f46e5]", bg: "bg-[#eef2ff]" },
+            { label: "Total tests",   value: stats?.totalTests,   icon: BookOpen, color: "text-[#2D7BFF]", bg: "bg-[#EAF1FF]" },
             { label: "Free tests",    value: stats?.freeTests,    icon: Unlock,   color: "text-emerald-600", bg: "bg-emerald-50" },
-            { label: "AI generated",  value: stats?.aiTests,      icon: Sparkles, color: "text-[#7c3aed]", bg: "bg-[#f5f3ff]" },
+            { label: "AI generated",  value: stats?.aiTests,      icon: Sparkles, color: "text-[#1D63E6]", bg: "bg-[#EAF1FF]" },
             { label: "Users",         value: stats?.totalUsers,   icon: Users,    color: "text-[#0891b2]", bg: "bg-cyan-50" },
             { label: "Pro users",     value: stats?.proUsers,     icon: Crown,    color: "text-amber-600", bg: "bg-amber-50" },
             { label: "Results",       value: stats?.totalResults, icon: BarChart3,color: "text-[#475569]", bg: "bg-slate-100" },
@@ -271,12 +267,12 @@ export default function AdminPage() {
                   value={perCombo}
                   onChange={(e) => setPerCombo(Math.max(1, Math.min(20, Number(e.target.value))))}
                   disabled={bulkGenerating}
-                  className="w-14 px-2 py-1.5 rounded-lg border border-[#e2e8f0] text-sm text-center font-semibold text-[#0D1B2E] focus:outline-none focus:border-[#4f46e5]"
+                  className="w-14 px-2 py-1.5 rounded-lg border border-[#e2e8f0] text-sm text-center font-semibold text-[#0D1B2E] focus:outline-none focus:border-[#2D7BFF]"
                 />
                 <button
                   onClick={handleGenerateAll}
                   disabled={bulkGenerating || !!generating}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
                 >
                   {bulkGenerating ? <RefreshCw size={12} className="animate-spin" /> : <Sparkles size={12} />}
                   {bulkGenerating ? "Generating…" : `Fill to ${perCombo}`}
@@ -293,7 +289,7 @@ export default function AdminPage() {
                   </button>
                   <button
                     onClick={() => setDefaultFree(false)}
-                    className={`px-3 py-1.5 transition-colors ${!defaultFree ? "bg-[#4f46e5] text-white" : "bg-white text-[#64748b] hover:bg-[#f8fafc]"}`}
+                    className={`px-3 py-1.5 transition-colors ${!defaultFree ? "bg-[#2D7BFF] text-white" : "bg-white text-[#64748b] hover:bg-[#f8fafc]"}`}
                   >
                     Pro
                   </button>
@@ -307,16 +303,16 @@ export default function AdminPage() {
           </div>
 
           {bulkProgress && (
-            <div className="mb-4 rounded-lg bg-[#eef2ff] border border-[#c7d2fe] px-4 py-3">
+            <div className="mb-4 rounded-lg bg-[#EAF1FF] border border-[#BFD6FF] px-4 py-3">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold text-[#4f46e5]">
+                <span className="text-sm font-semibold text-[#2D7BFF]">
                   Generating {bulkProgress.done + 1} / {bulkProgress.total}
                 </span>
                 <span className="text-xs text-[#64748b]">{bulkProgress.current}</span>
               </div>
-              <div className="w-full h-2 bg-[#c7d2fe] rounded-full overflow-hidden">
+              <div className="w-full h-2 bg-[#BFD6FF] rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-[#4f46e5] rounded-full transition-all duration-300"
+                  className="h-full bg-[#2D7BFF] rounded-full transition-all duration-300"
                   style={{ width: `${(bulkProgress.done / bulkProgress.total) * 100}%` }}
                 />
               </div>
@@ -361,7 +357,7 @@ export default function AdminPage() {
                             className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors disabled:opacity-50 ${
                               count > 0
                                 ? "bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100"
-                                : "bg-[#f8fafc] border border-[#e2e8f0] text-[#64748b] hover:bg-[#eef2ff] hover:border-[#c7d2fe] hover:text-[#4f46e5]"
+                                : "bg-[#f8fafc] border border-[#e2e8f0] text-[#64748b] hover:bg-[#EAF1FF] hover:border-[#BFD6FF] hover:text-[#2D7BFF]"
                             }`}
                           >
                             {isGenerating ? (
@@ -395,7 +391,7 @@ export default function AdminPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search tests…"
-                className="pl-8 pr-3 py-2 rounded-lg border border-[#e2e8f0] text-sm text-[#334155] focus:outline-none focus:border-[#4f46e5] w-52"
+                className="pl-8 pr-3 py-2 rounded-lg border border-[#e2e8f0] text-sm text-[#334155] focus:outline-none focus:border-[#2D7BFF] w-52"
               />
             </div>
           </div>
@@ -415,7 +411,7 @@ export default function AdminPage() {
                     <td className="py-3 pr-4">
                       <div className="flex items-center gap-2">
                         {t.isGeneratedByAI && (
-                          <span className="text-[10px] font-bold text-[#7c3aed] bg-[#f5f3ff] px-1.5 py-0.5 rounded-full flex items-center gap-0.5 flex-shrink-0">
+                          <span className="text-[10px] font-bold text-[#1D63E6] bg-[#EAF1FF] px-1.5 py-0.5 rounded-full flex items-center gap-0.5 flex-shrink-0">
                             <Sparkles size={8} /> AI
                           </span>
                         )}
@@ -513,7 +509,7 @@ export default function AdminPage() {
                         className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border transition-colors disabled:opacity-50 ${
                           u.isPro
                             ? "bg-amber-50 border-amber-300 text-amber-700 hover:bg-amber-100"
-                            : "bg-white border-[#e2e8f0] text-[#64748b] hover:border-[#4f46e5]/40 hover:text-[#4f46e5]"
+                            : "bg-white border-[#e2e8f0] text-[#64748b] hover:border-[#2D7BFF]/40 hover:text-[#2D7BFF]"
                         }`}
                       >
                         {u.isPro ? <Crown size={11} /> : <Plus size={11} />}

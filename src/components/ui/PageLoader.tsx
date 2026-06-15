@@ -4,8 +4,8 @@ export function PageLoader({ label = "Loading…" }: { label?: string }) {
       <div className="flex flex-col items-center gap-4">
         {/* Pulsing logo mark */}
         <div className="relative w-12 h-12">
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] animate-pulse" />
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] opacity-40 scale-110 animate-ping" />
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#2D7BFF] to-[#1D63E6] animate-pulse" />
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#2D7BFF] to-[#1D63E6] opacity-40 scale-110 animate-ping" />
           <svg
             className="absolute inset-0 w-full h-full p-3 text-white"
             viewBox="0 0 24 24"
@@ -29,7 +29,7 @@ export function InlineLoader() {
   return (
     <div className="flex items-center justify-center py-16">
       <div className="flex flex-col items-center gap-3">
-        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] animate-pulse" />
+        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#2D7BFF] to-[#1D63E6] animate-pulse" />
         <div className="skeleton w-24 h-2 rounded-full" />
       </div>
     </div>

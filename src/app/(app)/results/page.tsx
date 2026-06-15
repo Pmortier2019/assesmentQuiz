@@ -71,7 +71,7 @@ function ResultsContent() {
           spread: 55,
           particleCount: 80,
           origin,
-          colors: ["#4f46e5", "#7c3aed", "#10b981", "#f59e0b", "#f43f5e"],
+          colors: ["#2D7BFF", "#1D63E6", "#10b981", "#f59e0b", "#f43f5e"],
           scalar: 1.1,
         });
       burst(60,  { x: 0, y: 0.65 });
@@ -133,7 +133,7 @@ function ResultsContent() {
           {/* AI Feedback */}
           <div className="animate-fade-up delay-200">
             <h2 className="font-display font-semibold text-base text-[#0D1B2E] mb-3 flex items-center gap-2">
-              <Sparkles size={16} className="text-[#4f46e5]" />
+              <Sparkles size={16} className="text-[#2D7BFF]" />
               {t("results_ai_feedback")}
             </h2>
             <FeedbackCard feedback={result.aiFeedback} isProUser={isProUser} />
@@ -143,7 +143,7 @@ function ResultsContent() {
           {result.questionResults && result.questionResults.length > 0 && (
             <div className="animate-fade-up delay-300">
               <h2 className="font-display font-semibold text-base text-[#0D1B2E] mb-3 flex items-center gap-2">
-                <ClipboardList size={16} className="text-[#4f46e5]" />
+                <ClipboardList size={16} className="text-[#2D7BFF]" />
                 {t("results_q_review")}
               </h2>
               <div className="flex flex-col gap-4">
@@ -190,9 +190,9 @@ function ResultsContent() {
                       })}
                     </div>
                     {qr.explanation && (
-                      <div className="ml-9 p-3 rounded-lg bg-[#eef2ff] border border-[#c7d2fe]">
-                        <p className="text-xs text-[#4f46e5] font-semibold mb-1">{t("results_explanation")}</p>
-                        <p className="text-sm text-[#1e1b4b] leading-relaxed">{qr.explanation}</p>
+                      <div className="ml-9 p-3 rounded-lg bg-[#EAF1FF] border border-[#BFD6FF]">
+                        <p className="text-xs text-[#2D7BFF] font-semibold mb-1">{t("results_explanation")}</p>
+                        <p className="text-sm text-[#15275C] leading-relaxed">{qr.explanation}</p>
                       </div>
                     )}
                   </div>
@@ -209,7 +209,7 @@ function ResultsContent() {
             </div>
             <Link
               href="/tests"
-              className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white font-semibold text-sm whitespace-nowrap hover:opacity-90 transition-opacity"
+              className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold text-sm whitespace-nowrap hover:opacity-90 transition-opacity"
             >
               {t("results_continue")}
               <ArrowRight size={15} />
@@ -223,7 +223,7 @@ function ResultsContent() {
           <div className="card p-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-display font-semibold text-sm text-[#0D1B2E]">{t("results_recommended")}</h3>
-              <span className="text-[10px] font-semibold text-[#4f46e5] bg-[#eef2ff] px-2 py-0.5 rounded-full">Voor jou</span>
+              <span className="text-[10px] font-semibold text-[#2D7BFF] bg-[#EAF1FF] px-2 py-0.5 rounded-full">Voor jou</span>
             </div>
             {recommendedTests.length === 0 ? (
               <p className="text-xs text-[#94a3b8] text-center py-4">{t("results_no_recommendations")}</p>
@@ -242,7 +242,7 @@ function ResultsContent() {
                       <p className="text-sm font-semibold text-[#0D1B2E] truncate">{t.title}</p>
                       <p className="text-xs text-[#94a3b8]">{t.estimatedTime} min · {t.difficulty}</p>
                     </div>
-                    <ArrowRight size={14} className="text-[#94a3b8] group-hover:text-[#4f46e5] transition-colors flex-shrink-0" />
+                    <ArrowRight size={14} className="text-[#94a3b8] group-hover:text-[#2D7BFF] transition-colors flex-shrink-0" />
                   </Link>
                 ))}
               </div>

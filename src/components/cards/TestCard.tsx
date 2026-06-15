@@ -30,7 +30,7 @@ export function TestCard({ test, isLocked = false, onStart, className, showRecom
       {/* Recommended badge */}
       {isRecommended && (
         <div className="absolute top-3 left-3">
-          <span className="flex items-center gap-1 text-[10px] font-bold text-[#4f46e5] bg-[#eef2ff] border border-[#c7d2fe] px-2 py-0.5 rounded-full uppercase tracking-wider">
+          <span className="flex items-center gap-1 text-[10px] font-bold text-[#2D7BFF] bg-[#EAF1FF] border border-[#BFD6FF] px-2 py-0.5 rounded-full uppercase tracking-wider">
             <Star size={9} /> Best match
           </span>
         </div>
@@ -52,7 +52,7 @@ export function TestCard({ test, isLocked = false, onStart, className, showRecom
           <AssessmentTypeIcon type={test.type} size={20} />
         </div>
         {locked ? (
-          <span className="flex items-center gap-1 text-[10px] font-bold text-[#7c3aed] bg-[#f5f3ff] border border-[#ddd6fe] px-2 py-0.5 rounded-full">
+          <span className="flex items-center gap-1 text-[10px] font-bold text-[#1D63E6] bg-[#EAF1FF] border border-[#BFD6FF] px-2 py-0.5 rounded-full">
             <Lock size={9} />
             Pro
           </span>
@@ -106,7 +106,7 @@ export function TestCard({ test, isLocked = false, onStart, className, showRecom
       {locked && (
         <Link
           href="/pricing"
-          className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+          className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
         >
           <Lock size={13} />
           Unlock — Pro plan

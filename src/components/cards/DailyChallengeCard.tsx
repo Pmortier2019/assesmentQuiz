@@ -44,14 +44,14 @@ export function DailyChallengeCard({ test }: DailyChallengeCardProps) {
   return (
     <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0D1B2E] to-[#1a2f4a] p-6 text-white">
       {/* bg decoration */}
-      <div className="absolute top-0 right-0 w-48 h-48 bg-[#4f46e5]/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#7c3aed]/20 rounded-full translate-y-1/2 -translate-x-1/2 blur-2xl pointer-events-none" />
+      <div className="absolute top-0 right-0 w-48 h-48 bg-[#2D7BFF]/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#1D63E6]/20 rounded-full translate-y-1/2 -translate-x-1/2 blur-2xl pointer-events-none" />
 
       <div className="relative">
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#4f46e5]/30 border border-[#4f46e5]/40">
-            <Zap size={12} className="text-[#818cf8] fill-[#818cf8]" />
-            <span className="text-xs font-semibold text-[#a5b4fc]">Daily Challenge</span>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#2D7BFF]/30 border border-[#2D7BFF]/40">
+            <Zap size={12} className="text-[#5E97FF] fill-[#5E97FF]" />
+            <span className="text-xs font-semibold text-[#93BBFF]">Daily Challenge</span>
           </div>
 
           {/* Countdown */}
@@ -86,7 +86,7 @@ export function DailyChallengeCard({ test }: DailyChallengeCardProps) {
 
           <Link
             href={`/tests/${test.id}`}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
           >
             Start now
             <ChevronRight size={14} />

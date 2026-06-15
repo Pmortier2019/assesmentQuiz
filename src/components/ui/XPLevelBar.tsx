@@ -60,12 +60,12 @@ export function XPLevelBar({ xp, compact = false }: XPLevelBarProps) {
     return (
       <div className="flex flex-col gap-1 w-full">
         <div className="flex items-center justify-between">
-          <span className="text-[10px] font-semibold text-[#4f46e5]">Lv.{levelNum} {levelName}</span>
+          <span className="text-[10px] font-semibold text-[#2D7BFF]">Lv.{levelNum} {levelName}</span>
           <span className="text-[10px] text-subtle">{xp} / {nextXP} XP</span>
         </div>
         <div ref={barRef} className="h-1.5 bg-surface-muted rounded-full overflow-hidden">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] transition-none"
+            className="h-full rounded-full bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] transition-none"
             style={{ width: `${displayed}%` }}
           />
         </div>
@@ -77,7 +77,7 @@ export function XPLevelBar({ xp, compact = false }: XPLevelBarProps) {
     <div className="card p-4 flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#2D7BFF] to-[#1D63E6] flex items-center justify-center">
             <span className="text-white text-xs font-bold">{levelNum}</span>
           </div>
           <div>
@@ -86,14 +86,14 @@ export function XPLevelBar({ xp, compact = false }: XPLevelBarProps) {
           </div>
         </div>
         <div className="text-right">
-          <p className="text-sm font-bold text-[#4f46e5]">{xp} XP</p>
+          <p className="text-sm font-bold text-[#2D7BFF]">{xp} XP</p>
           <p className="text-[10px] text-subtle">→ {nextXP} XP</p>
         </div>
       </div>
 
       <div ref={barRef} className="h-2 bg-surface-muted rounded-full overflow-hidden">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-[#4f46e5] to-[#7c3aed]"
+          className="h-full rounded-full bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6]"
           style={{ width: `${displayed}%`, transition: "width 0.05s linear" }}
         />
       </div>

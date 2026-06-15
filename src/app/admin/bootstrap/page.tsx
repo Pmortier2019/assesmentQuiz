@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Zap, ShieldCheck, AlertCircle } from "lucide-react";
+import { ShieldCheck, AlertCircle } from "lucide-react";
 import { adminBootstrap } from "@/lib/api";
 import { useAuth } from "@/lib/useAuth";
+import { LogoMark } from "@/components/ui/Logo";
 
 export default function AdminBootstrapPage() {
   const router = useRouter();
@@ -35,15 +36,13 @@ export default function AdminBootstrapPage() {
     <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="flex items-center gap-2 justify-center mb-8">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
-            <Zap size={15} className="text-white fill-white" />
-          </div>
+          <LogoMark size={30} className="shrink-0" />
           <span className="font-display font-bold text-[#0D1B2E]">Ready to Ace</span>
         </div>
 
         <div className="bg-white rounded-2xl border border-[#e2e8f0] p-8 shadow-sm">
           <div className="flex items-center gap-2 mb-6">
-            <ShieldCheck size={20} className="text-[#4f46e5]" />
+            <ShieldCheck size={20} className="text-[#2D7BFF]" />
             <h1 className="font-display font-bold text-lg text-[#0D1B2E]">Admin Bootstrap</h1>
           </div>
 
@@ -67,7 +66,7 @@ export default function AdminBootstrapPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-lg border border-[#e2e8f0] text-sm text-[#0D1B2E] focus:outline-none focus:border-[#4f46e5] focus:ring-2 focus:ring-[#4f46e5]/10 transition-all"
+                className="w-full px-3 py-2.5 rounded-lg border border-[#e2e8f0] text-sm text-[#0D1B2E] focus:outline-none focus:border-[#2D7BFF] focus:ring-2 focus:ring-[#2D7BFF]/10 transition-all"
                 placeholder="jouw@email.com"
               />
             </div>
@@ -78,14 +77,14 @@ export default function AdminBootstrapPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-lg border border-[#e2e8f0] text-sm text-[#0D1B2E] focus:outline-none focus:border-[#4f46e5] focus:ring-2 focus:ring-[#4f46e5]/10 transition-all"
+                className="w-full px-3 py-2.5 rounded-lg border border-[#e2e8f0] text-sm text-[#0D1B2E] focus:outline-none focus:border-[#2D7BFF] focus:ring-2 focus:ring-[#2D7BFF]/10 transition-all"
                 placeholder="••••••••"
               />
             </div>
             <button
               type="submit"
               disabled={status === "loading"}
-              className="w-full py-2.5 rounded-lg bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white font-semibold text-sm hover:opacity-90 disabled:opacity-50 transition-opacity"
+              className="w-full py-2.5 rounded-lg bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold text-sm hover:opacity-90 disabled:opacity-50 transition-opacity"
             >
               {status === "loading" ? "Bezig…" : "Maak mij admin"}
             </button>

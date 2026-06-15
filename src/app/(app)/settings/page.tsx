@@ -76,14 +76,14 @@ export default function SettingsPage() {
           {/* Data export */}
           <section className="bg-surface border border-line rounded-2xl p-6 flex flex-col gap-4">
             <div className="flex items-center gap-2">
-              <ShieldCheck size={18} className="text-[#4f46e5]" />
+              <ShieldCheck size={18} className="text-[#2D7BFF]" />
               <h2 className="font-display font-semibold text-default">{t("settings_data_title")}</h2>
             </div>
             <p className="text-sm text-muted">{t("settings_data_desc")}</p>
             <button
               onClick={handleExport}
               disabled={exporting}
-              className="inline-flex items-center gap-2 self-start px-4 py-2.5 rounded-xl text-sm font-medium bg-[#4f46e5] text-white hover:bg-[#4338ca] disabled:opacity-60 transition-colors"
+              className="inline-flex items-center gap-2 self-start px-4 py-2.5 rounded-xl text-sm font-medium bg-[#2D7BFF] text-white hover:bg-[#1D63E6] disabled:opacity-60 transition-colors"
             >
               <Download size={16} />
               {exporting ? t("settings_exporting") : t("settings_download")}

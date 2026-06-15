@@ -14,7 +14,7 @@ export function ResultsSummary({ result, className }: ResultsSummaryProps) {
   return (
     <div className={cn("flex flex-col gap-6", className)}>
       {/* Score hero */}
-      <div className="flex flex-col items-center py-8 gap-3 rounded-2xl bg-gradient-to-br from-[#f8fafc] to-[#eef2ff] border border-[#e2e8f0]">
+      <div className="flex flex-col items-center py-8 gap-3 rounded-2xl bg-gradient-to-br from-[#f8fafc] to-[#EAF1FF] border border-[#e2e8f0]">
         <div className="relative">
           <svg className="w-28 h-28 -rotate-90" viewBox="0 0 120 120">
             <circle cx="60" cy="60" r="50" fill="none" stroke="#e2e8f0" strokeWidth="10" />
@@ -28,8 +28,8 @@ export function ResultsSummary({ result, className }: ResultsSummaryProps) {
             />
             <defs>
               <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#4f46e5" />
-                <stop offset="100%" stopColor="#7c3aed" />
+                <stop offset="0%" stopColor="#2D7BFF" />
+                <stop offset="100%" stopColor="#1D63E6" />
               </linearGradient>
             </defs>
           </svg>
@@ -48,7 +48,7 @@ export function ResultsSummary({ result, className }: ResultsSummaryProps) {
       {/* Stats row */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         {[
-          { icon: Trophy, label: "Score", value: `${result.score}%`, color: "text-[#4f46e5]", bg: "bg-[#eef2ff]" },
+          { icon: Trophy, label: "Score", value: `${result.score}%`, color: "text-[#2D7BFF]", bg: "bg-[#EAF1FF]" },
           { icon: Clock, label: "Time", value: formatTime(result.timeTaken), color: "text-[#f59e0b]", bg: "bg-amber-50" },
           { icon: TrendingUp, label: "Correct", value: `${correctCount}/${total}`, color: "text-[#10b981]", bg: "bg-emerald-50" },
         ].map(({ icon: Icon, label, value, color, bg }) => (

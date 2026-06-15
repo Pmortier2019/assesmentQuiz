@@ -211,8 +211,8 @@ export function FilterBar({
               className={cn(
                 "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all",
                 sortBy === "best_match"
-                  ? "bg-[#4f46e5] text-white"
-                  : "bg-[#eef2ff] text-[#4f46e5] hover:bg-[#e0e7ff]"
+                  ? "bg-[#2D7BFF] text-white"
+                  : "bg-[#EAF1FF] text-[#2D7BFF] hover:bg-[#D6E4FF]"
               )}
             >
               <Star size={11} /> Best match
@@ -227,7 +227,7 @@ export function FilterBar({
           className={cn(
             "px-3 py-1.5 rounded-lg text-xs font-medium border transition-all outline-none cursor-pointer",
             selectedType !== "all"
-              ? "border-[#4f46e5] bg-[#eef2ff] text-[#4f46e5]"
+              ? "border-[#2D7BFF] bg-[#EAF1FF] text-[#2D7BFF]"
               : "border-line bg-surface-muted text-muted hover:bg-line"
           )}
         >
@@ -261,7 +261,7 @@ export function FilterBar({
               className={cn(
                 "px-3 py-1.5 rounded-lg text-xs font-medium border transition-all outline-none cursor-pointer",
                 selectedRole !== "all"
-                  ? "border-[#4f46e5] bg-[#eef2ff] text-[#4f46e5]"
+                  ? "border-[#2D7BFF] bg-[#EAF1FF] text-[#2D7BFF]"
                   : "border-line bg-surface-muted text-muted hover:bg-line"
               )}
             >
@@ -335,12 +335,12 @@ function CategoryTiles({
               className={cn(
                 "flex items-center gap-2.5 px-3 py-2.5 rounded-xl border text-left transition-all",
                 isActive
-                  ? "border-[#4f46e5] bg-[#eef2ff] shadow-sm"
-                  : "border-line bg-surface hover:border-[#4f46e5]/40 hover:bg-surface-subtle"
+                  ? "border-[#2D7BFF] bg-[#EAF1FF] shadow-sm"
+                  : "border-line bg-surface hover:border-[#2D7BFF]/40 hover:bg-surface-subtle"
               )}
             >
-              <c.icon size={16} className={cn("flex-shrink-0", isActive ? "text-[#4f46e5]" : "text-muted")} />
-              <span className={cn("text-xs font-semibold leading-tight", isActive ? "text-[#4f46e5]" : "text-default")}>
+              <c.icon size={16} className={cn("flex-shrink-0", isActive ? "text-[#2D7BFF]" : "text-muted")} />
+              <span className={cn("text-xs font-semibold leading-tight", isActive ? "text-[#2D7BFF]" : "text-default")}>
                 {c.label}
               </span>
             </button>
@@ -453,7 +453,7 @@ function SmartSearch({
         aria-expanded={showDropdown}
         aria-controls="search-suggestions"
         aria-autocomplete="list"
-        className="w-full pl-10 pr-4 py-3 rounded-xl border border-line bg-surface text-sm text-default placeholder-[#94a3b8] focus:outline-none focus:border-[#4f46e5] focus:ring-2 focus:ring-[#4f46e5]/10 transition-all"
+        className="w-full pl-10 pr-4 py-3 rounded-xl border border-line bg-surface text-sm text-default placeholder-[#94a3b8] focus:outline-none focus:border-[#2D7BFF] focus:ring-2 focus:ring-[#2D7BFF]/10 transition-all"
       />
 
       {showDropdown && (
@@ -474,10 +474,10 @@ function SmartSearch({
                 onClick={() => pick(s.apply)}
                 className={cn(
                   "w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors",
-                  i === active ? "bg-[#eef2ff]" : "hover:bg-surface-subtle"
+                  i === active ? "bg-[#EAF1FF]" : "hover:bg-surface-subtle"
                 )}
               >
-                <Icon size={15} className="text-[#4f46e5] flex-shrink-0" />
+                <Icon size={15} className="text-[#2D7BFF] flex-shrink-0" />
                 <span className="flex-1 text-sm font-medium text-default truncate">{s.label}</span>
                 <span className="text-[10px] font-semibold uppercase tracking-wide text-subtle flex-shrink-0">{s.sublabel}</span>
                 {i === active && <CornerDownLeft size={13} className="text-subtle flex-shrink-0" />}
