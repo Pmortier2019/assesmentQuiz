@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, Zap, LogOut, ShieldCheck, Search } from "lucide-react";
+import { Menu, X, LogOut, ShieldCheck, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useT } from "@/lib/i18n";
 import { logout } from "@/lib/api";
 import { useAuth } from "@/lib/useAuth";
+import { LogoMark } from "@/components/ui/Logo";
 
 interface NavbarProps {
   transparent?: boolean;
@@ -41,11 +42,9 @@ export function Navbar({ transparent = false }: NavbarProps) {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href={loggedIn ? "/dashboard" : "/"} className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
-              <Zap size={16} className="text-white fill-white" />
-            </div>
+            <LogoMark size={30} className="shrink-0" />
             <span className="font-display font-bold text-default text-lg tracking-tight">
-              Ready to <span className="gradient-text">Ace</span>
+              Ready to <span className="text-[#EF96BD]">Ace</span>
             </span>
           </Link>
           {userIsAdmin && (

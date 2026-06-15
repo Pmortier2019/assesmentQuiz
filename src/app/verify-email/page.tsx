@@ -3,8 +3,9 @@
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { CheckCircle2, XCircle, Loader2, Zap } from "lucide-react";
+import { CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import { verifyEmail } from "@/lib/api";
+import { LogoMark } from "@/components/ui/Logo";
 
 type Status = "verifying" | "success" | "error";
 
@@ -35,11 +36,9 @@ function VerifyEmailContent() {
       <header className="bg-white border-b border-[#e2e8f0]">
         <div className="max-w-xl mx-auto px-4 py-4">
           <Link href="/" className="flex items-center gap-2 w-fit">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
-              <Zap size={13} className="text-white fill-white" />
-            </div>
+            <LogoMark size={30} className="shrink-0" />
             <span className="font-display font-bold text-[#0D1B2E]">
-              Ready to <span className="text-[#4f46e5]">Ace</span>
+              Ready to <span className="text-[#EF96BD]">Ace</span>
             </span>
           </Link>
         </div>

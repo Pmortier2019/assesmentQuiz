@@ -5,6 +5,7 @@ import { CheckCircle2, Zap, ArrowRight, ChevronDown } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { FooterNav } from "@/components/layout/FooterNav";
 import { PRACTICE_PAGES } from "./config";
+import { LogoMark } from "@/components/ui/Logo";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -158,10 +159,8 @@ export default async function PracticePage({ params }: Props) {
       <footer className="bg-white border-t border-[#e2e8f0] py-8 px-4">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
-              <Zap size={13} className="text-white fill-white" />
-            </div>
-            <span className="font-bold text-[#0D1B2E]">Ready to <span className="text-[#4f46e5]">Ace</span></span>
+            <LogoMark size={30} className="shrink-0" />
+            <span className="font-bold text-[#0D1B2E]">Ready to <span className="text-[#EF96BD]">Ace</span></span>
           </Link>
           <FooterNav />
           <p className="text-xs text-[#94a3b8]">© 2026 Ready to Ace. All rights reserved.</p>
