@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { LogoMark } from "@/components/ui/Logo";
+import { isLocale, localeAlternates } from "@/lib/locales";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/" },
-};
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  return { alternates: localeAlternates("/", isLocale(lang) ? lang : "en") };
+}
 import { HeroSection } from "@/components/sections/HeroSection";
 import { ValueSection } from "@/components/sections/ValueSection";
 import { TestCarouselSection } from "@/components/sections/TestCarouselSection";

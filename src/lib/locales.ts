@@ -33,3 +33,20 @@ export function localeFromPathname(pathname: string): Locale {
   const seg = pathname.split("/")[1] ?? "";
   return isLocale(seg) ? seg : DEFAULT_LOCALE;
 }
+
+export const SITE_URL = "https://www.ready-to-ace.com";
+
+/**
+ * Builds `alternates` metadata (self-canonical + reciprocal hreflang) for a
+ * page. `path` is the locale-less canonical path, e.g. "/" or "/practice/x".
+ * English lives at the root, Dutch under `/nl`; `x-default` points at English.
+ */
+export function localeAlternates(path: string, lang: Locale) {
+  const clean = path === "/" ? "" : path;
+  const en = `${SITE_URL}${clean}`;
+  const nl = `${SITE_URL}/nl${clean}`;
+  return {
+    canonical: lang === "nl" ? nl : en,
+    languages: { en, nl, "x-default": en },
+  };
+}

@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { PRACTICE_PAGES } from "./config";
+import { isLocale, type Locale } from "@/lib/locales";
 
 export const alt = "Ready to Ace practice test";
 export const size = { width: 1200, height: 630 };
@@ -11,9 +12,10 @@ export function generateStaticParams() {
   return Object.keys(PRACTICE_PAGES).map((slug) => ({ slug }));
 }
 
-export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const page = PRACTICE_PAGES[slug];
+export default async function Image({ params }: { params: Promise<{ lang: string; slug: string }> }) {
+  const { lang, slug } = await params;
+  const loc: Locale = isLocale(lang) ? lang : "en";
+  const page = PRACTICE_PAGES[slug]?.[loc];
   const title = page?.title ?? "Job Assessment Practice";
   const category = page?.category ?? "Practice";
 

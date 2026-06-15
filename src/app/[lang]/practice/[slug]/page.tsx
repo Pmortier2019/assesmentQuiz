@@ -6,9 +6,10 @@ import { Navbar } from "@/components/layout/Navbar";
 import { FooterNav } from "@/components/layout/FooterNav";
 import { PRACTICE_PAGES } from "./config";
 import { LogoMark } from "@/components/ui/Logo";
+import { isLocale, localeAlternates, SITE_URL, type Locale } from "@/lib/locales";
 
 interface Props {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ lang: string; slug: string }>;
 }
 
 export async function generateStaticParams() {
@@ -16,25 +17,28 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const page = PRACTICE_PAGES[slug];
+  const { lang, slug } = await params;
+  const loc: Locale = isLocale(lang) ? lang : "en";
+  const page = PRACTICE_PAGES[slug]?.[loc];
   if (!page) return {};
+  const alternates = localeAlternates(`/practice/${slug}`, loc);
   return {
     title: page.title,
     description: page.metaDescription,
     keywords: page.keywords,
-    alternates: { canonical: `/practice/${slug}` },
+    alternates,
     openGraph: {
       title: `${page.title} | Ready to Ace`,
       description: page.metaDescription,
-      url: `https://www.ready-to-ace.com/practice/${slug}`,
+      url: `${SITE_URL}${loc === "nl" ? "/nl" : ""}/practice/${slug}`,
     },
   };
 }
 
 export default async function PracticePage({ params }: Props) {
-  const { slug } = await params;
-  const page = PRACTICE_PAGES[slug];
+  const { lang, slug } = await params;
+  const loc: Locale = isLocale(lang) ? lang : "en";
+  const page = PRACTICE_PAGES[slug]?.[loc];
   if (!page) notFound();
 
   const jsonLd = {
