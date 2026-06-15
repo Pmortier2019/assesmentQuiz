@@ -1,5 +1,5 @@
 import { MetadataRoute } from "next";
-import { PRACTICE_PAGES } from "./practice/[slug]/config";
+import { PRACTICE_PAGES } from "./[lang]/practice/[slug]/config";
 
 const BASE_URL = "https://www.ready-to-ace.com";
 

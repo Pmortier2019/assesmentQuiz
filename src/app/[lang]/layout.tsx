@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from "next";
+import { notFound } from "next/navigation";
 import { Bricolage_Grotesque, DM_Sans } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import { LanguageProvider } from "@/lib/i18n";
 import { QueryProvider } from "@/lib/queryClient";
 import { AuthProvider } from "@/components/auth/AuthProvider";
+import { LOCALES, isLocale, type Locale } from "@/lib/locales";
 
 // Self-hosted at build time (no render-blocking Google Fonts request, no CLS).
 // Both are variable fonts, so the full weight range comes for free.
@@ -64,13 +66,22 @@ export const viewport: Viewport = {
   themeColor: "#0D1B2E",
 };
 
-export default function RootLayout({
+export function generateStaticParams() {
+  return LOCALES.map((lang) => ({ lang }));
+}
+
+export default async function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+  params,
+}: Readonly<{ children: React.ReactNode; params: Promise<{ lang: string }> }>) {
+  const { lang } = await params;
+  if (!isLocale(lang)) notFound();
+  const locale: Locale = lang;
+
   return (
-    <html lang="en" className={`h-full ${bricolage.variable} ${dmSans.variable}`}>
+    <html lang={locale} className={`h-full ${bricolage.variable} ${dmSans.variable}`}>
       <body className="min-h-full flex flex-col bg-surface text-default antialiased">
-        <LanguageProvider>
+        <LanguageProvider locale={locale}>
           <QueryProvider>
             <AuthProvider>
               {children}
