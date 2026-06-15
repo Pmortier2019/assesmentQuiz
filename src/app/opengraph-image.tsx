@@ -39,8 +39,9 @@ export default function Image() {
               <path d="M12.5 24.5 L18 30 L29 14.5" stroke="#EF96BD" strokeWidth={4.5} strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
-          <span style={{ fontSize: "30px", fontWeight: 700 }}>
-            Ready to <span style={{ color: "#EF96BD" }}>Ace</span>
+          <span style={{ fontSize: "30px", fontWeight: 700, display: "flex", gap: "9px" }}>
+            <span>Ready to</span>
+            <span style={{ color: "#EF96BD" }}>Ace</span>
           </span>
         </div>
         <div style={{ fontSize: "68px", fontWeight: 800, lineHeight: 1.1, maxWidth: "900px" }}>
