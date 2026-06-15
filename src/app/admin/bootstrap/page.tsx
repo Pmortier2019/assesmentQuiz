@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Zap, ShieldCheck, AlertCircle } from "lucide-react";
+import { ShieldCheck, AlertCircle } from "lucide-react";
 import { adminBootstrap } from "@/lib/api";
 import { useAuth } from "@/lib/useAuth";
+import { LogoMark } from "@/components/ui/Logo";
 
 export default function AdminBootstrapPage() {
   const router = useRouter();
@@ -35,10 +36,8 @@ export default function AdminBootstrapPage() {
     <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="flex items-center gap-2 justify-center mb-8">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
-            <Zap size={15} className="text-white fill-white" />
-          </div>
-          <span className="font-display font-bold text-[#0D1B2E]">Ready to Ace</span>
+          <LogoMark size={30} className="shrink-0" />
+          <span className="font-display font-bold text-[#2F5233]">Ready to <span className="text-[#EF96BD]">Ace</span></span>
         </div>
 
         <div className="bg-white rounded-2xl border border-[#e2e8f0] p-8 shadow-sm">

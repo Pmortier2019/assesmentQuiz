@@ -3,10 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import {
-  Zap, Users, BookOpen, BarChart3, Sparkles, Trash2, Lock, Unlock,
-  RefreshCw, Upload, AlertCircle, CheckCircle2, ChevronRight, Plus, Search, Crown,
-} from "lucide-react";
+import { Users, BookOpen, BarChart3, Sparkles, Trash2, Lock, Unlock, RefreshCw, Upload, AlertCircle, CheckCircle2, ChevronRight, Plus, Search, Crown } from "lucide-react";
 import {
   getAdminStats, getAdminUsers, getAdminTests, getGenerationStatus,
   generateTestOfType, deleteTest, setTestFree, setUserPro,
@@ -16,6 +13,7 @@ import {
 import { useAuth } from "@/lib/useAuth";
 import { AssessmentTypeIcon } from "@/components/ui/AssessmentTypeIcon";
 import type { Test } from "@/lib/types";
+import { LogoMark } from "@/components/ui/Logo";
 
 const DIFF_COLORS: Record<string, string> = {
   EASY:   "bg-emerald-100 text-emerald-700",
@@ -196,10 +194,8 @@ export default function AdminPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
-                <Zap size={13} className="text-white fill-white" />
-              </div>
-              <span className="font-display font-bold text-[#0D1B2E]">Ready to Ace</span>
+              <LogoMark size={30} className="shrink-0" />
+              <span className="font-display font-bold text-[#2F5233]">Ready to <span className="text-[#EF96BD]">Ace</span></span>
             </Link>
             <ChevronRight size={14} className="text-[#94a3b8]" />
             <span className="text-sm font-semibold text-[#4f46e5]">Admin</span>
