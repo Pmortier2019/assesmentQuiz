@@ -136,7 +136,7 @@ export default function AdminImportPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <LogoMark size={30} className="shrink-0" />
-            <span className="font-display font-bold text-[#0D1B2E]">
+            <span className="font-display font-bold text-[#2F5233]">
               Ready to <span className="text-[#EF96BD]">Ace</span>
             </span>
           </Link>

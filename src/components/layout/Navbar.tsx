@@ -43,7 +43,7 @@ export function Navbar({ transparent = false }: NavbarProps) {
           {/* Logo */}
           <Link href={loggedIn ? "/dashboard" : "/"} className="flex items-center gap-2 group">
             <LogoMark size={30} className="shrink-0" />
-            <span className="font-display font-bold text-default text-lg tracking-tight">
+            <span className="font-display font-bold text-[#2F5233] text-lg tracking-tight">
               Ready to <span className="text-[#EF96BD]">Ace</span>
             </span>
           </Link>

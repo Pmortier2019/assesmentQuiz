@@ -52,7 +52,7 @@ export function Sidebar({ streak: streakProp, userName: userNameProp, isAdmin: i
       {/* Logo */}
       <Link href="/dashboard" className="flex items-center gap-2 px-2 py-3 mb-2">
         <LogoMark size={30} className="shrink-0" />
-        <span className="font-display font-bold text-default text-lg tracking-tight">
+        <span className="font-display font-bold text-[#2F5233] text-lg tracking-tight">
           Ready to <span className="text-[#EF96BD]">Ace</span>
         </span>
       </Link>

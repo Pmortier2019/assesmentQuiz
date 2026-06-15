@@ -37,7 +37,7 @@ export default function ForgotPasswordPage() {
         <div className="max-w-xl mx-auto px-4 py-4">
           <Link href="/" className="flex items-center gap-2 w-fit">
             <LogoMark size={30} className="shrink-0" />
-            <span className="font-display font-bold text-[#0D1B2E]">
+            <span className="font-display font-bold text-[#2F5233]">
               Ready to <span className="text-[#EF96BD]">Ace</span>
             </span>
           </Link>

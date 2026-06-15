@@ -195,7 +195,7 @@ export default function AdminPage() {
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2">
               <LogoMark size={30} className="shrink-0" />
-              <span className="font-display font-bold text-[#0D1B2E]">Ready to <span className="text-[#EF96BD]">Ace</span></span>
+              <span className="font-display font-bold text-[#2F5233]">Ready to <span className="text-[#EF96BD]">Ace</span></span>
             </Link>
             <ChevronRight size={14} className="text-[#94a3b8]" />
             <span className="text-sm font-semibold text-[#4f46e5]">Admin</span>

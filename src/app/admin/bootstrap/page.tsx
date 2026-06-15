@@ -37,7 +37,7 @@ export default function AdminBootstrapPage() {
       <div className="w-full max-w-sm">
         <div className="flex items-center gap-2 justify-center mb-8">
           <LogoMark size={30} className="shrink-0" />
-          <span className="font-display font-bold text-[#0D1B2E]">Ready to <span className="text-[#EF96BD]">Ace</span></span>
+          <span className="font-display font-bold text-[#2F5233]">Ready to <span className="text-[#EF96BD]">Ace</span></span>
         </div>
 
         <div className="bg-white rounded-2xl border border-[#e2e8f0] p-8 shadow-sm">
