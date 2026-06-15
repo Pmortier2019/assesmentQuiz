@@ -3,10 +3,9 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Mail } from "lucide-react";
+import { Mail, Zap } from "lucide-react";
 import { resendVerification } from "@/lib/api";
 import { useState } from "react";
-import { LogoMark } from "@/components/ui/Logo";
 
 function CheckEmailContent() {
   const searchParams = useSearchParams();
@@ -18,9 +17,11 @@ function CheckEmailContent() {
       <header className="bg-white border-b border-[#e2e8f0]">
         <div className="max-w-xl mx-auto px-4 py-4">
           <Link href="/" className="flex items-center gap-2 w-fit">
-            <LogoMark size={30} className="shrink-0" />
-            <span className="font-display font-bold text-[#2F5233]">
-              Ready to <span className="text-[#EF96BD]">Ace</span>
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
+              <Zap size={13} className="text-white fill-white" />
+            </div>
+            <span className="font-display font-bold text-[#0D1B2E]">
+              Ready to <span className="text-[#4f46e5]">Ace</span>
             </span>
           </Link>
         </div>

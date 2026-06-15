@@ -25,24 +25,19 @@ export default function Image() {
         <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "40px" }}>
           <div
             style={{
-              width: "60px",
-              height: "60px",
-              borderRadius: "16px",
-              backgroundColor: "#FFFFFF",
+              width: "44px",
+              height: "44px",
+              borderRadius: "12px",
+              backgroundImage: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              fontSize: "26px",
             }}
           >
-            <svg width={40} height={40} viewBox="0 0 40 40" fill="none">
-              <path d="M8.5 32 L20 8 L31.5 32" stroke="#2F5233" strokeWidth={4.5} strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M12.5 24.5 L18 30 L29 14.5" stroke="#EF96BD" strokeWidth={4.5} strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            ⚡
           </div>
-          <span style={{ fontSize: "30px", fontWeight: 700, display: "flex", gap: "9px" }}>
-            <span>Ready to</span>
-            <span style={{ color: "#EF96BD" }}>Ace</span>
-          </span>
+          <span style={{ fontSize: "30px", fontWeight: 700 }}>Ready to Ace</span>
         </div>
         <div style={{ fontSize: "68px", fontWeight: 800, lineHeight: 1.1, maxWidth: "900px" }}>
           Free Job Assessment Practice Tests

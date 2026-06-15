@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Upload, CheckCircle2, AlertCircle, ArrowRight, RotateCcw, Shuffle } from "lucide-react";
+import { Zap, Upload, CheckCircle2, AlertCircle, ArrowRight, RotateCcw, Shuffle } from "lucide-react";
 import { importTest } from "@/lib/api";
 import { AdminGuard } from "@/components/auth/AdminGuard";
 import type { Test } from "@/lib/types";
-import { LogoMark } from "@/components/ui/Logo";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -135,9 +134,11 @@ export default function AdminImportPage() {
       <header className="bg-white border-b border-[#e2e8f0]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <LogoMark size={30} className="shrink-0" />
-            <span className="font-display font-bold text-[#2F5233]">
-              Ready to <span className="text-[#EF96BD]">Ace</span>
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
+              <Zap size={13} className="text-white fill-white" />
+            </div>
+            <span className="font-display font-bold text-[#0D1B2E]">
+              Ready to <span className="gradient-text">Ace</span>
             </span>
           </Link>
           <span className="text-xs font-semibold text-[#64748b] bg-[#f1f5f9] px-3 py-1 rounded-full">

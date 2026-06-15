@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Mail, CheckCircle2 } from "lucide-react";
+import { Zap, ArrowLeft, Mail, CheckCircle2 } from "lucide-react";
 import { forgotPassword, ApiError } from "@/lib/api";
-import { LogoMark } from "@/components/ui/Logo";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -36,9 +35,11 @@ export default function ForgotPasswordPage() {
       <header className="bg-white border-b border-[#e2e8f0]">
         <div className="max-w-xl mx-auto px-4 py-4">
           <Link href="/" className="flex items-center gap-2 w-fit">
-            <LogoMark size={30} className="shrink-0" />
-            <span className="font-display font-bold text-[#2F5233]">
-              Ready to <span className="text-[#EF96BD]">Ace</span>
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
+              <Zap size={13} className="text-white fill-white" />
+            </div>
+            <span className="font-display font-bold text-[#0D1B2E]">
+              Ready to <span className="gradient-text">Ace</span>
             </span>
           </Link>
         </div>
