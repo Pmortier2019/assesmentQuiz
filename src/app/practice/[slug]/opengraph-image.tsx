@@ -35,19 +35,24 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "36px" }}>
           <div
             style={{
-              width: "40px",
-              height: "40px",
-              borderRadius: "12px",
-              backgroundImage: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+              width: "56px",
+              height: "56px",
+              borderRadius: "15px",
+              backgroundColor: "#FFFFFF",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: "22px",
             }}
           >
-            ⚡
+            <svg width={38} height={38} viewBox="0 0 40 40" fill="none">
+              <path d="M8.5 32 L20 8 L31.5 32" stroke="#2F5233" strokeWidth={4.5} strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M12.5 24.5 L18 30 L29 14.5" stroke="#EF96BD" strokeWidth={4.5} strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </div>
-          <span style={{ fontSize: "28px", fontWeight: 700 }}>Ready to Ace</span>
+          <span style={{ fontSize: "28px", fontWeight: 700, display: "flex", gap: "8px" }}>
+            <span>Ready to</span>
+            <span style={{ color: "#EF96BD" }}>Ace</span>
+          </span>
         </div>
         <div
           style={{
