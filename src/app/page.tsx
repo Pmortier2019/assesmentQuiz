@@ -40,6 +40,31 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
     {
+      "@type": "Organization",
+      "@id": "https://www.ready-to-ace.com/#org",
+      "name": "Ready to Ace",
+      "url": "https://www.ready-to-ace.com",
+      // Points at the generated OG image for now; swap for a dedicated square
+      // logo asset when one exists.
+      "logo": "https://www.ready-to-ace.com/opengraph-image",
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.ready-to-ace.com/#website",
+      "url": "https://www.ready-to-ace.com",
+      "name": "Ready to Ace",
+      "publisher": { "@id": "https://www.ready-to-ace.com/#org" },
+      // Backs the sitelinks search box; /tests?search= is a real, working query.
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://www.ready-to-ace.com/tests?search={search_term_string}",
+        },
+        "query-input": "required name=search_term_string",
+      },
+    },
+    {
       "@type": "WebApplication",
       "@id": "https://www.ready-to-ace.com/#app",
       "name": "Ready to Ace",
