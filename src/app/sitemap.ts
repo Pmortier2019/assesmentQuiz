@@ -1,30 +1,25 @@
 import { MetadataRoute } from "next";
+import { PRACTICE_PAGES } from "./practice/[slug]/config";
 
 const BASE_URL = "https://www.ready-to-ace.com";
 
-const practicePages = [
-  "numerical-reasoning",
-  "logical-reasoning",
-  "verbal-reasoning",
-  "situational-judgement",
-  "critical-reasoning",
-  "data-interpretation",
-  "work-style-assessment",
-  "leadership-assessment",
-  "professional-ethics",
-];
-
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticPages = [
-    { url: BASE_URL, priority: 1.0, changeFrequency: "weekly" as const },
-    { url: `${BASE_URL}/tests`, priority: 0.9, changeFrequency: "weekly" as const },
-    { url: `${BASE_URL}/pricing`, priority: 0.8, changeFrequency: "monthly" as const },
+  // Single build timestamp so every entry reports a consistent lastModified.
+  const lastModified = new Date();
+
+  const staticPages: MetadataRoute.Sitemap = [
+    { url: BASE_URL, lastModified, priority: 1.0, changeFrequency: "weekly" },
+    { url: `${BASE_URL}/tests`, lastModified, priority: 0.9, changeFrequency: "weekly" },
+    { url: `${BASE_URL}/pricing`, lastModified, priority: 0.8, changeFrequency: "monthly" },
   ];
 
-  const practiceRoutes = practicePages.map((slug) => ({
+  // Derive practice routes from the page config so the sitemap can never drift
+  // out of sync with the pages that actually exist.
+  const practiceRoutes: MetadataRoute.Sitemap = Object.keys(PRACTICE_PAGES).map((slug) => ({
     url: `${BASE_URL}/practice/${slug}`,
+    lastModified,
     priority: 0.9,
-    changeFrequency: "monthly" as const,
+    changeFrequency: "monthly",
   }));
 
   return [...staticPages, ...practiceRoutes];
