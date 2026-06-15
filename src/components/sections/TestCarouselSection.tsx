@@ -9,9 +9,9 @@ const CARDS = [
     icon: BarChart3,
     title: "Numerical Reasoning",
     desc: "Charts, tables, percentages and data interpretation",
-    color: "from-[#4f46e5] to-[#6366f1]",
-    bg: "from-[#eef2ff] to-[#e0e7ff]",
-    iconColor: "text-[#4f46e5]",
+    color: "from-[#2D7BFF] to-[#2D7BFF]",
+    bg: "from-[#EAF1FF] to-[#D6E4FF]",
+    iconColor: "text-[#2D7BFF]",
     tag: "Most popular",
     score: 78,
   },
@@ -19,9 +19,9 @@ const CARDS = [
     icon: Brain,
     title: "Logical Reasoning",
     desc: "Pattern recognition, sequences and deductive logic",
-    color: "from-[#7c3aed] to-[#8b5cf6]",
-    bg: "from-[#f5f3ff] to-[#ede9fe]",
-    iconColor: "text-[#7c3aed]",
+    color: "from-[#1D63E6] to-[#5E97FF]",
+    bg: "from-[#EAF1FF] to-[#D6E4FF]",
+    iconColor: "text-[#1D63E6]",
     tag: "High demand",
     score: 65,
   },
@@ -158,7 +158,7 @@ export function TestCarouselSection() {
         <div className="flex-shrink-0 w-56 rounded-2xl border-2 border-dashed border-[#e2e8f0] flex flex-col items-center justify-center gap-2 p-5 text-center">
           <p className="font-display font-semibold text-[#94a3b8] text-sm">More coming</p>
           <p className="text-xs text-[#cbd5e1]">New types added monthly</p>
-          <Link href="/tests" className="text-xs font-semibold text-[#4f46e5] hover:underline mt-1">
+          <Link href="/tests" className="text-xs font-semibold text-[#2D7BFF] hover:underline mt-1">
             See all →
           </Link>
         </div>

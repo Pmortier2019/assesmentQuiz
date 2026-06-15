@@ -73,8 +73,8 @@ function LoginForm() {
         <div className="max-w-xl mx-auto px-4 py-4">
           <Link href="/" className="flex items-center gap-2 w-fit">
             <LogoMark size={30} className="shrink-0" />
-            <span className="font-display font-bold text-[#2F5233]">
-              Ready to <span className="text-[#EF96BD]">Ace</span>
+            <span className="font-display font-bold text-[#0D1B2E]">
+              Ready to <span className="gradient-text">Ace</span>
             </span>
           </Link>
         </div>
@@ -122,7 +122,7 @@ function LoginForm() {
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Pierre"
                     required
-                    className="w-full px-4 py-3 rounded-xl border border-[#e2e8f0] text-sm text-[#0D1B2E] placeholder-[#94a3b8] focus:outline-none focus:border-[#4f46e5] focus:ring-2 focus:ring-[#4f46e5]/10 transition-all"
+                    className="w-full px-4 py-3 rounded-xl border border-[#e2e8f0] text-sm text-[#0D1B2E] placeholder-[#94a3b8] focus:outline-none focus:border-[#2D7BFF] focus:ring-2 focus:ring-[#2D7BFF]/10 transition-all"
                   />
                 </div>
               )}
@@ -135,7 +135,7 @@ function LoginForm() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
                   required
-                  className="w-full px-4 py-3 rounded-xl border border-[#e2e8f0] text-sm text-[#0D1B2E] placeholder-[#94a3b8] focus:outline-none focus:border-[#4f46e5] focus:ring-2 focus:ring-[#4f46e5]/10 transition-all"
+                  className="w-full px-4 py-3 rounded-xl border border-[#e2e8f0] text-sm text-[#0D1B2E] placeholder-[#94a3b8] focus:outline-none focus:border-[#2D7BFF] focus:ring-2 focus:ring-[#2D7BFF]/10 transition-all"
                 />
               </div>
 
@@ -143,7 +143,7 @@ function LoginForm() {
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="text-xs font-semibold text-[#475569]">Password</label>
                   {mode === "login" && (
-                    <Link href="/forgot-password" className="text-xs text-[#4f46e5] hover:underline">
+                    <Link href="/forgot-password" className="text-xs text-[#2D7BFF] hover:underline">
                       Forgot password?
                     </Link>
                   )}
@@ -155,7 +155,7 @@ function LoginForm() {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
                     required
-                    className="w-full px-4 py-3 pr-12 rounded-xl border border-[#e2e8f0] text-sm text-[#0D1B2E] placeholder-[#94a3b8] focus:outline-none focus:border-[#4f46e5] focus:ring-2 focus:ring-[#4f46e5]/10 transition-all"
+                    className="w-full px-4 py-3 pr-12 rounded-xl border border-[#e2e8f0] text-sm text-[#0D1B2E] placeholder-[#94a3b8] focus:outline-none focus:border-[#2D7BFF] focus:ring-2 focus:ring-[#2D7BFF]/10 transition-all"
                   />
                   <button
                     type="button"
@@ -174,7 +174,7 @@ function LoginForm() {
                     <button
                       type="button"
                       onClick={() => handleSubmit()}
-                      className="flex-shrink-0 text-xs font-semibold text-[#4f46e5] hover:underline whitespace-nowrap"
+                      className="flex-shrink-0 text-xs font-semibold text-[#2D7BFF] hover:underline whitespace-nowrap"
                     >
                       Try again
                     </button>
@@ -187,7 +187,7 @@ function LoginForm() {
                         setError("Verification email resent. Check your inbox.");
                         setIsUnverified(false);
                       }}
-                      className="flex-shrink-0 text-xs font-semibold text-[#4f46e5] hover:underline whitespace-nowrap"
+                      className="flex-shrink-0 text-xs font-semibold text-[#2D7BFF] hover:underline whitespace-nowrap"
                     >
                       Resend email
                     </button>
@@ -198,7 +198,7 @@ function LoginForm() {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white font-semibold text-sm shadow-lg hover:opacity-90 disabled:opacity-60 transition-opacity mt-2"
+                className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold text-sm shadow-lg hover:opacity-90 disabled:opacity-60 transition-opacity mt-2"
               >
                 {loading ? "Please wait..." : mode === "login" ? "Log in" : "Create account"}
                 {!loading && <ArrowRight size={15} />}
@@ -208,9 +208,9 @@ function LoginForm() {
             {mode === "register" && (
               <p className="text-xs text-[#94a3b8] text-center mt-4 leading-relaxed">
                 By creating an account, you agree to our{" "}
-                <span className="text-[#4f46e5] cursor-pointer hover:underline">Terms of Service</span>{" "}
+                <span className="text-[#2D7BFF] cursor-pointer hover:underline">Terms of Service</span>{" "}
                 and{" "}
-                <span className="text-[#4f46e5] cursor-pointer hover:underline">Privacy Policy</span>.
+                <span className="text-[#2D7BFF] cursor-pointer hover:underline">Privacy Policy</span>.
               </p>
             )}
           </div>
@@ -219,7 +219,7 @@ function LoginForm() {
             {mode === "login" ? "Don't have an account? " : "Already have an account? "}
             <button
               onClick={() => setMode(mode === "login" ? "register" : "login")}
-              className="text-[#4f46e5] font-semibold hover:underline"
+              className="text-[#2D7BFF] font-semibold hover:underline"
             >
               {mode === "login" ? "Sign up free" : "Log in"}
             </button>

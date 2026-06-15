@@ -51,8 +51,8 @@ export function FeaturesSection() {
             const Icon = f.icon;
             return (
               <div key={f.title} className="card card-interactive p-6 group">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#4f46e5]/10 to-[#7c3aed]/10 flex items-center justify-center mb-4 group-hover:from-[#4f46e5]/20 group-hover:to-[#7c3aed]/20 transition-all">
-                  <Icon size={20} className="text-[#4f46e5]" />
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#2D7BFF]/10 to-[#1D63E6]/10 flex items-center justify-center mb-4 group-hover:from-[#2D7BFF]/20 group-hover:to-[#1D63E6]/20 transition-all">
+                  <Icon size={20} className="text-[#2D7BFF]" />
                 </div>
                 <h3 className="font-display font-semibold text-[#0D1B2E] text-base mb-2">{f.title}</h3>
                 <p className="text-sm text-[#64748b] leading-relaxed">{f.description}</p>

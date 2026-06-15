@@ -8,7 +8,7 @@ export function HeroSection() {
       {/* Animated gradient mesh background */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden>
         {/* Base wash */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[140%] h-[600px] bg-gradient-to-b from-[#eef2ff]/70 to-transparent" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[140%] h-[600px] bg-gradient-to-b from-[#EAF1FF]/70 to-transparent" />
         {/* Animated blobs */}
         <div className="mesh-blob mesh-blob-1" />
         <div className="mesh-blob mesh-blob-2" />
@@ -26,9 +26,9 @@ export function HeroSection() {
           {/* Left */}
           <div className="flex flex-col gap-6 animate-fade-up">
             {/* Eyebrow */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#eef2ff] border border-[#c7d2fe] w-fit">
-              <Sparkles size={13} className="text-[#4f46e5]" />
-              <span className="text-xs font-semibold text-[#4f46e5]">Practice tests tailored to your profession</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#EAF1FF] border border-[#BFD6FF] w-fit">
+              <Sparkles size={13} className="text-[#2D7BFF]" />
+              <span className="text-xs font-semibold text-[#2D7BFF]">Practice tests tailored to your profession</span>
             </div>
 
             {/* Headline */}
@@ -48,14 +48,14 @@ export function HeroSection() {
             <div className="flex flex-wrap gap-3 pt-2">
               <Link
                 href="/onboarding"
-                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white font-semibold shadow-lg hover:opacity-90 transition-opacity text-sm"
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold shadow-lg hover:opacity-90 transition-opacity text-sm"
               >
                 Start free
                 <ArrowRight size={16} />
               </Link>
               <Link
                 href="/tests"
-                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl border border-[#e2e8f0] text-[#475569] font-semibold hover:border-[#4f46e5]/40 hover:text-[#4f46e5] transition-colors text-sm"
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl border border-[#e2e8f0] text-[#475569] font-semibold hover:border-[#2D7BFF]/40 hover:text-[#2D7BFF] transition-colors text-sm"
               >
                 View test types
               </Link>
@@ -67,7 +67,7 @@ export function HeroSection() {
                 {["SK", "TB", "NV", "ML"].map((initials, i) => (
                   <div
                     key={i}
-                    className="w-8 h-8 rounded-full border-2 border-white bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center text-white text-[10px] font-bold"
+                    className="w-8 h-8 rounded-full border-2 border-white bg-gradient-to-br from-[#2D7BFF] to-[#1D63E6] flex items-center justify-center text-white text-[10px] font-bold"
                   >
                     {initials}
                   </div>

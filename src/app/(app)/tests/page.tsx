@@ -140,7 +140,7 @@ function TestsContent() {
           <div className="animate-fade-up flex items-start justify-between gap-4 flex-wrap">
             <div>
               <h1 className="flex items-center gap-2 font-display font-bold text-2xl text-default mb-1">
-                <Library size={22} className="text-[#4f46e5]" />
+                <Library size={22} className="text-[#2D7BFF]" />
                 {t("tests_library_title")}
               </h1>
               <p className="text-muted text-sm">
@@ -162,7 +162,7 @@ function TestsContent() {
                     </button>
                     <button
                       onClick={() => setGenerateAsFree(false)}
-                      className={`px-3 py-1.5 transition-colors ${!generateAsFree ? "bg-[#4f46e5] text-white" : "bg-surface text-muted hover:bg-surface-subtle"}`}
+                      className={`px-3 py-1.5 transition-colors ${!generateAsFree ? "bg-[#2D7BFF] text-white" : "bg-surface text-muted hover:bg-surface-subtle"}`}
                     >
                       {t("pro")}
                     </button>
@@ -170,7 +170,7 @@ function TestsContent() {
                   <button
                     onClick={handleGenerate}
                     disabled={generating}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity shadow-sm"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity shadow-sm"
                   >
                     <Wand2 size={15} />
                     {generating ? t("tests_generating") : t("tests_generate_full")}
@@ -183,7 +183,7 @@ function TestsContent() {
                     </p>
                     <div className="w-full h-1.5 bg-line rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] rounded-full transition-all duration-300"
+                        className="h-full bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] rounded-full transition-all duration-300"
                         style={{ width: `${(generateProgress.current / generateProgress.total) * 100}%` }}
                       />
                     </div>
@@ -220,7 +220,7 @@ function TestsContent() {
               </div>
               <Link
                 href="/pricing"
-                className="flex-shrink-0 px-4 py-2 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+                className="flex-shrink-0 px-4 py-2 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
               >
                 {t("upgrade_cta")}
               </Link>
@@ -268,7 +268,7 @@ function TestsContent() {
               </div>
               <button
                 onClick={clearFilters}
-                className="text-sm text-[#4f46e5] font-semibold hover:underline"
+                className="text-sm text-[#2D7BFF] font-semibold hover:underline"
               >
                 {t("tests_clear_filters")}
               </button>
@@ -300,9 +300,9 @@ function TestsContent() {
               )}
 
               {/* Coming soon */}
-              <div className="rounded-2xl border border-dashed border-[#c7d2fe] bg-[#f8faff] p-8 text-center animate-fade-up delay-400">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#4f46e5]/15 to-[#7c3aed]/15 flex items-center justify-center mx-auto mb-4">
-                  <Sparkles size={22} className="text-[#4f46e5]" />
+              <div className="rounded-2xl border border-dashed border-[#BFD6FF] bg-[#f8faff] p-8 text-center animate-fade-up delay-400">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#2D7BFF]/15 to-[#1D63E6]/15 flex items-center justify-center mx-auto mb-4">
+                  <Sparkles size={22} className="text-[#2D7BFF]" />
                 </div>
                 <h3 className="font-display font-semibold text-default mb-2">
                   {t("tests_coming_soon_title")}

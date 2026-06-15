@@ -45,7 +45,7 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
           </div>
           <Link
             href="/results"
-            className="text-xs text-[#4f46e5] font-semibold hover:underline flex items-center gap-1"
+            className="text-xs text-[#2D7BFF] font-semibold hover:underline flex items-center gap-1"
           >
             {t("tt_all_results")} <ArrowRight size={12} />
           </Link>
@@ -69,8 +69,8 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
               />
               <defs>
                 <linearGradient id="passGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#4f46e5" />
-                  <stop offset="100%" stopColor="#7c3aed" />
+                  <stop offset="0%" stopColor="#2D7BFF" />
+                  <stop offset="100%" stopColor="#1D63E6" />
                 </linearGradient>
                 <linearGradient id="failGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor="#f59e0b" />
@@ -104,8 +104,8 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
         {/* Stats row */}
         <div className="grid grid-cols-3 gap-4 animate-fade-up delay-100">
           <div className="card p-4 flex flex-col items-center gap-1.5 text-center">
-            <div className="w-9 h-9 rounded-xl bg-[#eef2ff] flex items-center justify-center">
-              <Trophy size={18} className="text-[#4f46e5]" />
+            <div className="w-9 h-9 rounded-xl bg-[#EAF1FF] flex items-center justify-center">
+              <Trophy size={18} className="text-[#2D7BFF]" />
             </div>
             <p className="font-display font-bold text-lg text-default">{result.score}%</p>
             <p className="text-xs text-subtle">{t("tt_your_score")}</p>
@@ -134,7 +134,7 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
 
         {/* Feedback */}
         {result.aiFeedback && (
-          <div className="card p-4 border-l-4 border-[#4f46e5] animate-fade-up delay-200">
+          <div className="card p-4 border-l-4 border-[#2D7BFF] animate-fade-up delay-200">
             <p className="text-sm font-semibold text-default mb-1">{t("tt_feedback")}</p>
             <p className="text-sm text-body">{result.aiFeedback}</p>
           </div>
@@ -188,7 +188,7 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
           </Link>
           <Link
             href={`/tests/${test.id}`}
-            className="flex-1 py-3 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 transition-opacity text-center"
+            className="flex-1 py-3 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white text-sm font-semibold hover:opacity-90 transition-opacity text-center"
           >
             {t("tt_try_again")}
           </Link>
@@ -432,7 +432,7 @@ export default function TestPage() {
         </header>
         <div className="flex-1 flex items-center justify-center px-4 py-16">
           <div className="max-w-md w-full text-center flex flex-col items-center gap-6">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center shadow-lg">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#2D7BFF] to-[#1D63E6] flex items-center justify-center shadow-lg">
               <Lock size={24} className="text-white" />
             </div>
             <div>
@@ -448,13 +448,13 @@ export default function TestPage() {
             <div className="flex flex-col sm:flex-row gap-3 w-full justify-center">
               <Link
                 href="/pricing"
-                className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white font-semibold text-sm hover:opacity-90 transition-opacity shadow-sm"
+                className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold text-sm hover:opacity-90 transition-opacity shadow-sm"
               >
                 {t("tt_upgrade_price")}
               </Link>
               <Link
                 href="/tests"
-                className="px-6 py-3 rounded-xl border border-line text-body font-semibold text-sm hover:border-[#4f46e5]/30 hover:text-[#4f46e5] transition-colors"
+                className="px-6 py-3 rounded-xl border border-line text-body font-semibold text-sm hover:border-[#2D7BFF]/30 hover:text-[#2D7BFF] transition-colors"
               >
                 {t("results_back")}
               </Link>
@@ -470,7 +470,7 @@ export default function TestPage() {
     return (
       <div className="min-h-screen bg-surface-subtle flex flex-col items-center justify-center gap-4 p-4">
         <p className="font-display font-semibold text-default text-xl">{t("tt_test_not_available")}</p>
-        <Link href="/tests" className="text-sm text-[#4f46e5] hover:underline">← {t("results_back")}</Link>
+        <Link href="/tests" className="text-sm text-[#2D7BFF] hover:underline">← {t("results_back")}</Link>
       </div>
     );
   }
@@ -560,7 +560,7 @@ export default function TestPage() {
                       i === currentIndex
                         ? "bg-[#0D1B2E] text-white"
                         : answers[q.id]
-                        ? "bg-[#4f46e5] text-white"
+                        ? "bg-[#2D7BFF] text-white"
                         : "bg-line text-muted hover:bg-[#d1d9e0]"
                     )}
                   >
@@ -574,7 +574,7 @@ export default function TestPage() {
               <button
                 onClick={handleSubmit}
                 disabled={submitting}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-all shadow-md"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white text-sm font-semibold hover:opacity-90 disabled:opacity-60 transition-all shadow-md"
               >
                 <CheckCircle2 size={16} />
                 {submitting ? t("tt_submitting") : t("tt_finish")}
@@ -632,7 +632,7 @@ export default function TestPage() {
                       i === currentIndex
                         ? "bg-[#0D1B2E] text-white ring-2 ring-[#0D1B2E] ring-offset-1"
                         : answers[q.id]
-                        ? "bg-[#4f46e5] text-white"
+                        ? "bg-[#2D7BFF] text-white"
                         : "bg-surface-muted text-muted hover:bg-line"
                     )}
                   >
@@ -644,7 +644,7 @@ export default function TestPage() {
             {/* Legend */}
             <div className="mt-3 flex flex-col gap-1.5 text-[10px] text-subtle">
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded bg-[#4f46e5] inline-block" /> {t("tt_legend_answered")}
+                <span className="w-3 h-3 rounded bg-[#2D7BFF] inline-block" /> {t("tt_legend_answered")}
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="w-3 h-3 rounded bg-[#0D1B2E] inline-block" /> {t("tt_legend_current")}
@@ -657,7 +657,7 @@ export default function TestPage() {
               <button
                 onClick={handleSubmit}
                 disabled={submitting}
-                className="mt-4 w-full py-2.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                className="mt-4 w-full py-2.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white text-sm font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
               >
                 <CheckCircle2 size={15} />
                 {submitting ? t("tt_submitting") : t("tt_finish")}

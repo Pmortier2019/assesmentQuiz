@@ -96,7 +96,7 @@ export default function ProgressPage() {
               {/* Stats row */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 animate-fade-up delay-100">
                 {[
-                  { label: "Tests done",   value: summary!.totalTests, icon: Target,  color: "text-[#4f46e5]", bg: "bg-[#eef2ff]" },
+                  { label: "Tests done",   value: summary!.totalTests, icon: Target,  color: "text-[#2D7BFF]", bg: "bg-[#EAF1FF]" },
                   { label: "Overall avg",  value: `${summary!.avgScore}%`, icon: BarChart2, color: scoreColor(summary!.avgScore), bg: "bg-[#f8fafc]" },
                   { label: "Best skill",   value: best ? typeLabel(best.type) : "—", icon: Trophy, color: "text-emerald-600", bg: "bg-emerald-50", small: true },
                   { label: "Needs work",   value: weakest ? typeLabel(weakest.type) : "—", icon: AlertCircle, color: "text-rose-500", bg: "bg-rose-50", small: true },

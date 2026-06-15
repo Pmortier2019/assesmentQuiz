@@ -193,10 +193,10 @@ export function CommandPalette() {
                       onClick={() => run(it)}
                       className={cn(
                         "w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors",
-                        i === clampedActive ? "bg-[#eef2ff]" : "hover:bg-surface-subtle"
+                        i === clampedActive ? "bg-[#EAF1FF]" : "hover:bg-surface-subtle"
                       )}
                     >
-                      <Icon size={16} className="text-[#4f46e5] flex-shrink-0" />
+                      <Icon size={16} className="text-[#2D7BFF] flex-shrink-0" />
                       <span className="flex-1 text-sm font-medium text-default truncate">{it.label}</span>
                       {it.sublabel && (
                         <span className="text-[10px] font-semibold uppercase tracking-wide text-subtle flex-shrink-0">{it.sublabel}</span>

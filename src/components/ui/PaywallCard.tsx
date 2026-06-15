@@ -21,18 +21,18 @@ export function PaywallCard({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-2xl border border-[#4f46e5]/20",
-        "bg-gradient-to-br from-[#4f46e5]/5 via-white to-[#7c3aed]/5",
+        "relative overflow-hidden rounded-2xl border border-[#2D7BFF]/20",
+        "bg-gradient-to-br from-[#2D7BFF]/5 via-white to-[#1D63E6]/5",
         compact ? "p-4" : "p-8",
         className
       )}
     >
       {/* decorative blobs */}
-      <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-[#4f46e5]/10 blur-2xl pointer-events-none" />
-      <div className="absolute -bottom-6 -left-6 w-24 h-24 rounded-full bg-[#7c3aed]/10 blur-2xl pointer-events-none" />
+      <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-[#2D7BFF]/10 blur-2xl pointer-events-none" />
+      <div className="absolute -bottom-6 -left-6 w-24 h-24 rounded-full bg-[#1D63E6]/10 blur-2xl pointer-events-none" />
 
       <div className={cn("relative flex flex-col items-center text-center", compact ? "gap-3" : "gap-5")}>
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center shadow-lg">
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#2D7BFF] to-[#1D63E6] flex items-center justify-center shadow-lg">
           <Lock size={20} className="text-white" />
         </div>
 
@@ -52,7 +52,7 @@ export function PaywallCard({
           {!compact && (
             <Link
               href="/tests"
-              className="px-6 py-3 rounded-xl border border-line text-body font-semibold text-sm hover:border-[#4f46e5]/30 hover:text-[#4f46e5] transition-colors"
+              className="px-6 py-3 rounded-xl border border-line text-body font-semibold text-sm hover:border-[#2D7BFF]/30 hover:text-[#2D7BFF] transition-colors"
             >
               See all tests
             </Link>

@@ -146,9 +146,9 @@ export function HeroDashboardMockup() {
         </div>
 
         {/* Score improvement */}
-        <div className="rounded-xl bg-gradient-to-br from-[#eef2ff] to-[#f5f3ff] p-4">
+        <div className="rounded-xl bg-gradient-to-br from-[#EAF1FF] to-[#EAF1FF] p-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-[#4f46e5]">Score improvement</span>
+            <span className="text-xs font-semibold text-[#2D7BFF]">Score improvement</span>
             <div className={`flex items-center gap-1 text-xs font-bold ${improvementColor}`}>
               <TrendingUp size={12} />
               {data.scoreImprovement}
@@ -158,7 +158,7 @@ export function HeroDashboardMockup() {
             {data.barHeights.map((h, i) => (
               <div
                 key={i}
-                className="flex-1 rounded-sm bg-gradient-to-t from-[#4f46e5] to-[#7c3aed] opacity-80"
+                className="flex-1 rounded-sm bg-gradient-to-t from-[#2D7BFF] to-[#1D63E6] opacity-80"
                 style={{ height: `${h}%` }}
               />
             ))}
@@ -168,8 +168,8 @@ export function HeroDashboardMockup() {
         {/* Recommended test */}
         <div className="rounded-xl border border-[#e2e8f0] p-3">
           <div className="flex items-center gap-2 mb-2">
-            <BookOpen size={14} className="text-[#4f46e5]" />
-            <span className="text-xs font-semibold text-[#4f46e5]">Recommended</span>
+            <BookOpen size={14} className="text-[#2D7BFF]" />
+            <span className="text-xs font-semibold text-[#2D7BFF]">Recommended</span>
           </div>
           <p className="text-sm font-semibold text-[#0D1B2E] mb-2 truncate">{data.recommendedTitle}</p>
           <ProgressBar value={data.masteryPct} size="sm" />
@@ -184,7 +184,7 @@ export function HeroDashboardMockup() {
               {[0, 1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className={`w-4 h-4 rounded-sm ${i < data.freeTestsUsed ? "bg-[#4f46e5]" : "bg-[#e2e8f0]"}`}
+                  className={`w-4 h-4 rounded-sm ${i < data.freeTestsUsed ? "bg-[#2D7BFF]" : "bg-[#e2e8f0]"}`}
                 />
               ))}
             </div>
@@ -195,7 +195,7 @@ export function HeroDashboardMockup() {
 
       {/* Floating badge */}
       <div className="absolute -top-4 -right-4 bg-white rounded-xl shadow-lg border border-[#e2e8f0] px-3 py-2 flex items-center gap-2 animate-slide-right delay-300">
-        <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
+        <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-[#2D7BFF] to-[#1D63E6] flex items-center justify-center">
           <BookOpen size={12} className="text-white" />
         </div>
         <div>

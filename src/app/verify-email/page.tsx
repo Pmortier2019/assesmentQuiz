@@ -37,8 +37,8 @@ function VerifyEmailContent() {
         <div className="max-w-xl mx-auto px-4 py-4">
           <Link href="/" className="flex items-center gap-2 w-fit">
             <LogoMark size={30} className="shrink-0" />
-            <span className="font-display font-bold text-[#2F5233]">
-              Ready to <span className="text-[#EF96BD]">Ace</span>
+            <span className="font-display font-bold text-[#0D1B2E]">
+              Ready to <span className="text-[#2D7BFF]">Ace</span>
             </span>
           </Link>
         </div>
@@ -48,7 +48,7 @@ function VerifyEmailContent() {
         <div className="w-full max-w-md text-center animate-fade-up">
           {status === "verifying" && (
             <>
-              <Loader2 size={48} className="text-[#4f46e5] animate-spin mx-auto mb-6" />
+              <Loader2 size={48} className="text-[#2D7BFF] animate-spin mx-auto mb-6" />
               <h1 className="font-display font-bold text-2xl text-[#0D1B2E] mb-3">Verifying your email…</h1>
               <p className="text-[#64748b]">Just a moment.</p>
             </>
@@ -69,7 +69,7 @@ function VerifyEmailContent() {
               <p className="text-[#64748b] mb-6">{errorMsg}</p>
               <Link
                 href="/login"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white font-semibold text-sm hover:opacity-90 transition-opacity"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold text-sm hover:opacity-90 transition-opacity"
               >
                 Back to login
               </Link>

@@ -5,11 +5,11 @@ export function FinalCTASection() {
   return (
     <section className="py-24 bg-[#0D1B2E] relative overflow-hidden">
       {/* Background blobs */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#4f46e5]/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-[#7c3aed]/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#2D7BFF]/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-[#1D63E6]/20 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center gap-8">
-        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center shadow-xl">
+        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#2D7BFF] to-[#1D63E6] flex items-center justify-center shadow-xl">
           <Zap size={24} className="text-white fill-white" />
         </div>
 
@@ -27,7 +27,7 @@ export function FinalCTASection() {
         <div className="flex flex-wrap gap-4 justify-center">
           <Link
             href="/onboarding"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white font-bold text-base shadow-2xl hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-bold text-base shadow-2xl hover:opacity-90 transition-opacity"
           >
             Start for free
             <ArrowRight size={18} />

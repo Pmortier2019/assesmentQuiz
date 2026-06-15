@@ -24,8 +24,8 @@ export function LegalShell({
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4">
           <Link href="/" className="inline-flex items-center gap-2">
             <LogoMark size={30} className="shrink-0" />
-            <span className="font-display font-bold text-[#2F5233] text-lg tracking-tight">
-              Ready to <span className="text-[#EF96BD]">Ace</span>
+            <span className="font-display font-bold text-default text-lg tracking-tight">
+              Ready to <span className="gradient-text">Ace</span>
             </span>
           </Link>
         </div>
@@ -52,7 +52,7 @@ function LegalFooter() {
         <Link href="/" className="hover:text-[#475569] transition-colors">{t("legal_home")}</Link>
         <Link href="/terms" className="hover:text-[#475569] transition-colors">{t("legal_terms")}</Link>
         <Link href="/privacy" className="hover:text-[#475569] transition-colors">{t("legal_privacy")}</Link>
-        <span className="text-xs">© 2026 Ready to <span className="text-[#EF96BD]">Ace</span></span>
+        <span className="text-xs">© 2026 Ready to Ace</span>
       </div>
     </footer>
   );
