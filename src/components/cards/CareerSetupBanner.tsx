@@ -3,9 +3,9 @@ import Link from "next/link";
 
 export function CareerSetupBanner() {
   return (
-    <div className="rounded-2xl border-2 border-dashed border-[#c7d2fe] bg-gradient-to-br from-[#eef2ff] to-[#f5f3ff] p-6">
+    <div className="rounded-2xl border-2 border-dashed border-[#BFD6FF] bg-gradient-to-br from-[#EAF1FF] to-[#EAF1FF] p-6">
       <div className="flex items-start gap-4">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center flex-shrink-0">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#2D7BFF] to-[#1D63E6] flex items-center justify-center flex-shrink-0">
           <Sparkles size={18} className="text-white" />
         </div>
         <div className="flex-1">
@@ -17,7 +17,7 @@ export function CareerSetupBanner() {
           </p>
           <Link
             href="/onboarding"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
           >
             Set up my profile
             <ArrowRight size={14} />

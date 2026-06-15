@@ -7,8 +7,8 @@ interface Props {
 }
 
 const STEP_COLORS = [
-  "bg-[#4f46e5] text-white",
-  "bg-[#7c3aed] text-white",
+  "bg-[#2D7BFF] text-white",
+  "bg-[#1D63E6] text-white",
   "bg-[#0891b2] text-white",
   "bg-[#059669] text-white",
 ];
@@ -25,10 +25,10 @@ export function PreparationPathCard({ path }: Props) {
         <div className="flex items-start justify-between mb-5">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-7 h-7 rounded-lg bg-[#4f46e5]/40 flex items-center justify-center">
-                <MapPin size={13} className="text-[#a5b4fc]" />
+              <div className="w-7 h-7 rounded-lg bg-[#2D7BFF]/40 flex items-center justify-center">
+                <MapPin size={13} className="text-[#93BBFF]" />
               </div>
-              <span className="text-xs font-semibold text-[#a5b4fc] uppercase tracking-wider">Your Preparation Path</span>
+              <span className="text-xs font-semibold text-[#93BBFF] uppercase tracking-wider">Your Preparation Path</span>
             </div>
             <h3 className="font-display font-bold text-lg text-white leading-tight">
               {path.targetRole
@@ -69,7 +69,7 @@ export function PreparationPathCard({ path }: Props) {
             <div className="flex flex-wrap gap-1.5">
               {path.focusAreas.map((area) => (
                 <span key={area} className="flex items-center gap-1 text-xs font-medium text-white/80 bg-white/10 px-2.5 py-1 rounded-full">
-                  <Zap size={9} className="text-[#a5b4fc]" />
+                  <Zap size={9} className="text-[#93BBFF]" />
                   {area}
                 </span>
               ))}

@@ -22,8 +22,8 @@ function Footer() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-2">
             <LogoMark size={30} className="shrink-0" />
-            <span className="font-display font-bold text-[#2F5233]">
-              Ready to <span className="text-[#EF96BD]">Ace</span>
+            <span className="font-display font-bold text-[#0D1B2E]">
+              Ready to <span className="gradient-text">Ace</span>
             </span>
           </Link>
           <FooterNav />

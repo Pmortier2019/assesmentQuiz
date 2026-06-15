@@ -27,7 +27,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           flexDirection: "column",
           justifyContent: "center",
           padding: "80px",
-          backgroundImage: "linear-gradient(135deg, #0D1B2E 0%, #1e1b4b 100%)",
+          backgroundImage: "linear-gradient(135deg, #0D1B2E 0%, #15275C 100%)",
           color: "white",
           fontFamily: "sans-serif",
         }}
@@ -35,8 +35,8 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "36px" }}>
           <div
             style={{
-              width: "56px",
-              height: "56px",
+              width: "58px",
+              height: "58px",
               borderRadius: "15px",
               backgroundColor: "#FFFFFF",
               display: "flex",
@@ -45,13 +45,13 @@ export default async function Image({ params }: { params: Promise<{ slug: string
             }}
           >
             <svg width={38} height={38} viewBox="0 0 40 40" fill="none">
-              <path d="M8.5 32 L20 8 L31.5 32" stroke="#2F5233" strokeWidth={4.5} strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M12.5 24.5 L18 30 L29 14.5" stroke="#EF96BD" strokeWidth={4.5} strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M8.5 32 L20 7.5 L31.5 32" stroke="#15275C" strokeWidth={5.5} strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M12 25 L18.5 31 L30 13" stroke="#2D7BFF" strokeWidth={5} strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
           <span style={{ fontSize: "28px", fontWeight: 700, display: "flex", gap: "8px" }}>
             <span>Ready to</span>
-            <span style={{ color: "#EF96BD" }}>Ace</span>
+            <span style={{ color: "#2D7BFF" }}>Ace</span>
           </span>
         </div>
         <div

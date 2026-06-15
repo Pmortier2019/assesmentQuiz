@@ -70,7 +70,7 @@ export function PricingCard({ plan, highlighted = false, className }: PricingCar
       {/* Pro badge */}
       {highlighted && (
         <div className="absolute top-5 right-5">
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-xs font-bold">
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white text-xs font-bold">
             <Sparkles size={10} />
             Most popular
           </span>
@@ -81,7 +81,7 @@ export function PricingCard({ plan, highlighted = false, className }: PricingCar
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-3">
           {highlighted && (
-            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
+            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-[#2D7BFF] to-[#1D63E6] flex items-center justify-center">
               <Zap size={12} className="text-white fill-white" />
             </div>
           )}
@@ -124,7 +124,7 @@ export function PricingCard({ plan, highlighted = false, className }: PricingCar
           <div key={f} className="flex items-start gap-3">
             <div className={cn(
               "w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center mt-0.5",
-              highlighted ? "bg-[#4f46e5]" : "bg-[#f0fdf4]"
+              highlighted ? "bg-[#2D7BFF]" : "bg-[#f0fdf4]"
             )}>
               <Check size={11} className={highlighted ? "text-white" : "text-[#16a34a]"} strokeWidth={3} />
             </div>

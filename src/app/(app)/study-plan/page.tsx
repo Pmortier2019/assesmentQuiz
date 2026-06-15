@@ -89,7 +89,7 @@ export default function StudyPlanPage() {
           {/* Header */}
           <div className="animate-fade-up">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#2D7BFF] to-[#1D63E6] flex items-center justify-center">
                 <Calendar size={20} className="text-white" />
               </div>
               <div>
@@ -109,7 +109,7 @@ export default function StudyPlanPage() {
                   min={minStr}
                   value={interviewDate}
                   onChange={(e) => setInterviewDate(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-lg border border-[#e2e8f0] text-sm text-[#0D1B2E] focus:outline-none focus:border-[#4f46e5] focus:ring-2 focus:ring-[#4f46e5]/10"
+                  className="w-full px-3 py-2.5 rounded-lg border border-[#e2e8f0] text-sm text-[#0D1B2E] focus:outline-none focus:border-[#2D7BFF] focus:ring-2 focus:ring-[#2D7BFF]/10"
                 />
               </div>
               <div>
@@ -119,7 +119,7 @@ export default function StudyPlanPage() {
                   placeholder="e.g. Data Analyst"
                   value={targetRole}
                   onChange={(e) => setTargetRole(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-lg border border-[#e2e8f0] text-sm text-[#0D1B2E] focus:outline-none focus:border-[#4f46e5] focus:ring-2 focus:ring-[#4f46e5]/10"
+                  className="w-full px-3 py-2.5 rounded-lg border border-[#e2e8f0] text-sm text-[#0D1B2E] focus:outline-none focus:border-[#2D7BFF] focus:ring-2 focus:ring-[#2D7BFF]/10"
                 />
               </div>
               <div>
@@ -127,7 +127,7 @@ export default function StudyPlanPage() {
                 <select
                   value={weak}
                   onChange={(e) => setWeak(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-lg border border-[#e2e8f0] text-sm text-[#0D1B2E] focus:outline-none focus:border-[#4f46e5] bg-white"
+                  className="w-full px-3 py-2.5 rounded-lg border border-[#e2e8f0] text-sm text-[#0D1B2E] focus:outline-none focus:border-[#2D7BFF] bg-white"
                 >
                   <option value="">No preference</option>
                   {TEST_TYPES.map((t) => (
@@ -139,7 +139,7 @@ export default function StudyPlanPage() {
             <button
               onClick={generate}
               disabled={!interviewDate}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity"
+              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white text-sm font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity"
             >
               <Sparkles size={15} />
               Generate my plan
@@ -150,12 +150,12 @@ export default function StudyPlanPage() {
           {plan && (
             <div className="flex flex-col gap-4 animate-fade-up">
               <div className="flex items-center gap-2">
-                <Zap size={16} className="text-[#4f46e5]" />
+                <Zap size={16} className="text-[#2D7BFF]" />
                 <h2 className="font-display font-semibold text-lg text-[#0D1B2E]">
                   Your {plan.length}-day study plan
                 </h2>
                 {targetRole && (
-                  <span className="text-xs font-semibold text-[#4f46e5] bg-[#eef2ff] px-2 py-0.5 rounded-full">
+                  <span className="text-xs font-semibold text-[#2D7BFF] bg-[#EAF1FF] px-2 py-0.5 rounded-full">
                     {targetRole}
                   </span>
                 )}
@@ -168,7 +168,7 @@ export default function StudyPlanPage() {
                     <div key={day.day} className="card p-4 hover:shadow-md transition-shadow">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <span className="w-6 h-6 rounded-full bg-[#eef2ff] text-[#4f46e5] text-[10px] font-bold flex items-center justify-center">
+                          <span className="w-6 h-6 rounded-full bg-[#EAF1FF] text-[#2D7BFF] text-[10px] font-bold flex items-center justify-center">
                             {day.day}
                           </span>
                           <span className="text-xs font-semibold text-[#94a3b8]">{day.date}</span>
@@ -185,7 +185,7 @@ export default function StudyPlanPage() {
 
                       <Link
                         href={`/tests?type=${day.testType}`}
-                        className="flex items-center gap-1 text-xs font-semibold text-[#4f46e5] hover:underline"
+                        className="flex items-center gap-1 text-xs font-semibold text-[#2D7BFF] hover:underline"
                       >
                         <BookOpen size={11} />
                         Practice now

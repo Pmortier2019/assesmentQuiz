@@ -19,8 +19,8 @@ function CheckEmailContent() {
         <div className="max-w-xl mx-auto px-4 py-4">
           <Link href="/" className="flex items-center gap-2 w-fit">
             <LogoMark size={30} className="shrink-0" />
-            <span className="font-display font-bold text-[#2F5233]">
-              Ready to <span className="text-[#EF96BD]">Ace</span>
+            <span className="font-display font-bold text-[#0D1B2E]">
+              Ready to <span className="text-[#2D7BFF]">Ace</span>
             </span>
           </Link>
         </div>
@@ -28,8 +28,8 @@ function CheckEmailContent() {
 
       <main className="flex-1 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md text-center animate-fade-up">
-          <div className="w-16 h-16 rounded-2xl bg-[#eef2ff] flex items-center justify-center mx-auto mb-6">
-            <Mail size={32} className="text-[#4f46e5]" />
+          <div className="w-16 h-16 rounded-2xl bg-[#EAF1FF] flex items-center justify-center mx-auto mb-6">
+            <Mail size={32} className="text-[#2D7BFF]" />
           </div>
           <h1 className="font-display font-bold text-2xl text-[#0D1B2E] mb-3">Check your inbox</h1>
           <p className="text-[#64748b] mb-2">
@@ -50,7 +50,7 @@ function CheckEmailContent() {
                   setResent(true);
                 }
               }}
-              className="text-sm text-[#4f46e5] hover:underline font-semibold"
+              className="text-sm text-[#2D7BFF] hover:underline font-semibold"
             >
               Didn&apos;t receive it? Resend
             </button>
@@ -60,7 +60,7 @@ function CheckEmailContent() {
 
           <p className="mt-8 text-xs text-[#94a3b8]">
             Wrong address?{" "}
-            <Link href="/login" className="text-[#4f46e5] hover:underline">
+            <Link href="/login" className="text-[#2D7BFF] hover:underline">
               Go back
             </Link>
           </p>

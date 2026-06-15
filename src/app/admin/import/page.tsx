@@ -136,8 +136,8 @@ export default function AdminImportPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <LogoMark size={30} className="shrink-0" />
-            <span className="font-display font-bold text-[#2F5233]">
-              Ready to <span className="text-[#EF96BD]">Ace</span>
+            <span className="font-display font-bold text-[#0D1B2E]">
+              Ready to <span className="gradient-text">Ace</span>
             </span>
           </Link>
           <span className="text-xs font-semibold text-[#64748b] bg-[#f1f5f9] px-3 py-1 rounded-full">
@@ -176,7 +176,7 @@ export default function AdminImportPage() {
                       </p>
                     </div>
                     <div className="flex items-center gap-1.5 text-xs text-[#64748b]">
-                      <Shuffle size={12} className="text-[#4f46e5]" />
+                      <Shuffle size={12} className="text-[#2D7BFF]" />
                       <span>{shown}/{poolSize} vragen</span>
                     </div>
                   </div>
@@ -194,7 +194,7 @@ export default function AdminImportPage() {
               </button>
               <Link
                 href="/tests"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
               >
                 View in Tests
                 <ArrowRight size={14} />
@@ -212,11 +212,11 @@ export default function AdminImportPage() {
             </div>
 
             {/* Instructions */}
-            <div className="rounded-xl bg-[#eef2ff] border border-[#c7d2fe] p-4 text-sm leading-relaxed">
-              <p className="font-semibold text-[#4338ca] mb-1">How to use</p>
-              <ol className="list-decimal list-inside flex flex-col gap-1 text-[#4f46e5]">
+            <div className="rounded-xl bg-[#EAF1FF] border border-[#BFD6FF] p-4 text-sm leading-relaxed">
+              <p className="font-semibold text-[#1D63E6] mb-1">How to use</p>
+              <ol className="list-decimal list-inside flex flex-col gap-1 text-[#2D7BFF]">
                 <li>Generate tests using the AI prompt (ChatGPT / Claude)</li>
-                <li>Ask for an array of tests: <code className="bg-[#e0e7ff] px-1 rounded text-xs">[ {"{ ... }"}, {"{ ... }"} ]</code></li>
+                <li>Ask for an array of tests: <code className="bg-[#D6E4FF] px-1 rounded text-xs">[ {"{ ... }"}, {"{ ... }"} ]</code></li>
                 <li>Paste the JSON below, set the question pool size, and import</li>
               </ol>
             </div>
@@ -239,7 +239,7 @@ export default function AdminImportPage() {
                     value={displayCount}
                     onChange={(e) => setDisplayCount(e.target.value)}
                     placeholder="e.g. 8"
-                    className="w-24 px-3 py-2 rounded-lg border border-[#e2e8f0] text-sm text-[#0D1B2E] focus:outline-none focus:border-[#4f46e5] focus:ring-2 focus:ring-[#4f46e5]/10 transition-all"
+                    className="w-24 px-3 py-2 rounded-lg border border-[#e2e8f0] text-sm text-[#0D1B2E] focus:outline-none focus:border-[#2D7BFF] focus:ring-2 focus:ring-[#2D7BFF]/10 transition-all"
                   />
                   <span className="text-xs text-[#94a3b8]">
                     {displayCount
@@ -256,14 +256,14 @@ export default function AdminImportPage() {
                 <label className="text-xs font-semibold text-[#475569]">
                   JSON
                   {previewCount > 0 && (
-                    <span className="ml-2 text-[#4f46e5] font-medium">
+                    <span className="ml-2 text-[#2D7BFF] font-medium">
                       · {previewCount} {previewCount === 1 ? "test" : "tests"} detected
                     </span>
                   )}
                 </label>
                 <button
                   onClick={() => handleChange(EXAMPLE_JSON)}
-                  className="text-xs text-[#4f46e5] hover:underline font-medium"
+                  className="text-xs text-[#2D7BFF] hover:underline font-medium"
                 >
                   Load example
                 </button>
@@ -273,7 +273,7 @@ export default function AdminImportPage() {
                 onChange={(e) => handleChange(e.target.value)}
                 rows={20}
                 placeholder={'Paste your JSON here, e.g. [ { "title": "...", "questions": [...] } ]'}
-                className="w-full rounded-xl border border-[#e2e8f0] bg-white px-4 py-3 text-xs font-mono text-[#334155] placeholder-[#94a3b8] focus:outline-none focus:border-[#4f46e5] focus:ring-2 focus:ring-[#4f46e5]/10 transition-all resize-none"
+                className="w-full rounded-xl border border-[#e2e8f0] bg-white px-4 py-3 text-xs font-mono text-[#334155] placeholder-[#94a3b8] focus:outline-none focus:border-[#2D7BFF] focus:ring-2 focus:ring-[#2D7BFF]/10 transition-all resize-none"
               />
               {parseError && (
                 <p className="text-xs text-[#e11d48] flex items-center gap-1.5">
@@ -301,7 +301,7 @@ export default function AdminImportPage() {
             <button
               onClick={handleImport}
               disabled={!raw.trim() || !!parseError || status === "loading"}
-              className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white font-semibold text-sm shadow-lg hover:opacity-90 disabled:opacity-50 transition-opacity"
+              className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold text-sm shadow-lg hover:opacity-90 disabled:opacity-50 transition-opacity"
             >
               {status === "loading" && progress ? (
                 `Importing ${progress.done} / ${progress.total}…`

@@ -64,7 +64,7 @@ export function LeaderboardCard({ type }: LeaderboardCardProps) {
                   e.score >= 90
                     ? "text-[#10b981]"
                     : e.score >= 70
-                    ? "text-[#4f46e5]"
+                    ? "text-[#2D7BFF]"
                     : "text-[#f59e0b]"
                 }`}
               >

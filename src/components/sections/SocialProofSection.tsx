@@ -5,9 +5,9 @@ import { Star, MessageSquarePlus, TrendingUp, Users, CheckCircle, Clock } from "
 import Link from "next/link";
 
 const STATS = [
-  { icon: CheckCircle, value: 12400, suffix: "+", label: "Tests completed", color: "text-[#4f46e5]", bg: "bg-[#eef2ff]" },
+  { icon: CheckCircle, value: 12400, suffix: "+", label: "Tests completed", color: "text-[#2D7BFF]", bg: "bg-[#EAF1FF]" },
   { icon: TrendingUp,  value: 87,    suffix: "%",  label: "Avg. score improvement", color: "text-[#10b981]", bg: "bg-[#f0fdf4]" },
-  { icon: Users,       value: 3200,  suffix: "+",  label: "Active learners", color: "text-[#7c3aed]", bg: "bg-[#f5f3ff]" },
+  { icon: Users,       value: 3200,  suffix: "+",  label: "Active learners", color: "text-[#1D63E6]", bg: "bg-[#EAF1FF]" },
   { icon: Clock,       value: 15,    suffix: " min", label: "Avg. session length", color: "text-[#f59e0b]", bg: "bg-[#fffbeb]" },
 ];
 
@@ -88,8 +88,8 @@ export function SocialProofSection() {
 
         {/* CTA — be the first to review */}
         <div className="flex flex-col items-center gap-5">
-          <div className="w-14 h-14 rounded-2xl bg-[#eef2ff] flex items-center justify-center">
-            <MessageSquarePlus size={26} className="text-[#4f46e5]" />
+          <div className="w-14 h-14 rounded-2xl bg-[#EAF1FF] flex items-center justify-center">
+            <MessageSquarePlus size={26} className="text-[#2D7BFF]" />
           </div>
           <div className="text-center max-w-sm">
             <p className="font-display font-semibold text-[#0D1B2E] text-lg mb-2">Be the first to review</p>
@@ -104,7 +104,7 @@ export function SocialProofSection() {
           </div>
           <Link
             href="/onboarding"
-            className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+            className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
           >
             Start practicing for free
           </Link>

@@ -43,8 +43,8 @@ export function Navbar({ transparent = false }: NavbarProps) {
           {/* Logo */}
           <Link href={loggedIn ? "/dashboard" : "/"} className="flex items-center gap-2 group">
             <LogoMark size={30} className="shrink-0" />
-            <span className="font-display font-bold text-[#2F5233] text-lg tracking-tight">
-              Ready to <span className="text-[#EF96BD]">Ace</span>
+            <span className="font-display font-bold text-default text-lg tracking-tight">
+              Ready to <span className="gradient-text">Ace</span>
             </span>
           </Link>
           {userIsAdmin && (
@@ -62,7 +62,7 @@ export function Navbar({ transparent = false }: NavbarProps) {
             {loggedIn && (
               <button
                 onClick={() => window.dispatchEvent(new Event("command-palette:open"))}
-                className="flex items-center gap-2 pl-2.5 pr-2 py-1.5 rounded-lg border border-line bg-surface-muted text-subtle hover:text-default hover:border-[#4f46e5]/40 transition-colors"
+                className="flex items-center gap-2 pl-2.5 pr-2 py-1.5 rounded-lg border border-line bg-surface-muted text-subtle hover:text-default hover:border-[#2D7BFF]/40 transition-colors"
                 aria-label="Open command palette"
               >
                 <Search size={14} />
@@ -98,7 +98,7 @@ export function Navbar({ transparent = false }: NavbarProps) {
                 </Link>
                 <Link
                   href="/onboarding"
-                  className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity"
+                  className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity"
                 >
                   {t("nav_start")}
                 </Link>
@@ -142,7 +142,7 @@ export function Navbar({ transparent = false }: NavbarProps) {
                 </Link>
                 <Link
                   href="/onboarding"
-                  className="px-4 py-2.5 rounded-lg bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold text-center"
+                  className="px-4 py-2.5 rounded-lg bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white text-sm font-semibold text-center"
                   onClick={() => setMobileOpen(false)}
                 >
                   {t("nav_start")}

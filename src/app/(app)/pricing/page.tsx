@@ -36,11 +36,11 @@ export default function PricingPage() {
       <main className="flex-1 bg-[#f8fafc]">
         {/* Hero */}
         <section className="relative overflow-hidden bg-white py-16 sm:py-24">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#eef2ff]/40 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#EAF1FF]/40 to-transparent pointer-events-none" />
           <div className="relative max-w-3xl mx-auto px-4 sm:px-6 text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#eef2ff] border border-[#c7d2fe] mb-6">
-              <Sparkles size={13} className="text-[#4f46e5]" />
-              <span className="text-xs font-semibold text-[#4f46e5]">Simple pricing</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#EAF1FF] border border-[#BFD6FF] mb-6">
+              <Sparkles size={13} className="text-[#2D7BFF]" />
+              <span className="text-xs font-semibold text-[#2D7BFF]">Simple pricing</span>
             </div>
             <h1 className="font-display font-extrabold text-4xl sm:text-5xl text-[#0D1B2E] mb-4 tracking-tight">
               One plan.{" "}
@@ -82,8 +82,8 @@ export default function PricingPage() {
                 <div className="p-4 text-center border-l border-[#e2e8f0]">
                   <span className="text-sm font-bold text-[#0D1B2E]">Free</span>
                 </div>
-                <div className="p-4 text-center border-l border-[#e2e8f0] bg-[#eef2ff]">
-                  <span className="text-sm font-bold text-[#4f46e5]">Pro</span>
+                <div className="p-4 text-center border-l border-[#e2e8f0] bg-[#EAF1FF]">
+                  <span className="text-sm font-bold text-[#2D7BFF]">Pro</span>
                 </div>
               </div>
 
@@ -115,9 +115,9 @@ export default function PricingPage() {
                   </div>
                   <div className="p-4 text-center border-l border-[#f1f5f9] bg-[#f8faff]">
                     {pro === "✓" ? (
-                      <Check size={16} className="text-[#4f46e5] mx-auto" strokeWidth={3} />
+                      <Check size={16} className="text-[#2D7BFF] mx-auto" strokeWidth={3} />
                     ) : (
-                      <span className="text-sm font-semibold text-[#4f46e5]">{pro}</span>
+                      <span className="text-sm font-semibold text-[#2D7BFF]">{pro}</span>
                     )}
                   </div>
                 </div>
@@ -155,14 +155,14 @@ export default function PricingPage() {
             <div className="flex flex-col sm:flex-row gap-3 w-full max-w-sm">
               <Link
                 href="/onboarding"
-                className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white font-semibold text-sm shadow-lg hover:opacity-90 transition-opacity"
+                className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold text-sm shadow-lg hover:opacity-90 transition-opacity"
               >
                 Start for free
                 <ArrowRight size={15} />
               </Link>
               <Link
                 href="/dashboard"
-                className="flex-1 flex items-center justify-center px-6 py-3.5 rounded-xl border border-[#e2e8f0] text-[#475569] font-semibold text-sm hover:border-[#4f46e5]/30 transition-colors"
+                className="flex-1 flex items-center justify-center px-6 py-3.5 rounded-xl border border-[#e2e8f0] text-[#475569] font-semibold text-sm hover:border-[#2D7BFF]/30 transition-colors"
               >
                 View demo
               </Link>

@@ -20,7 +20,7 @@ export function FeedbackCard({ feedback, isProUser = false, className }: Feedbac
         </div>
         {/* overlay */}
         <div className="absolute inset-0 bg-white/80 flex flex-col items-center justify-center p-6 gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#2D7BFF] to-[#1D63E6] flex items-center justify-center">
             <Lock size={18} className="text-white" />
           </div>
           <p className="font-display font-semibold text-[#0D1B2E] text-center">
@@ -28,7 +28,7 @@ export function FeedbackCard({ feedback, isProUser = false, className }: Feedbac
           </p>
           <Link
             href="/pricing"
-            className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white text-sm font-semibold hover:opacity-90"
+            className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white text-sm font-semibold hover:opacity-90"
           >
             Upgrade to Pro
           </Link>
@@ -38,12 +38,12 @@ export function FeedbackCard({ feedback, isProUser = false, className }: Feedbac
   }
 
   return (
-    <div className={cn("rounded-2xl border border-[#c7d2fe] bg-gradient-to-br from-[#eef2ff] to-[#f5f3ff] p-6", className)}>
+    <div className={cn("rounded-2xl border border-[#BFD6FF] bg-gradient-to-br from-[#EAF1FF] to-[#EAF1FF] p-6", className)}>
       <div className="flex items-center gap-2 mb-4">
-        <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center">
+        <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#2D7BFF] to-[#1D63E6] flex items-center justify-center">
           <Sparkles size={14} className="text-white" />
         </div>
-        <span className="font-display font-semibold text-[#4f46e5] text-sm">Detailed Feedback</span>
+        <span className="font-display font-semibold text-[#2D7BFF] text-sm">Detailed Feedback</span>
       </div>
       <p className="text-sm text-[#334155] leading-relaxed">
         {feedback ?? "No feedback available yet."}

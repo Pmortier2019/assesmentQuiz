@@ -34,8 +34,8 @@ export function AchievementBadges({ results, streak }: AchievementBadgesProps) {
       label: "First Test",
       desc: "Completed your first assessment",
       earned: firstTest,
-      color: "text-[#4f46e5]",
-      bg: "bg-[#eef2ff]",
+      color: "text-[#2D7BFF]",
+      bg: "bg-[#EAF1FF]",
     },
     {
       id: "seven_streak",
@@ -61,8 +61,8 @@ export function AchievementBadges({ results, streak }: AchievementBadgesProps) {
       label: "Speed Demon",
       desc: "Finished a test in under 20s/question",
       earned: speedDemon,
-      color: "text-[#7c3aed]",
-      bg: "bg-[#f5f3ff]",
+      color: "text-[#1D63E6]",
+      bg: "bg-[#EAF1FF]",
     },
   ];
 

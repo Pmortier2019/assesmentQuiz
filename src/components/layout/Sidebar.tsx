@@ -52,8 +52,8 @@ export function Sidebar({ streak: streakProp, userName: userNameProp, isAdmin: i
       {/* Logo */}
       <Link href="/dashboard" className="flex items-center gap-2 px-2 py-3 mb-2">
         <LogoMark size={30} className="shrink-0" />
-        <span className="font-display font-bold text-[#2F5233] text-lg tracking-tight">
-          Ready to <span className="text-[#EF96BD]">Ace</span>
+        <span className="font-display font-bold text-default text-lg tracking-tight">
+          Ready to <span className="gradient-text">Ace</span>
         </span>
       </Link>
 
@@ -73,13 +73,13 @@ export function Sidebar({ streak: streakProp, userName: userNameProp, isAdmin: i
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all",
                 active
-                  ? "bg-surface text-[#4f46e5] shadow-sm border border-line"
+                  ? "bg-surface text-[#2D7BFF] shadow-sm border border-line"
                   : "text-muted hover:bg-surface hover:text-default hover:shadow-sm"
               )}
             >
-              <Icon size={18} className={active ? "text-[#4f46e5]" : ""} />
+              <Icon size={18} className={active ? "text-[#2D7BFF]" : ""} />
               {label}
-              {active && <ChevronRight size={14} className="ml-auto text-[#4f46e5]" />}
+              {active && <ChevronRight size={14} className="ml-auto text-[#2D7BFF]" />}
             </Link>
           );
         })}
@@ -92,7 +92,7 @@ export function Sidebar({ streak: streakProp, userName: userNameProp, isAdmin: i
             "w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold",
             isAdmin
               ? "bg-gradient-to-br from-amber-400 to-orange-500"
-              : "bg-gradient-to-br from-[#4f46e5] to-[#7c3aed]"
+              : "bg-gradient-to-br from-[#2D7BFF] to-[#1D63E6]"
           )}>
             {isAdmin ? <ShieldCheck size={14} /> : userName.charAt(0).toUpperCase()}
           </div>

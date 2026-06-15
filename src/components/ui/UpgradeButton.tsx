@@ -51,7 +51,7 @@ export function UpgradeButton({
         disabled={loading}
         className={cn(
           "inline-flex items-center gap-2 rounded-xl font-semibold",
-          "bg-gradient-to-r from-[#4f46e5] to-[#7c3aed] text-white",
+          "bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white",
           "shadow-lg hover:opacity-90 disabled:opacity-60 transition-opacity",
           sizeClasses[size],
           className

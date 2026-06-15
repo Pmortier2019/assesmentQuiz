@@ -35,22 +35,22 @@ export function TestQuestionCard({
   };
 
   const answerStyles = {
-    default:   "border-line bg-surface hover:border-[#4f46e5]/50 hover:bg-[#f8faff] hover:shadow-sm cursor-pointer",
-    selected:  "border-[#4f46e5] bg-[#eef2ff] shadow-sm cursor-pointer ring-1 ring-[#4f46e5]/20",
+    default:   "border-line bg-surface hover:border-[#2D7BFF]/50 hover:bg-[#f8faff] hover:shadow-sm cursor-pointer",
+    selected:  "border-[#2D7BFF] bg-[#EAF1FF] shadow-sm cursor-pointer ring-1 ring-[#2D7BFF]/20",
     correct:   "border-[#10b981] bg-[#f0fdf4] cursor-default",
     wrong:     "border-[#f43f5e] bg-[#fff1f2] cursor-default",
   };
 
   const answerLabelStyles = {
     default:  "bg-surface-muted text-muted",
-    selected: "bg-[#4f46e5] text-white",
+    selected: "bg-[#2D7BFF] text-white",
     correct:  "bg-[#10b981] text-white",
     wrong:    "bg-[#f43f5e] text-white",
   };
 
   const answerTextStyles = {
     default:  "text-body",
-    selected: "text-[#1e1b4b] font-semibold",
+    selected: "text-[#15275C] font-semibold",
     correct:  "text-[#166534] font-semibold",
     wrong:    "text-[#9f1239]",
   };
@@ -115,7 +115,7 @@ export function TestQuestionCard({
                   <span className={cn(
                     "w-3 h-3 rounded-full border-2 transition-all",
                     isSelected
-                      ? "border-[#4f46e5] bg-[#4f46e5]"
+                      ? "border-[#2D7BFF] bg-[#2D7BFF]"
                       : "border-[#cbd5e1] bg-transparent"
                   )} />
                 )}
@@ -127,7 +127,7 @@ export function TestQuestionCard({
                 {answer.text}
               </span>
               {isSelected && !showExplanation && (
-                <span className="ml-auto flex-shrink-0 text-[#4f46e5] text-xs font-semibold pt-0.5">Selected</span>
+                <span className="ml-auto flex-shrink-0 text-[#2D7BFF] text-xs font-semibold pt-0.5">Selected</span>
               )}
             </button>
           );
@@ -137,8 +137,8 @@ export function TestQuestionCard({
 
       {/* Explanation (post-submit) */}
       {showExplanation && (
-        <div className="rounded-xl border border-[#c7d2fe] bg-[#eef2ff] p-4 animate-fade-in">
-          <p className="text-xs font-semibold text-[#4f46e5] uppercase tracking-wide mb-2">Explanation</p>
+        <div className="rounded-xl border border-[#BFD6FF] bg-[#EAF1FF] p-4 animate-fade-in">
+          <p className="text-xs font-semibold text-[#2D7BFF] uppercase tracking-wide mb-2">Explanation</p>
           <p className="text-sm text-body leading-relaxed">{question.explanation}</p>
         </div>
       )}
