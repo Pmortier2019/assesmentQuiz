@@ -2,7 +2,7 @@
 
 import {
   Flame, TrendingUp, BookOpen, Trophy, Sparkles, Lock, ChevronRight,
-  Target, BarChart3, Clock, Star, Users, Zap, ArrowRight,
+  BarChart3, Clock, Star, Users, ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
 import { Sidebar } from "@/components/layout/Sidebar";
@@ -54,19 +54,19 @@ function RecommendedTestCard({ test, badge }: { test: Test; badge?: string }) {
         </div>
         <div className="flex flex-col items-end gap-1">
           {badge && (
-            <span className="text-[10px] font-bold text-[#4f46e5] bg-[#eef2ff] px-2 py-0.5 rounded-full uppercase tracking-wider">
+            <span className="text-[10px] font-bold text-primary bg-primary-soft px-2 py-0.5 rounded-full uppercase tracking-wider">
               {badge}
             </span>
           )}
           {test.isFree ? (
-            <span className="text-[10px] font-semibold text-[#10b981] bg-[#f0fdf4] px-2 py-0.5 rounded-full">{t("free")}</span>
+            <span className="text-[10px] font-semibold text-success bg-success-soft px-2 py-0.5 rounded-full">{t("free")}</span>
           ) : (
             <Lock size={11} className="text-subtle mt-0.5" />
           )}
         </div>
       </div>
       <div>
-        <p className="font-semibold text-default text-sm leading-snug group-hover:text-[#4f46e5] transition-colors">
+        <p className="font-semibold text-default text-sm leading-snug group-hover:text-primary transition-colors">
           {test.title}
         </p>
         <p className="text-xs text-subtle mt-1">
@@ -238,18 +238,76 @@ export default function DashboardPage() {
 
         <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 flex flex-col gap-8">
 
-          {/* Welcome */}
-          <DashboardHeader
-            userName={user.name}
-            streak={user.streak}
-            targetRole={user.targetRole}
-            targetIndustry={user.targetIndustry}
-            targetCompany={user.targetCompany}
-            freeTestsUsed={user.freeTestsUsed}
-            freeTestsLimit={FREE_TESTS_LIMIT}
-            hasCareerTargets={hasCareerTargets}
-            isAtLimit={isAtLimit}
-          />
+          {/* Hero command center — the greeting and the four headline stats share
+              one tinted, rounded anchor panel so the top of the page reads as a
+              single focal point instead of two equal-weight rows. The white stat
+              cards lift off the tint, adding depth. */}
+          <section className="relative overflow-hidden rounded-3xl border border-primary-border/60 bg-gradient-to-br from-primary-soft via-surface to-violet-soft px-5 sm:px-7 py-6 sm:py-7 animate-fade-up">
+            <DashboardHeader
+              userName={user.name}
+              streak={user.streak}
+              targetRole={user.targetRole}
+              targetIndustry={user.targetIndustry}
+              targetCompany={user.targetCompany}
+              freeTestsUsed={user.freeTestsUsed}
+              freeTestsLimit={FREE_TESTS_LIMIT}
+              hasCareerTargets={hasCareerTargets}
+              isAtLimit={isAtLimit}
+            />
+
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+              <DashboardCard
+                title={t("dash_tests_completed")}
+                value={results.length}
+                icon={BookOpen}
+                iconColor="text-primary"
+                iconBg="bg-primary-soft"
+                trend={testsThisWeek > 0 ? { value: testsThisWeek, label: t("dash_this_week_count"), unit: "" } : undefined}
+              />
+              {/* Avg score — score ring */}
+              <div className="card p-5 flex flex-col gap-3">
+                <p className="text-sm font-medium text-muted">{t("dash_avg_score")}</p>
+                <div className="flex items-center gap-4">
+                  {results.length > 0 ? (
+                    <ScoreRing
+                      score={Math.round(results.reduce((s, r) => s + r.score, 0) / results.length)}
+                      size={72}
+                      strokeWidth={7}
+                      color="var(--emerald)"
+                      trackColor="var(--emerald-soft)"
+                    />
+                  ) : (
+                    <p className="font-display font-bold text-2xl text-default">—</p>
+                  )}
+                  {improvement !== null && (
+                    <div>
+                      <p className={`text-xs font-semibold ${improvement >= 0 ? "text-success" : "text-danger"}`}>
+                        {improvement >= 0 ? "+" : ""}{improvement}%
+                      </p>
+                      <p className="text-xs text-subtle">{t("dash_improvement")}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <DashboardCard
+                title={t("dash_day_streak")}
+                value={user.streak}
+                icon={Flame}
+                iconColor="text-amber-500"
+                iconBg="bg-amber-50"
+                subtitle={t("dash_keep_it_up")}
+              />
+              <DashboardCard
+                title={t("dash_free_tests")}
+                value={`${user.freeTestsUsed}/${FREE_TESTS_LIMIT}`}
+                icon={Trophy}
+                iconColor="text-warning"
+                iconBg="bg-amber-50"
+              >
+                <ProgressBar value={user.freeTestsUsed} max={FREE_TESTS_LIMIT} size="sm" variant="gradient" />
+              </DashboardCard>
+            </div>
+          </section>
 
           {/* Paywall banner */}
           {isAtLimit && (
@@ -264,60 +322,6 @@ export default function DashboardPage() {
               <CareerSetupBanner />
             </div>
           )}
-
-          {/* Stats row */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-up delay-200">
-            <DashboardCard
-              title={t("dash_tests_completed")}
-              value={results.length}
-              icon={BookOpen}
-              iconColor="text-[#4f46e5]"
-              iconBg="bg-[#eef2ff]"
-              trend={testsThisWeek > 0 ? { value: testsThisWeek, label: t("dash_this_week_count"), unit: "" } : undefined}
-            />
-            {/* Avg score — score ring */}
-            <div className="card p-5 flex flex-col gap-3">
-              <p className="text-sm font-medium text-muted">{t("dash_avg_score")}</p>
-              <div className="flex items-center gap-4">
-                {results.length > 0 ? (
-                  <ScoreRing
-                    score={Math.round(results.reduce((s, r) => s + r.score, 0) / results.length)}
-                    size={72}
-                    strokeWidth={7}
-                    color="#10b981"
-                    trackColor="#f0fdf4"
-                  />
-                ) : (
-                  <p className="font-display font-bold text-2xl text-default">—</p>
-                )}
-                {improvement !== null && (
-                  <div>
-                    <p className={`text-xs font-semibold ${improvement >= 0 ? "text-[#10b981]" : "text-[#f43f5e]"}`}>
-                      {improvement >= 0 ? "+" : ""}{improvement}%
-                    </p>
-                    <p className="text-xs text-subtle">{t("dash_improvement")}</p>
-                  </div>
-                )}
-              </div>
-            </div>
-            <DashboardCard
-              title={t("dash_day_streak")}
-              value={user.streak}
-              icon={Flame}
-              iconColor="text-amber-500"
-              iconBg="bg-amber-50"
-              subtitle={t("dash_keep_it_up")}
-            />
-            <DashboardCard
-              title={t("dash_free_tests")}
-              value={`${user.freeTestsUsed}/${FREE_TESTS_LIMIT}`}
-              icon={Trophy}
-              iconColor="text-[#f59e0b]"
-              iconBg="bg-amber-50"
-            >
-              <ProgressBar value={user.freeTestsUsed} max={FREE_TESTS_LIMIT} size="sm" variant="gradient" />
-            </DashboardCard>
-          </div>
 
           {/* XP level bar + achievements + weak spots */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 animate-fade-up delay-250">
@@ -383,7 +387,7 @@ export default function DashboardPage() {
                   <p className="text-xs text-subtle mt-0.5">{t("dash_based_on_role")}</p>
                 )}
               </div>
-              <Link href="/tests?sort=recommended" className="text-xs text-[#4f46e5] font-semibold hover:underline flex items-center gap-1">
+              <Link href="/tests?sort=recommended" className="text-xs text-primary font-semibold hover:underline flex items-center gap-1">
                 {t("dash_browse_all")} <ChevronRight size={12} />
               </Link>
             </div>
@@ -402,7 +406,7 @@ export default function DashboardPage() {
           {adaptiveSuggestions.length > 0 && (
             <div className="animate-fade-up delay-400">
               <div className="flex items-center gap-2 mb-4">
-                <TrendingUp size={16} className="text-[#10b981]" />
+                <TrendingUp size={16} className="text-success" />
                 <div>
                   <h2 className="font-display font-semibold text-lg text-default">{t("dash_ready_level_up")}</h2>
                   <p className="text-xs text-subtle mt-0.5">{t("dash_level_up_sub")}</p>
@@ -427,7 +431,7 @@ export default function DashboardPage() {
                   </h2>
                 </div>
                 <Link href={`/tests?role=${encodeURIComponent(user.targetRole ?? "")}`}
-                  className="text-xs text-[#4f46e5] font-semibold hover:underline flex items-center gap-1">
+                  className="text-xs text-primary font-semibold hover:underline flex items-center gap-1">
                   {t("dash_see_all")} <ChevronRight size={12} />
                 </Link>
               </div>
@@ -444,7 +448,7 @@ export default function DashboardPage() {
             <div className="animate-fade-up delay-500">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <Users size={16} className="text-[#7c3aed]" />
+                  <Users size={16} className="text-violet" />
                   <div>
                     <h2 className="font-display font-semibold text-lg text-default">
                       {t("dash_frequently_used_at", { company: user.targetCompany ?? "" })}
@@ -481,7 +485,7 @@ export default function DashboardPage() {
                     <BarChart3 size={18} className="text-subtle" />
                   </div>
                   <p className="text-sm text-muted">{t("dash_complete_tests")}</p>
-                  <Link href="/tests" className="text-sm font-semibold text-[#4f46e5] hover:underline">{t("dash_browse_tests")}</Link>
+                  <Link href="/tests" className="text-sm font-semibold text-primary hover:underline">{t("dash_browse_tests")}</Link>
                 </div>
               ) : (
                 <div className="flex flex-col gap-4">
@@ -504,7 +508,7 @@ export default function DashboardPage() {
             <div className="card p-5">
               <div className="flex items-center justify-between mb-5">
                 <h2 className="font-display font-semibold text-base text-default">{t("dash_recent_results")}</h2>
-                <Link href="/results" className="text-xs text-[#4f46e5] font-semibold hover:underline">{t("dash_view_all")}</Link>
+                <Link href="/results" className="text-xs text-primary font-semibold hover:underline">{t("dash_view_all")}</Link>
               </div>
               {results.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-8 gap-3 text-center">
@@ -512,7 +516,7 @@ export default function DashboardPage() {
                     <BookOpen size={18} className="text-subtle" />
                   </div>
                   <p className="text-sm text-muted">{t("dash_no_results")}</p>
-                  <Link href="/tests" className="text-sm font-semibold text-[#4f46e5] hover:underline">
+                  <Link href="/tests" className="text-sm font-semibold text-primary hover:underline">
                     {t("dash_browse_tests")}
                   </Link>
                 </div>
@@ -548,7 +552,7 @@ export default function DashboardPage() {
                 <h2 className="font-display font-semibold text-lg text-default">{t("dash_pro_tests")}</h2>
                 <Lock size={14} className="text-subtle" />
               </div>
-              <Link href="/pricing" className="text-xs text-[#4f46e5] font-semibold hover:underline">{t("nav_upgrade")}</Link>
+              <Link href="/pricing" className="text-xs text-primary font-semibold hover:underline">{t("nav_upgrade")}</Link>
             </div>
             <div className="grid sm:grid-cols-3 gap-4">
               {lockedTests.map((test) => (
@@ -559,7 +563,7 @@ export default function DashboardPage() {
                     </div>
                     <div className="flex items-center gap-1.5">
                       {test.isGeneratedByAI && (
-                        <span className="text-xs font-semibold text-[#4f46e5] bg-[#eef2ff] px-2 py-0.5 rounded-full flex items-center gap-1">
+                        <span className="text-xs font-semibold text-primary bg-primary-soft px-2 py-0.5 rounded-full flex items-center gap-1">
                           <Sparkles size={9} /> {t("dash_badge_new")}
                         </span>
                       )}
@@ -576,15 +580,15 @@ export default function DashboardPage() {
           </div>
 
           {/* AI upsell */}
-          <div className="animate-fade-up delay-700 rounded-2xl border border-[#c7d2fe] bg-gradient-to-br from-[#eef2ff] to-[#f5f3ff] p-6">
+          <div className="animate-fade-up delay-700 rounded-2xl border border-primary-border bg-gradient-to-br from-primary-soft to-violet-soft p-6">
             <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#4f46e5] to-[#7c3aed] flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-violet flex items-center justify-center flex-shrink-0">
                 <Sparkles size={18} className="text-white" />
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
                   <h3 className="font-display font-semibold text-default">{t("dash_personal_coaching")}</h3>
-                  <span className="text-[10px] font-bold text-[#7c3aed] bg-[#f5f3ff] border border-[#ddd6fe] px-2 py-0.5 rounded-full uppercase tracking-wider">
+                  <span className="text-[10px] font-bold text-violet bg-violet-soft border border-violet-border px-2 py-0.5 rounded-full uppercase tracking-wider">
                     {t("dash_coming_soon")}
                   </span>
                 </div>
@@ -594,7 +598,7 @@ export default function DashboardPage() {
                 <div className="flex items-center gap-3">
                   <Link
                     href="/pricing"
-                    className="px-4 py-2 rounded-lg bg-[#4f46e5] text-white text-sm font-semibold hover:bg-[#4338ca] transition-colors"
+                    className="px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary-hover transition-colors"
                   >
                     {t("dash_get_early_access")}
                   </Link>

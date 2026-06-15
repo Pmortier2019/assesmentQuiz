@@ -12,6 +12,22 @@
   --color-muted:          var(--text-muted);
   --color-subtle:         var(--text-subtle);
   --color-line:           var(--border);
+
+  /* Brand / accent colours — exposed as utilities (text-primary, bg-primary-soft,
+     border-primary-border, …) so component code stops hardcoding raw hex. Each
+     points at a runtime variable below, ready to switch under `.dark`. */
+  --color-primary:        var(--indigo);
+  --color-primary-hover:  var(--indigo-600);
+  --color-primary-soft:   var(--indigo-soft);
+  --color-primary-border: var(--indigo-border);
+  --color-success:        var(--emerald);
+  --color-success-soft:   var(--emerald-soft);
+  --color-violet:         var(--violet);
+  --color-violet-soft:    var(--violet-soft);
+  --color-violet-border:  var(--violet-border);
+  --color-cyan:           var(--cyan);
+  --color-warning:        var(--amber);
+  --color-danger:         var(--rose);
 }
 
 /* ── Design tokens ── */
@@ -20,14 +36,20 @@
   --navy-800:   #1a2f4a;
   --navy-700:   #1e3a5f;
 
-  --indigo:     #4f46e5;
-  --indigo-600: #4338ca;
-  --violet:     #7c3aed;
-  --blue:       #2563eb;
+  --indigo:        #4f46e5;
+  --indigo-600:    #4338ca;
+  --indigo-soft:   #eef2ff;
+  --indigo-border: #c7d2fe;
+  --violet:        #7c3aed;
+  --violet-soft:   #f5f3ff;
+  --violet-border: #ddd6fe;
+  --blue:          #2563eb;
+  --cyan:          #0891b2;
 
-  --emerald:    #10b981;
-  --amber:      #f59e0b;
-  --rose:       #f43f5e;
+  --emerald:      #10b981;
+  --emerald-soft: #f0fdf4;
+  --amber:        #f59e0b;
+  --rose:         #f43f5e;
 
   --bg:            #ffffff;
   --bg-subtle:     #f8fafc;
