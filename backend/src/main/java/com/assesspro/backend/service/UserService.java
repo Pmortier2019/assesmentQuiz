@@ -109,9 +109,12 @@ public class UserService {
     @Transactional
     public UserResponse updateCareerTargets(Long userId, CareerTargetsRequest request) {
         User user = findUser(userId);
-        user.setTargetRole(request.getTargetRole());
-        user.setTargetIndustry(request.getTargetIndustry());
-        user.setTargetCompany(request.getTargetCompany());
+        // Only overwrite fields that were actually sent, so a partial update
+        // (e.g. changing just the company) doesn't wipe role/industry and bounce
+        // the user back into onboarding.
+        if (request.getTargetRole() != null) user.setTargetRole(request.getTargetRole());
+        if (request.getTargetIndustry() != null) user.setTargetIndustry(request.getTargetIndustry());
+        if (request.getTargetCompany() != null) user.setTargetCompany(request.getTargetCompany());
         if (request.getLevel() != null) user.setLevel(request.getLevel());
         userRepository.save(user);
         return toUserResponse(user);
