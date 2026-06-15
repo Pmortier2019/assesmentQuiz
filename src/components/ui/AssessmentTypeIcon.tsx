@@ -1,6 +1,7 @@
 import { ClipboardList } from "lucide-react";
 import { ASSESSMENT_TYPE_ICONS, cn } from "@/lib/utils";
 import { normalizeAssessmentType } from "@/lib/api";
+import type { AssessmentType } from "@/lib/types";
 
 interface AssessmentTypeIconProps {
   type: string | null | undefined;
