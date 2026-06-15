@@ -107,10 +107,12 @@ export default function OnboardingPage() {
   const [company, setCompany] = useState("");
   const [level, setLevel] = useState<"beginner" | "intermediate" | "advanced" | null>(null);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState(false);
 
   const handleFinish = async () => {
     if (!level) return;
     setSaving(true);
+    setSaveError(false);
     try {
       await saveOnboarding({
         targetRole: role ?? undefined,
@@ -118,10 +120,13 @@ export default function OnboardingPage() {
         targetCompany: company.trim() || undefined,
         level,
       });
+      router.push("/dashboard");
     } catch {
-      // Career targets are optional — navigate to dashboard regardless
+      // Don't navigate on failure: the targets weren't saved, so the user
+      // would be sent straight back here on next login. Surface it and retry.
+      setSaveError(true);
+      setSaving(false);
     }
-    router.push("/dashboard");
   };
 
   return (
@@ -392,6 +397,14 @@ export default function OnboardingPage() {
                       </span>
                     )}
                   </div>
+                </div>
+              )}
+
+              {saveError && (
+                <div className="mb-4 rounded-lg bg-[#fff1f2] border border-[#fecdd3] px-3 py-2.5">
+                  <p className="text-xs text-[#e11d48] leading-relaxed">
+                    We couldn&apos;t save your profile. Check your connection and try again.
+                  </p>
                 </div>
               )}
 
