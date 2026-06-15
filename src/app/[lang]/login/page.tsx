@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, Suspense } from "react";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
+import { useSearchParams } from "next/navigation";
+import { useLocaleRouter } from "@/components/ui/LocaleLink";
 import { Eye, EyeOff, ArrowRight } from "lucide-react";
 import { login, register, resendVerification, ApiError } from "@/lib/api";
 import { LogoMark } from "@/components/ui/Logo";
@@ -10,7 +11,7 @@ import { LogoMark } from "@/components/ui/Logo";
 type Mode = "login" | "register";
 
 function LoginForm() {
-  const router = useRouter();
+  const router = useLocaleRouter();
   const searchParams = useSearchParams();
   const from = searchParams.get("from");
   const [mode, setMode] = useState<Mode>("login");

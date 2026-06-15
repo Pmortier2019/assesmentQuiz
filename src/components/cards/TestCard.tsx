@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { Clock, Lock, Sparkles, ChevronRight, Star, Check } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { AssessmentTypeIcon } from "@/components/ui/AssessmentTypeIcon";

@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { useState } from "react";
 import { Menu, X, LogOut, ShieldCheck, Search } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useLocaleRouter } from "@/components/ui/LocaleLink";
 import { cn } from "@/lib/utils";
 import { useT } from "@/lib/i18n";
 import { logout } from "@/lib/api";
@@ -17,7 +17,7 @@ interface NavbarProps {
 export function Navbar({ transparent = false }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { loggedIn, isAdmin: userIsAdmin } = useAuth();
-  const router = useRouter();
+  const router = useLocaleRouter();
   const { t } = useT();
 
   const handleLogout = () => {

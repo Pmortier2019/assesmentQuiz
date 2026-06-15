@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { useSearchParams } from "next/navigation";
 import { Mail } from "lucide-react";
 import { resendVerification } from "@/lib/api";

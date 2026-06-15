@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { ArrowLeft, Mail, CheckCircle2 } from "lucide-react";
 import { forgotPassword, ApiError } from "@/lib/api";
 import { LogoMark } from "@/components/ui/Logo";

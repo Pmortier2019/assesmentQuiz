@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useLocaleRouter } from "@/components/ui/LocaleLink";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { Users, BookOpen, BarChart3, Sparkles, Trash2, Lock, Unlock, RefreshCw, Upload, AlertCircle, CheckCircle2, ChevronRight, Plus, Search, Crown } from "lucide-react";
 import {
   getAdminStats, getAdminUsers, getAdminTests, getGenerationStatus,
@@ -22,7 +22,7 @@ const DIFF_COLORS: Record<string, string> = {
 };
 
 export default function AdminPage() {
-  const router = useRouter();
+  const router = useLocaleRouter();
   const { status, isAdmin } = useAuth();
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [users, setUsers] = useState<AdminUser[]>([]);

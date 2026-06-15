@@ -1,14 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useLocaleRouter } from "@/components/ui/LocaleLink";
 import { ShieldCheck, AlertCircle } from "lucide-react";
 import { adminBootstrap } from "@/lib/api";
 import { useAuth } from "@/lib/useAuth";
 import { LogoMark } from "@/components/ui/Logo";
 
 export default function AdminBootstrapPage() {
-  const router = useRouter();
+  const router = useLocaleRouter();
   const { status: authStatus, isAdmin } = useAuth();
   const [email, setEmail] = useState("");
 

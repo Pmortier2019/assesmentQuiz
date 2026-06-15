@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { Upload, CheckCircle2, AlertCircle, ArrowRight, RotateCcw, Shuffle } from "lucide-react";
 import { importTest } from "@/lib/api";
 import { AdminGuard } from "@/components/auth/AdminGuard";

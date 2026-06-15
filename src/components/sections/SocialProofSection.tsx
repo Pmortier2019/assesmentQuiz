@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Star, MessageSquarePlus, TrendingUp, Users, CheckCircle, Clock } from "lucide-react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 
 const STATS = [
   { icon: CheckCircle, value: 12400, suffix: "+", label: "Tests completed", color: "text-[#2D7BFF]", bg: "bg-[#EAF1FF]" },

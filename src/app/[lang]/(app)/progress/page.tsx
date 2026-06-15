@@ -7,7 +7,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { getSkillsSummary, normalizeAssessmentType, type SkillsSummary, type SkillEntry } from "@/lib/api";
 import { AssessmentTypeIcon } from "@/components/ui/AssessmentTypeIcon";
 import { ASSESSMENT_TYPE_LABELS } from "@/lib/utils";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 
 function scoreColor(score: number) {
   if (score >= 80) return "text-emerald-600";

@@ -13,7 +13,7 @@ import { FeaturesSection } from "@/components/sections/FeaturesSection";
 import { PricingPreviewSection } from "@/components/sections/PricingPreviewSection";
 import { FinalCTASection } from "@/components/sections/FinalCTASection";
 import { FooterNav } from "@/components/layout/FooterNav";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 
 function Footer() {
   return (

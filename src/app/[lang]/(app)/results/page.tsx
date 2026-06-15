@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { ArrowRight, ChevronLeft, Sparkles, ClipboardList, CheckCircle, XCircle, Trophy, Check, X, Circle } from "lucide-react";
 import { getResultById, getUserResults, getCurrentUser, getTests, getRecommendedTests } from "@/lib/api";
 import { ResultsSummary } from "@/components/test/ResultsSummary";

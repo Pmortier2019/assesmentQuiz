@@ -27,3 +27,9 @@ export function localizePathname(pathname: string, locale: Locale): string {
   if (locale === DEFAULT_LOCALE) return base;
   return base === "/" ? "/nl" : `/nl${base}`;
 }
+
+/** Reads the active locale from a visible pathname (default locale = no prefix). */
+export function localeFromPathname(pathname: string): Locale {
+  const seg = pathname.split("/")[1] ?? "";
+  return isLocale(seg) ? seg : DEFAULT_LOCALE;
+}

@@ -1,7 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
+import { usePathname } from "next/navigation";
+import { useLocaleRouter } from "@/components/ui/LocaleLink";
 import { LayoutDashboard, BookOpen, Trophy, TrendingUp, CreditCard, ChevronRight, BarChart2, LogOut, Calendar, ShieldCheck, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StreakBadge } from "@/components/ui/StreakBadge";
@@ -28,7 +29,7 @@ export function Sidebar({ streak: streakProp, userName: userNameProp, isAdmin: i
   const streak = streakProp ?? user?.streak ?? 0;
   const isAdmin = isAdminProp ?? user?.isAdmin ?? authIsAdmin;
   const pathname = usePathname();
-  const router = useRouter();
+  const router = useLocaleRouter();
   const { t } = useT();
 
   const handleLogout = () => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, ArrowRight, Sparkles } from "lucide-react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { Navbar } from "@/components/layout/Navbar";
 import { PricingCard } from "@/components/cards/PricingCard";
 import { UpgradeButton } from "@/components/ui/UpgradeButton";

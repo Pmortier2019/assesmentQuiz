@@ -1,8 +1,9 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
+import { useSearchParams } from "next/navigation";
+import { useLocaleRouter } from "@/components/ui/LocaleLink";
 import { CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import { verifyEmail } from "@/lib/api";
 import { LogoMark } from "@/components/ui/Logo";
@@ -10,7 +11,7 @@ import { LogoMark } from "@/components/ui/Logo";
 type Status = "verifying" | "success" | "error";
 
 function VerifyEmailContent() {
-  const router = useRouter();
+  const router = useLocaleRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token") ?? "";
   const [status, setStatus] = useState<Status>(token ? "verifying" : "error");

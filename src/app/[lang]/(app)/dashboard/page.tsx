@@ -4,7 +4,7 @@ import {
   Flame, TrendingUp, BookOpen, Trophy, Sparkles, Lock, ChevronRight,
   BarChart3, Clock, Star, Users, ArrowRight,
 } from "lucide-react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Navbar } from "@/components/layout/Navbar";
 import { DashboardCard } from "@/components/cards/DashboardCard";

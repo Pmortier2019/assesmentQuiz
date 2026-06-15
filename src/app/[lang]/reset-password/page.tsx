@@ -1,14 +1,15 @@
 "use client";
 
 import { useState, Suspense } from "react";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
+import { useSearchParams } from "next/navigation";
+import { useLocaleRouter } from "@/components/ui/LocaleLink";
 import { Eye, EyeOff, CheckCircle2 } from "lucide-react";
 import { resetPassword, ApiError } from "@/lib/api";
 import { LogoMark } from "@/components/ui/Logo";
 
 function ResetPasswordForm() {
-  const router = useRouter();
+  const router = useLocaleRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token") ?? "";
 

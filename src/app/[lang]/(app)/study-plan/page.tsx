@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Calendar, BookOpen, ChevronRight, Zap, Sparkles } from "lucide-react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Navbar } from "@/components/layout/Navbar";
 import { AssessmentTypeIcon } from "@/components/ui/AssessmentTypeIcon";

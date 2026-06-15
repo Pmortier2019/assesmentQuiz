@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useLocaleRouter } from "@/components/ui/LocaleLink";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import {
   ArrowRight, ArrowLeft, Check, Zap, Building2,
   Briefcase, Target, X,
@@ -96,7 +96,7 @@ function Stepper({ current }: { current: number }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function OnboardingPage() {
-  const router = useRouter();
+  const router = useLocaleRouter();
   const { status } = useAuth();
   const [step, setStep] = useState(0);
 

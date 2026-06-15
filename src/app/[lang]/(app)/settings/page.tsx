@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useLocaleRouter } from "@/components/ui/LocaleLink";
 import { Download, Trash2, AlertTriangle, ShieldCheck } from "lucide-react";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Navbar } from "@/components/layout/Navbar";
@@ -10,7 +10,7 @@ import { useT } from "@/lib/i18n";
 
 export default function SettingsPage() {
   const { t } = useT();
-  const router = useRouter();
+  const router = useLocaleRouter();
 
   const [exporting, setExporting] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
