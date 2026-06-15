@@ -1,5 +1,5 @@
 import { MapPin, Clock, Zap, ChevronRight } from "lucide-react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import type { PreparationPath } from "@/lib/types";
 
 interface Props {

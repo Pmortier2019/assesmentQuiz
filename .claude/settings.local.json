@@ -94,7 +94,9 @@
       "mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_screenshot",
       "mcp__plugin_chrome-devtools-mcp_chrome-devtools__wait_for",
       "mcp__plugin_chrome-devtools-mcp_chrome-devtools__fill",
-      "Bash(cd C:UsersPieteassesmentQuiz *)"
+      "Bash(cd C:UsersPieteassesmentQuiz *)",
+      "Bash(sed 's#^src/##')",
+      "Bash(grep -rn 'router\\\\.\\\\\\(push\\\\|replace\\\\\\)\\(\"/\\\\|redirect\\(\"/\\\\|router\\\\.\\\\\\(push\\\\|replace\\\\\\)\\(`/' src --include=*.tsx --include=*.ts)"
     ]
   }
 }

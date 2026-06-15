@@ -1,7 +1,7 @@
 "use client";
 
 import { Lock } from "lucide-react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { cn } from "@/lib/utils";
 import { UpgradeButton } from "@/components/ui/UpgradeButton";
 

@@ -1,5 +1,5 @@
 import { Sparkles, ArrowRight } from "lucide-react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 
 export function CareerSetupBanner() {
   return (

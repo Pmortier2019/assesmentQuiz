@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { useT } from "@/lib/i18n";
 import { LogoMark } from "@/components/ui/Logo";
 

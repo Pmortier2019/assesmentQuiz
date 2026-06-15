@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useLocaleRouter } from "@/components/ui/LocaleLink";
 import { useQuery } from "@tanstack/react-query";
 import {
   Search, CornerDownLeft, FileText, Layers, Tag, ArrowRight,
@@ -32,7 +32,7 @@ const NAV_ITEMS: { label: string; href: string; icon: LucideIcon }[] = [
 ];
 
 export function CommandPalette() {
-  const router = useRouter();
+  const router = useLocaleRouter();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [debounced, setDebounced] = useState("");

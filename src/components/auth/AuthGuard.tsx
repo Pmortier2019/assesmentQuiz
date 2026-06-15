@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useLocaleRouter } from "@/components/ui/LocaleLink";
 import { PageLoader } from "@/components/ui/PageLoader";
 import { useAuth } from "@/lib/useAuth";
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
+  const router = useLocaleRouter();
   const pathname = usePathname();
   const { status } = useAuth();
 

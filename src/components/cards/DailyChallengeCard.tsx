@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { Zap, Clock, ChevronRight, Timer } from "lucide-react";
 import type { Test } from "@/lib/types";
 import { AssessmentTypeIcon } from "@/components/ui/AssessmentTypeIcon";

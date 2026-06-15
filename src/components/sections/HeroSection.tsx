@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { ArrowRight, Sparkles, Star } from "lucide-react";
 import { HeroDashboardMockup } from "./HeroDashboardMockup";
 

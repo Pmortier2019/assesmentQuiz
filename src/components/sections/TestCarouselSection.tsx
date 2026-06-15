@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { BarChart3, Brain, MessageSquare, Users, Smile, ArrowRight } from "lucide-react";
-import Link from "next/link";
+import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 
 const CARDS = [
   {

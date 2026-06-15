@@ -1,8 +1,10 @@
 "use client";
 
-import { createContext, useContext, useSyncExternalStore, ReactNode } from "react";
+import { createContext, useContext, ReactNode } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { localizePathname, type Locale } from "@/lib/locales";
 
-export type Locale = "en" | "nl";
+export type { Locale };
 
 // ─── Translations ─────────────────────────────────────────────────────────────
 
@@ -465,32 +467,23 @@ const I18nContext = createContext<I18nContextValue>({
   plural: (_count, keys) => keys.other,
 });
 
-const STORAGE_KEY = "assesspro_locale";
-
-const localeListeners = new Set<() => void>();
+const COOKIE_KEY = "assesspro_locale";
 
 const pluralRules: Record<Locale, Intl.PluralRules> = {
   en: new Intl.PluralRules("en"),
   nl: new Intl.PluralRules("nl"),
 };
 
-function subscribeLocale(callback: () => void) {
-  localeListeners.add(callback);
-  return () => localeListeners.delete(callback);
-}
-
-function readStoredLocale(): Locale {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  return stored === "en" || stored === "nl" ? stored : "en";
-}
-
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const locale = useSyncExternalStore<Locale>(subscribeLocale, readStoredLocale, () => "en");
+export function LanguageProvider({ locale, children }: { locale: Locale; children: ReactNode }) {
+  const router = useRouter();
+  const pathname = usePathname();
 
   function setLocale(l: Locale) {
-    localStorage.setItem(STORAGE_KEY, l);
-    document.documentElement.lang = l;
-    localeListeners.forEach((fn) => fn());
+    // Remember the explicit choice, then navigate to the same page in the
+    // target locale. The URL is the source of truth; the cookie only records
+    // intent for future entry points.
+    document.cookie = `${COOKIE_KEY}=${l}; path=/; max-age=31536000; samesite=lax`;
+    router.push(localizePathname(pathname, l));
   }
 
   function t(key: TranslationKey, vars?: Record<string, string | number>): string {

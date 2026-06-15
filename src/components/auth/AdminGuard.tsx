@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useLocaleRouter } from "@/components/ui/LocaleLink";
 import { PageLoader } from "@/components/ui/PageLoader";
 import { useAuth } from "@/lib/useAuth";
 
 export function AdminGuard({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
+  const router = useLocaleRouter();
   const { status, isAdmin } = useAuth();
 
   useEffect(() => {

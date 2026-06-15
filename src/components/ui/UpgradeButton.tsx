@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Sparkles, Loader2 } from "lucide-react";
 import { startCheckout } from "@/lib/api";
 import { isLoggedIn } from "@/lib/auth";
-import { useRouter } from "next/navigation";
+import { useLocaleRouter } from "@/components/ui/LocaleLink";
 import { cn } from "@/lib/utils";
 
 interface UpgradeButtonProps {
@@ -20,7 +20,7 @@ export function UpgradeButton({
 }: UpgradeButtonProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const router = useRouter();
+  const router = useLocaleRouter();
 
   async function handleClick() {
     if (!isLoggedIn()) {
