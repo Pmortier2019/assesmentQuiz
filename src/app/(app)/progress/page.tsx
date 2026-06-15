@@ -4,10 +4,9 @@ import { useEffect, useState } from "react";
 import { TrendingUp, TrendingDown, Minus, BarChart2, Target, Trophy, AlertCircle } from "lucide-react";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Navbar } from "@/components/layout/Navbar";
-import { getSkillsSummary, type SkillsSummary, type SkillEntry } from "@/lib/api";
+import { getSkillsSummary, normalizeAssessmentType, type SkillsSummary, type SkillEntry } from "@/lib/api";
 import { AssessmentTypeIcon } from "@/components/ui/AssessmentTypeIcon";
 import { ASSESSMENT_TYPE_LABELS } from "@/lib/utils";
-import type { AssessmentType } from "@/lib/types";
 import Link from "next/link";
 
 function scoreColor(score: number) {
@@ -29,8 +28,7 @@ function TrendIcon({ trend }: { trend: SkillEntry["trend"] }) {
 }
 
 function typeLabel(type: string): string {
-  const key = type.toLowerCase() as AssessmentType;
-  return ASSESSMENT_TYPE_LABELS[key] ?? type.replace(/_/g, " ");
+  return ASSESSMENT_TYPE_LABELS[normalizeAssessmentType(type)] ?? type.replace(/_/g, " ");
 }
 
 export default function ProgressPage() {

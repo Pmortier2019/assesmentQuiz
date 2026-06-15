@@ -1,5 +1,6 @@
 import { ClipboardList } from "lucide-react";
 import { ASSESSMENT_TYPE_ICONS, cn } from "@/lib/utils";
+import { normalizeAssessmentType } from "@/lib/api";
 import type { AssessmentType } from "@/lib/types";
 
 interface AssessmentTypeIconProps {
@@ -14,7 +15,7 @@ interface AssessmentTypeIconProps {
  * pass `className` to override the colour where a tile needs it.
  */
 export function AssessmentTypeIcon({ type, size = 20, className }: AssessmentTypeIconProps) {
-  const key = (type ?? "").toLowerCase() as AssessmentType;
+  const key = (type ? normalizeAssessmentType(type) : "") as AssessmentType;
   const Icon = ASSESSMENT_TYPE_ICONS[key] ?? ClipboardList;
   return <Icon size={size} className={cn("text-[#0D1B2E]", className)} aria-hidden="true" />;
 }
