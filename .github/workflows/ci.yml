@@ -1,13 +1,14 @@
 name: CI
 
-# Draait bij elke Pull Request en bij elke push naar main.
+# Draait bij elke Pull Request naar main/develop en bij elke push naar main/develop.
 # Zolang deze checks niet groen zijn, mag een PR niet mergen (zie branch protection).
+# develop = integratiebuffer: feature-PR's gaan hierheen, niet rechtstreeks naar main.
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, develop]
   push:
-    branches: [main]
+    branches: [main, develop]
 
 # Annuleer oudere runs op dezelfde branch/PR — bespaart tijd en CI-minuten.
 concurrency:
