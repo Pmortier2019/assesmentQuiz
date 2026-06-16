@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { Bricolage_Grotesque, DM_Sans } from "next/font/google";
 import "../globals.css";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { LanguageProvider } from "@/lib/i18n";
 import { QueryProvider } from "@/lib/queryClient";
 import { AuthProvider } from "@/components/auth/AuthProvider";
@@ -88,6 +90,10 @@ export default async function RootLayout({
             </AuthProvider>
           </QueryProvider>
         </LanguageProvider>
+        {/* Privacy-friendly, cookieless traffic + Core Web Vitals telemetry.
+            Activate per metric in the Vercel dashboard (Analytics / Speed Insights). */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
