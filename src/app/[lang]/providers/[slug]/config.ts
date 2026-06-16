@@ -370,4 +370,204 @@ export const PROVIDER_PAGES: Record<string, LocalizedProviderPage> = {
       relatedSlugs: ["situational-judgement", "work-style-assessment", "verbal-reasoning"],
     },
   },
+  caliper: {
+    en: {
+      name: "Caliper",
+      title: "Caliper Profile Practice",
+      headline: "Caliper Assessment Practice",
+      description:
+        "Prepare for the Caliper Profile — a personality and cognitive assessment used by U.S. employers to predict job fit, especially in sales and leadership roles. It combines work-style questions with abstract reasoning.",
+      metaDescription:
+        "Free Caliper Profile preparation. Practice the abstract reasoning and work-style questions behind the Caliper assessment used in U.S. hiring. Start free.",
+      keywords: ["Caliper Profile", "Caliper assessment practice", "Caliper test prep", "Caliper personality test", "Caliper questions"],
+      category: "Test Provider",
+      bullets: [
+        "Work-style and personality questions",
+        "Abstract and logical reasoning",
+        "Job-fit and motivation profiling",
+        "Consistent, honest answering strategy",
+        "Reasoning practice behind the test",
+      ],
+      faqs: [
+        { q: "What is the Caliper Profile?", a: "The Caliper Profile is a personality and cognitive assessment that predicts how well someone fits a role. It combines work-style and motivation questions with abstract reasoning, and is popular in U.S. sales and leadership hiring." },
+        { q: "Can you prepare for the Caliper assessment?", a: "The personality section has no right answers, but understanding the format and answering consistently helps. The reasoning section can be practiced directly. Ready to Ace offers unlimited reasoning practice for €4/month." },
+        { q: "How long is the Caliper Profile?", a: "It typically takes around 60–90 minutes and mixes multiple-choice personality items with reasoning questions. Going in familiar with the format keeps you calm and focused." },
+      ],
+      relatedSlugs: ["work-style-assessment", "leadership-assessment", "logical-reasoning"],
+    },
+    nl: {
+      name: "Caliper",
+      title: "Caliper Profile Oefenen",
+      headline: "Caliper Assessment Oefenen",
+      description:
+        "Bereid je voor op het Caliper Profile — een persoonlijkheids- en capaciteitenassessment dat Amerikaanse werkgevers gebruiken om job-fit te voorspellen, vooral in sales- en leiderschapsrollen. Het combineert werkstijlvragen met abstract redeneren.",
+      metaDescription:
+        "Gratis Caliper Profile voorbereiden. Oefen het abstracte redeneren en de werkstijlvragen achter het Caliper-assessment uit de Amerikaanse werving. Gratis starten.",
+      keywords: ["Caliper Profile", "Caliper assessment oefenen", "Caliper test voorbereiden", "Caliper persoonlijkheidstest", "Caliper vragen"],
+      category: "Testaanbieder",
+      bullets: [
+        "Werkstijl- en persoonlijkheidsvragen",
+        "Abstract en logisch redeneren",
+        "Job-fit en motivatie in kaart",
+        "Consistent en eerlijk antwoorden",
+        "Redeneeroefening achter de test",
+      ],
+      faqs: [
+        { q: "Wat is het Caliper Profile?", a: "Het Caliper Profile is een persoonlijkheids- en capaciteitenassessment dat voorspelt hoe goed iemand bij een rol past. Het combineert werkstijl- en motivatievragen met abstract redeneren en is populair bij Amerikaanse sales- en leiderschapswerving." },
+        { q: "Kun je je voorbereiden op het Caliper-assessment?", a: "Het persoonlijkheidsdeel heeft geen goede antwoorden, maar het format kennen en consistent antwoorden helpt. Het redeneerdeel kun je direct oefenen. Ready to Ace biedt onbeperkt oefenen voor €4/maand." },
+        { q: "Hoe lang duurt het Caliper Profile?", a: "Het duurt meestal zo'n 60–90 minuten en mengt meerkeuze-persoonlijkheidsvragen met redeneervragen. Bekend zijn met het format houdt je rustig en gefocust." },
+      ],
+      relatedSlugs: ["work-style-assessment", "leadership-assessment", "logical-reasoning"],
+    },
+  },
+  pymetrics: {
+    en: {
+      name: "Pymetrics",
+      title: "Pymetrics Games Practice",
+      headline: "Pymetrics (Harver) Practice",
+      description:
+        "Prepare for Pymetrics — a set of neuroscience-based games that measure cognitive and emotional traits rather than right-or-wrong answers. Used by major U.S. employers for fair, early-stage screening.",
+      metaDescription:
+        "Free Pymetrics preparation. Understand the games, what each measures, and practice the reasoning and judgement skills behind them. Start practicing free.",
+      keywords: ["Pymetrics games", "Pymetrics practice", "Pymetrics test prep", "Pymetrics assessment", "Harver Pymetrics"],
+      category: "Test Provider",
+      bullets: [
+        "How the 12 core games work",
+        "What each game actually measures",
+        "Risk, memory and attention tasks",
+        "Reasoning and judgement practice",
+        "Staying calm and consistent",
+      ],
+      faqs: [
+        { q: "What is Pymetrics?", a: "Pymetrics (now part of Harver) uses around a dozen short, neuroscience-based games to measure cognitive and emotional traits such as attention, risk tolerance and memory. There are no right or wrong answers — it builds a profile of how you think." },
+        { q: "Can you prepare for Pymetrics games?", a: "You can't 'pass' them, but knowing the format removes surprise and nerves. Understanding what each game measures and practicing focus and quick decision-making helps you perform naturally." },
+        { q: "Which employers use Pymetrics?", a: "Large U.S. employers in consulting, finance and technology use Pymetrics for fair early-stage screening. Practicing reasoning and situational judgement keeps your thinking sharp. Ready to Ace offers unlimited practice for €4/month." },
+      ],
+      relatedSlugs: ["situational-judgement", "logical-reasoning", "work-style-assessment"],
+    },
+    nl: {
+      name: "Pymetrics",
+      title: "Pymetrics Games Oefenen",
+      headline: "Pymetrics (Harver) Oefenen",
+      description:
+        "Bereid je voor op Pymetrics — een reeks op neurowetenschap gebaseerde games die cognitieve en emotionele kenmerken meten in plaats van goede of foute antwoorden. Grote Amerikaanse werkgevers gebruiken het voor eerlijke screening vooraf.",
+      metaDescription:
+        "Gratis Pymetrics voorbereiden. Begrijp de games, wat elke game meet, en oefen de redeneer- en oordeelsvaardigheden erachter. Gratis starten.",
+      keywords: ["Pymetrics games", "Pymetrics oefenen", "Pymetrics test voorbereiden", "Pymetrics assessment", "Harver Pymetrics"],
+      category: "Testaanbieder",
+      bullets: [
+        "Hoe de 12 kern-games werken",
+        "Wat elke game eigenlijk meet",
+        "Taken rond risico, geheugen en aandacht",
+        "Oefenen van redeneren en oordeel",
+        "Rustig en consistent blijven",
+      ],
+      faqs: [
+        { q: "Wat is Pymetrics?", a: "Pymetrics (nu onderdeel van Harver) gebruikt zo'n twaalf korte, op neurowetenschap gebaseerde games om cognitieve en emotionele kenmerken te meten, zoals aandacht, risicobereidheid en geheugen. Er zijn geen goede of foute antwoorden — het bouwt een profiel van hoe jij denkt." },
+        { q: "Kun je je voorbereiden op de Pymetrics-games?", a: "Je kunt ze niet 'halen', maar het format kennen haalt de verrassing en zenuwen weg. Begrijpen wat elke game meet en focus en snelle besluitvorming oefenen helpt je natuurlijk te presteren." },
+        { q: "Welke werkgevers gebruiken Pymetrics?", a: "Grote Amerikaanse werkgevers in consultancy, finance en tech gebruiken Pymetrics voor eerlijke screening vooraf. Redeneren en situational judgement oefenen houdt je denken scherp. Ready to Ace biedt onbeperkt oefenen voor €4/maand." },
+      ],
+      relatedSlugs: ["situational-judgement", "logical-reasoning", "work-style-assessment"],
+    },
+  },
+  saville: {
+    en: {
+      name: "Saville",
+      title: "Saville Assessment Practice",
+      headline: "Saville Assessment Practice",
+      description:
+        "Prepare for Saville Assessment aptitude tests, including Swift Analysis Aptitude and the Wave personality questionnaire — numerical, verbal and diagrammatic reasoning used by employers worldwide.",
+      metaDescription:
+        "Free Saville Assessment practice. Numerical, verbal and diagrammatic reasoning in the Saville Swift style, plus Wave personality prep. Start practicing free.",
+      keywords: ["Saville assessment practice", "Saville Swift aptitude", "Saville Wave", "Saville numerical test", "Saville test prep"],
+      category: "Test Provider",
+      bullets: [
+        "Numerical (comprehension & analysis)",
+        "Verbal (comprehension & analysis)",
+        "Diagrammatic / abstract reasoning",
+        "Swift combined aptitude format",
+        "Wave personality questionnaire prep",
+      ],
+      faqs: [
+        { q: "What is a Saville Assessment?", a: "Saville Assessment (part of Willis Towers Watson) provides aptitude and personality tests. Its Swift range combines numerical, verbal and diagrammatic reasoning in one timed sitting, while the Wave questionnaire maps work style and motivation." },
+        { q: "What is Saville Swift?", a: "Swift tests bundle several reasoning types into a single short, timed assessment, so quick switching between question types matters. Practicing each type under time pressure is the best preparation." },
+        { q: "How do I prepare for Saville tests?", a: "Practice numerical, verbal and diagrammatic reasoning at speed and review the Wave personality format. Ready to Ace offers unlimited reasoning practice for €4/month." },
+      ],
+      relatedSlugs: ["numerical-reasoning", "verbal-reasoning", "logical-reasoning", "work-style-assessment"],
+    },
+    nl: {
+      name: "Saville",
+      title: "Saville Assessment Oefenen",
+      headline: "Saville Assessment Oefenen",
+      description:
+        "Bereid je voor op de capaciteitentests van Saville Assessment, waaronder Swift Analysis Aptitude en de Wave-persoonlijkheidsvragenlijst — numeriek, verbaal en diagrammatisch redeneren, gebruikt door werkgevers wereldwijd.",
+      metaDescription:
+        "Gratis Saville Assessment oefenen. Numeriek, verbaal en diagrammatisch redeneren in Saville Swift-stijl, plus voorbereiding op Wave-persoonlijkheid. Gratis starten.",
+      keywords: ["Saville assessment oefenen", "Saville Swift aptitude", "Saville Wave", "Saville numerieke test", "Saville test voorbereiden"],
+      category: "Testaanbieder",
+      bullets: [
+        "Numeriek (begrip & analyse)",
+        "Verbaal (begrip & analyse)",
+        "Diagrammatisch / abstract redeneren",
+        "Swift gecombineerd aptitude-format",
+        "Voorbereiding Wave-persoonlijkheidsvragenlijst",
+      ],
+      faqs: [
+        { q: "Wat is een Saville Assessment?", a: "Saville Assessment (onderdeel van Willis Towers Watson) biedt capaciteiten- en persoonlijkheidstests. De Swift-reeks combineert numeriek, verbaal en diagrammatisch redeneren in één test op tijd, terwijl de Wave-vragenlijst werkstijl en motivatie in kaart brengt." },
+        { q: "Wat is Saville Swift?", a: "Swift-tests bundelen meerdere redeneertypes in één korte test op tijd, dus snel schakelen tussen vraagtypes telt mee. Elk type oefenen onder tijdsdruk is de beste voorbereiding." },
+        { q: "Hoe bereid ik me voor op Saville-tests?", a: "Oefen numeriek, verbaal en diagrammatisch redeneren op snelheid en bekijk het Wave-persoonlijkheidsformat. Ready to Ace biedt onbeperkt oefenen voor €4/maand." },
+      ],
+      relatedSlugs: ["numerical-reasoning", "verbal-reasoning", "logical-reasoning", "work-style-assessment"],
+    },
+  },
+  kenexa: {
+    en: {
+      name: "IBM Kenexa",
+      title: "IBM Kenexa Practice Tests",
+      headline: "IBM Kenexa Assessment Practice",
+      description:
+        "Prepare for IBM Kenexa assessments — numerical, verbal and logical reasoning tests (including the Kenexa Prove It! range) used by large employers for graduate and professional hiring.",
+      metaDescription:
+        "Free IBM Kenexa practice tests. Numerical, verbal and logical reasoning in the Kenexa style used by large employers worldwide. Start practicing free.",
+      keywords: ["IBM Kenexa test", "Kenexa practice test", "Kenexa Prove It", "Kenexa numerical test", "Kenexa assessment prep"],
+      category: "Test Provider",
+      bullets: [
+        "Numerical reasoning from data",
+        "Verbal reasoning from passages",
+        "Logical / inductive reasoning",
+        "Prove It! skills-style questions",
+        "Timed practice matching real conditions",
+      ],
+      faqs: [
+        { q: "What is an IBM Kenexa test?", a: "IBM Kenexa provides aptitude assessments measuring numerical, verbal and logical reasoning, along with the Prove It! range of skills tests. They are used by large employers in graduate and professional selection." },
+        { q: "Which employers use Kenexa?", a: "Large corporates across finance, retail and technology use IBM Kenexa assessments as part of structured hiring, often as an early online screening step." },
+        { q: "How do I prepare for a Kenexa test?", a: "Practice numerical, verbal and logical reasoning under timed conditions to build speed and accuracy. Ready to Ace offers unlimited practice for €4/month." },
+      ],
+      relatedSlugs: ["numerical-reasoning", "verbal-reasoning", "logical-reasoning"],
+    },
+    nl: {
+      name: "IBM Kenexa",
+      title: "IBM Kenexa Test Oefenen",
+      headline: "IBM Kenexa Assessment Oefenen",
+      description:
+        "Bereid je voor op IBM Kenexa-assessments — numerieke, verbale en logische redeneertests (waaronder de Kenexa Prove It!-reeks) die grote werkgevers gebruiken bij traineeship- en professionele werving.",
+      metaDescription:
+        "Gratis IBM Kenexa-test oefenen. Numeriek, verbaal en logisch redeneren in Kenexa-stijl, gebruikt door grote werkgevers wereldwijd. Gratis starten.",
+      keywords: ["IBM Kenexa test", "Kenexa test oefenen", "Kenexa Prove It", "Kenexa numerieke test", "Kenexa assessment voorbereiden"],
+      category: "Testaanbieder",
+      bullets: [
+        "Numeriek redeneren met gegevens",
+        "Verbaal redeneren met teksten",
+        "Logisch / inductief redeneren",
+        "Prove It!-vaardigheidsvragen",
+        "Oefenen op tijd, net als de echte test",
+      ],
+      faqs: [
+        { q: "Wat is een IBM Kenexa-test?", a: "IBM Kenexa biedt capaciteitentests die numeriek, verbaal en logisch redeneren meten, samen met de Prove It!-reeks vaardigheidstests. Ze worden gebruikt door grote werkgevers bij traineeship- en professionele selectie." },
+        { q: "Welke werkgevers gebruiken Kenexa?", a: "Grote bedrijven in finance, retail en tech gebruiken IBM Kenexa-assessments als onderdeel van gestructureerde werving, vaak als vroege online screeningstap." },
+        { q: "Hoe bereid ik me voor op een Kenexa-test?", a: "Oefen numeriek, verbaal en logisch redeneren onder tijdsdruk om snelheid en nauwkeurigheid op te bouwen. Ready to Ace biedt onbeperkt oefenen voor €4/maand." },
+      ],
+      relatedSlugs: ["numerical-reasoning", "verbal-reasoning", "logical-reasoning"],
+    },
+  },
 };
