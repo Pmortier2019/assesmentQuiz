@@ -16,7 +16,13 @@ describe("ValueSection", () => {
   it("shows the free-tier and Pro value props", () => {
     render(<ValueSection />);
     expect(screen.getByText("5 free tests")).toBeInTheDocument();
-    expect(screen.getByText("€4/month Pro")).toBeInTheDocument();
+    // Default currency is USD ($) for the English/default locale.
+    expect(screen.getByText("$4/month Pro")).toBeInTheDocument();
     expect(screen.getByText("Profession-specific")).toBeInTheDocument();
+  });
+
+  it("localises the Pro price currency", () => {
+    render(<ValueSection currency="€" />);
+    expect(screen.getByText("€4/month Pro")).toBeInTheDocument();
   });
 });

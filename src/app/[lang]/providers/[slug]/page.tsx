@@ -31,7 +31,7 @@ const UI: Record<Locale, {
     browseAll: "Browse All Tests",
     covers: (name) => `Tests ${name} uses`,
     freeLine: "Start with 5 free tests — no credit card needed",
-    freeSub: "Unlimited access from €4/month. Cancel anytime.",
+    freeSub: "Unlimited access from $4/month. Cancel anytime.",
     getStarted: "Get Started Free",
     faq: "Frequently Asked Questions",
     ctaTitle: "Ready to start practising?",

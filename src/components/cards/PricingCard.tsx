@@ -4,6 +4,8 @@ import { Check, Sparkles, Zap } from "lucide-react";
 import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { cn } from "@/lib/utils";
 import { UpgradeButton } from "@/components/ui/UpgradeButton";
+import { useT } from "@/lib/i18n";
+import { CURRENCY } from "@/lib/locales";
 
 interface PricingCardProps {
   plan: "free" | "pro";
@@ -14,7 +16,7 @@ interface PricingCardProps {
 const PLANS = {
   free: {
     name: "Free",
-    price: "€0",
+    price: "0",
     period: "forever",
     description: "Perfect to get started and experience the platform.",
     features: [
@@ -36,7 +38,7 @@ const PLANS = {
   },
   pro: {
     name: "Pro",
-    price: "€4",
+    price: "4",
     period: "per month",
     description: "Everything you need to ace your assessment and get the job.",
     features: [
@@ -55,6 +57,7 @@ const PLANS = {
 };
 
 export function PricingCard({ plan, highlighted = false, className }: PricingCardProps) {
+  const { locale } = useT();
   const data = PLANS[plan];
 
   return (
@@ -92,7 +95,7 @@ export function PricingCard({ plan, highlighted = false, className }: PricingCar
 
         <div className="flex items-baseline gap-1 mb-2">
           <span className={cn("font-display font-extrabold text-5xl tracking-tight", highlighted ? "text-white" : "text-[#0D1B2E]")}>
-            {data.price}
+            {CURRENCY[locale]}{data.price}
           </span>
           <span className={cn("text-sm font-medium", highlighted ? "text-white/60" : "text-[#94a3b8]")}>
             /{data.period}

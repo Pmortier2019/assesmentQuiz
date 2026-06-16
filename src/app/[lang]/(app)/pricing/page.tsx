@@ -5,6 +5,8 @@ import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { Navbar } from "@/components/layout/Navbar";
 import { PricingCard } from "@/components/cards/PricingCard";
 import { UpgradeButton } from "@/components/ui/UpgradeButton";
+import { useT } from "@/lib/i18n";
+import { CURRENCY } from "@/lib/locales";
 
 const FAQ = [
   {
@@ -25,11 +27,13 @@ const FAQ = [
   },
   {
     q: "Is there a student discount?",
-    a: "At €4/month, we're already priced to be accessible to students. More plans coming soon.",
+    a: "At {price}4/month, we're already priced to be accessible to students. More plans coming soon.",
   },
 ];
 
 export default function PricingPage() {
+  const { locale } = useT();
+  const cur = CURRENCY[locale];
   return (
     <>
       <Navbar />
@@ -60,7 +64,7 @@ export default function PricingPage() {
             <PricingCard plan="pro" highlighted />
           </div>
           <div className="flex flex-col items-center gap-3 mt-8">
-            <UpgradeButton label="Upgrade to Pro — €4/mo" size="lg" />
+            <UpgradeButton label={`Upgrade to Pro — ${cur}4/mo`} size="lg" />
             <p className="text-sm text-[#94a3b8]">
               Cancel anytime · No hidden fees · Billed monthly via Lemon Squeezy
             </p>
@@ -136,7 +140,7 @@ export default function PricingPage() {
               {FAQ.map((item) => (
                 <div key={item.q} className="card p-5">
                   <h3 className="font-display font-semibold text-[#0D1B2E] text-sm mb-2">{item.q}</h3>
-                  <p className="text-sm text-[#64748b] leading-relaxed">{item.a}</p>
+                  <p className="text-sm text-[#64748b] leading-relaxed">{item.a.replace("{price}", cur)}</p>
                 </div>
               ))}
             </div>
