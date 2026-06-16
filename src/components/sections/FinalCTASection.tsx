@@ -1,7 +1,7 @@
 import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { ArrowRight, Zap } from "lucide-react";
 
-export function FinalCTASection() {
+export function FinalCTASection({ currency = "$" }: { currency?: string }) {
   return (
     <section className="py-24 bg-[#0D1B2E] relative overflow-hidden">
       {/* Background blobs */}
@@ -41,7 +41,7 @@ export function FinalCTASection() {
         </div>
 
         <p className="text-sm text-white/30">
-          No credit card · 5 free tests · Upgrade anytime for €4/month
+          No credit card · 5 free tests · Upgrade anytime for {currency}4/month
         </p>
       </div>
     </section>

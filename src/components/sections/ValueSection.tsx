@@ -1,6 +1,6 @@
 import { Briefcase, Zap, MessageSquare, Calendar, Shield } from "lucide-react";
 
-const VALUES = [
+const getValues = (currency: string) => [
   {
     icon: Shield,
     title: "5 free tests",
@@ -10,7 +10,7 @@ const VALUES = [
   },
   {
     icon: Zap,
-    title: "€4/month Pro",
+    title: `${currency}4/month Pro`,
     description: "Unlock unlimited tests, fresh new content and detailed analytics for the price of a coffee.",
     color: "text-[#1D63E6]",
     bg: "bg-[#EAF1FF]",
@@ -38,7 +38,7 @@ const VALUES = [
   },
 ];
 
-export function ValueSection() {
+export function ValueSection({ currency = "$" }: { currency?: string }) {
   return (
     <section className="py-20 bg-[#f8fafc]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -54,7 +54,7 @@ export function ValueSection() {
 
         {/* Cards */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
-          {VALUES.map((v, i) => {
+          {getValues(currency).map((v, i) => {
             const Icon = v.icon;
             return (
               <div

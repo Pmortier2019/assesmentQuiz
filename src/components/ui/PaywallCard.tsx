@@ -4,6 +4,8 @@ import { Lock } from "lucide-react";
 import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { cn } from "@/lib/utils";
 import { UpgradeButton } from "@/components/ui/UpgradeButton";
+import { useT } from "@/lib/i18n";
+import { CURRENCY } from "@/lib/locales";
 
 interface PaywallCardProps {
   title?: string;
@@ -14,10 +16,15 @@ interface PaywallCardProps {
 
 export function PaywallCard({
   title = "Unlock unlimited practice",
-  description = "You've used all 5 free tests. Upgrade to Pro for €4/month and get unlimited fresh assessments.",
+  description,
   compact = false,
   className,
 }: PaywallCardProps) {
+  const { locale } = useT();
+  const cur = CURRENCY[locale];
+  const desc =
+    description ??
+    `You've used all 5 free tests. Upgrade to Pro for ${cur}4/month and get unlimited fresh assessments.`;
   return (
     <div
       className={cn(
@@ -42,13 +49,13 @@ export function PaywallCard({
           </h3>
           {!compact && (
             <p className="mt-2 text-muted max-w-md text-sm leading-relaxed">
-              {description}
+              {desc}
             </p>
           )}
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 items-center">
-          <UpgradeButton label="Upgrade to Pro — €4/mo" />
+          <UpgradeButton label={`Upgrade to Pro — ${cur}4/mo`} />
           {!compact && (
             <Link
               href="/tests"
