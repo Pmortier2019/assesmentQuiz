@@ -33,7 +33,7 @@ const PLANS = {
       "Progress tracking",
       "Daily preparation plan",
     ],
-    cta: "Start for free",
+    cta: "Start your first free test",
     href: "/onboarding",
   },
   pro: {

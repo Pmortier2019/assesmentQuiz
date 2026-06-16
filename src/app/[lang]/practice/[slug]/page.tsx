@@ -149,7 +149,7 @@ export default async function PracticePage({ params }: Props) {
         {/* Footer CTA */}
         <section className="py-16 px-4 bg-gradient-to-br from-[#2D7BFF] to-[#1D63E6] text-white text-center">
           <h2 className="text-2xl font-bold mb-3">Ready to start practising?</h2>
-          <p className="text-white/80 mb-6">Join thousands of candidates preparing for their job assessments.</p>
+          <p className="text-white/80 mb-6">Be one of the first to prepare smarter for your job assessment.</p>
           <Link
             href="/onboarding"
             className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white text-[#2D7BFF] font-bold shadow hover:shadow-lg transition-shadow"

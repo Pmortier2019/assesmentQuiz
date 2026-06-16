@@ -35,7 +35,7 @@ const UI: Record<Locale, {
     getStarted: "Get Started Free",
     faq: "Frequently Asked Questions",
     ctaTitle: "Ready to start practising?",
-    ctaSub: "Join thousands of candidates preparing for their job assessments.",
+    ctaSub: "Be one of the first to prepare smarter for your job assessment.",
     ctaButton: "Start Free Today",
   },
   nl: {
@@ -47,7 +47,7 @@ const UI: Record<Locale, {
     getStarted: "Gratis beginnen",
     faq: "Veelgestelde vragen",
     ctaTitle: "Klaar om te oefenen?",
-    ctaSub: "Sluit je aan bij duizenden kandidaten die zich voorbereiden op hun assessment.",
+    ctaSub: "Wees een van de eersten die zich slimmer voorbereidt op het assessment.",
     ctaButton: "Begin vandaag gratis",
   },
 };

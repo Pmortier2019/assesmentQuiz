@@ -161,7 +161,7 @@ export default function PricingPage() {
                 href="/onboarding"
                 className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold text-sm shadow-lg hover:opacity-90 transition-opacity"
               >
-                Start for free
+                Start your first free test
                 <ArrowRight size={15} />
               </Link>
               <Link
