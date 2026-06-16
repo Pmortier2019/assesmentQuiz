@@ -20,7 +20,7 @@ export function FinalCTASection({ currency = "$" }: { currency?: string }) {
             starts today.
           </h2>
           <p className="text-lg text-white/60 max-w-md mx-auto leading-relaxed">
-            5 free tests, no credit card required. Join thousands of candidates who practice smarter.
+            5 free tests, no credit card required. Join the first candidates getting assessment-ready with Ready to Ace.
           </p>
         </div>
 
@@ -29,7 +29,7 @@ export function FinalCTASection({ currency = "$" }: { currency?: string }) {
             href="/onboarding"
             className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-bold text-base shadow-2xl hover:opacity-90 transition-opacity"
           >
-            Start for free
+            Start your first free test
             <ArrowRight size={18} />
           </Link>
           <Link

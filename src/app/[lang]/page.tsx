@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { LogoMark } from "@/components/ui/Logo";
-import { isLocale, localeAlternates } from "@/lib/locales";
+import { CURRENCY, isLocale, localeAlternates } from "@/lib/locales";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 import { HeroSection } from "@/components/sections/HeroSection";
 import { ValueSection } from "@/components/sections/ValueSection";
 import { TestCarouselSection } from "@/components/sections/TestCarouselSection";
-import { SocialProofSection } from "@/components/sections/SocialProofSection";
+import { InteractiveDemoSection } from "@/components/sections/InteractiveDemoSection";
 import { FeaturesSection } from "@/components/sections/FeaturesSection";
 import { PricingPreviewSection } from "@/components/sections/PricingPreviewSection";
 import { FinalCTASection } from "@/components/sections/FinalCTASection";
@@ -111,7 +111,9 @@ const jsonLd = {
   ],
 };
 
-export default function HomePage() {
+export default async function HomePage({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  const currency = CURRENCY[isLocale(lang) ? lang : "en"];
   return (
     <>
       <script
@@ -121,12 +123,12 @@ export default function HomePage() {
       <Navbar />
       <main className="flex-1">
         <HeroSection />
-        <ValueSection />
+        <ValueSection currency={currency} />
         <TestCarouselSection />
-        <SocialProofSection />
+        <InteractiveDemoSection />
         <FeaturesSection />
         <PricingPreviewSection />
-        <FinalCTASection />
+        <FinalCTASection currency={currency} />
       </main>
       <Footer />
     </>

@@ -1,5 +1,5 @@
 import { LocaleLink as Link } from "@/components/ui/LocaleLink";
-import { ArrowRight, Sparkles, Star } from "lucide-react";
+import { ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
 import { HeroDashboardMockup } from "./HeroDashboardMockup";
 
 export function HeroSection() {
@@ -41,7 +41,7 @@ export function HeroSection() {
 
             {/* Subtext */}
             <p className="text-lg text-[#475569] leading-relaxed max-w-lg">
-              Practice hundreds of real assessment tests built around your profession — and walk into your job application ready to pass.
+              Practice hundreds of realistic assessment tests built around your profession — and walk into your job application ready to pass.
             </p>
 
             {/* CTAs */}
@@ -50,7 +50,7 @@ export function HeroSection() {
                 href="/onboarding"
                 className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold shadow-lg hover:opacity-90 transition-opacity text-sm"
               >
-                Start free
+                Start your first free test
                 <ArrowRight size={16} />
               </Link>
               <Link
@@ -61,28 +61,20 @@ export function HeroSection() {
               </Link>
             </div>
 
-            {/* Social proof mini */}
-            <div className="flex items-center gap-4 pt-2">
-              <div className="flex -space-x-2">
-                {["SK", "TB", "NV", "ML"].map((initials, i) => (
-                  <div
-                    key={i}
-                    className="w-8 h-8 rounded-full border-2 border-white bg-gradient-to-br from-[#2D7BFF] to-[#1D63E6] flex items-center justify-center text-white text-[10px] font-bold"
-                  >
-                    {initials}
-                  </div>
-                ))}
-              </div>
-              <div>
-                <div className="flex items-center gap-0.5">
-                  {[1,2,3,4,5].map((s) => (
-                    <Star key={s} size={13} className="text-amber-400 fill-amber-400" />
-                  ))}
-                </div>
-                <p className="text-xs text-[#64748b]">
-                  <span className="font-semibold text-[#0D1B2E]">12,400+</span> tests completed
-                </p>
-              </div>
+            {/* Trust signals — honest, verifiable claims (no invented numbers) */}
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-2 text-sm text-[#64748b]">
+              <span className="inline-flex items-center gap-1.5">
+                <CheckCircle2 size={15} className="text-[#10b981]" />
+                5 free tests — no card needed
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <CheckCircle2 size={15} className="text-[#10b981]" />
+                Instant scoring & explanations
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <CheckCircle2 size={15} className="text-[#10b981]" />
+                Modelled on SHL, Korn Ferry &amp; cut-e
+              </span>
             </div>
           </div>
 
