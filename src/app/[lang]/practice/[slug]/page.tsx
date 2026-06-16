@@ -6,7 +6,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { FooterNav } from "@/components/layout/FooterNav";
 import { PRACTICE_PAGES } from "./config";
 import { LogoMark } from "@/components/ui/Logo";
-import { isLocale, localeAlternates, SITE_URL, type Locale } from "@/lib/locales";
+import { CURRENCY, isLocale, localeAlternates, SITE_URL, type Locale } from "@/lib/locales";
 
 interface Props {
   params: Promise<{ lang: string; slug: string }>;
@@ -114,7 +114,7 @@ export default async function PracticePage({ params }: Props) {
               Start with 5 free tests — no credit card needed
             </p>
             <p className="text-sm text-[#64748b] mb-6">
-              Unlimited access from €4/month. Cancel anytime.
+              Unlimited access from {CURRENCY[loc]}4/month. Cancel anytime.
             </p>
             <Link
               href="/onboarding"

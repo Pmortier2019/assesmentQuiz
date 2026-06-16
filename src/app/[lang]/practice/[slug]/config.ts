@@ -34,7 +34,7 @@ export const PRACTICE_PAGES: Record<string, LocalizedPracticePage> = {
       faqs: [
         { q: "What is a numerical reasoning test?", a: "A numerical reasoning test measures your ability to interpret and work with numerical data such as tables, graphs and statistics. They are widely used by employers in finance, consulting and technology during graduate and professional hiring." },
         { q: "Who uses numerical reasoning tests?", a: "Most large employers use numerical reasoning tests, including banks, consulting firms, tech companies and graduate employers. Common providers include SHL, Korn Ferry, cut-e and Talent Q." },
-        { q: "How can I improve my numerical reasoning score?", a: "Regular practice is the most effective method. Focus on reading data quickly, practising mental arithmetic and working under timed conditions. Ready to Ace provides unlimited practice tests for €4/month." },
+        { q: "How can I improve my numerical reasoning score?", a: "Regular practice is the most effective method. Focus on reading data quickly, practising mental arithmetic and working under timed conditions. Ready to Ace provides unlimited practice tests for $4/month." },
       ],
     },
     nl: {

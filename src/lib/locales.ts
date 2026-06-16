@@ -34,6 +34,13 @@ export function localeFromPathname(pathname: string): Locale {
   return isLocale(seg) ? seg : DEFAULT_LOCALE;
 }
 
+/**
+ * Display currency symbol per locale. The actual charge is handled by Lemon
+ * Squeezy (billed in EUR, converted at checkout); this only localises the
+ * symbol shown in marketing/UI — `$` for English visitors, `€` for Dutch.
+ */
+export const CURRENCY: Record<Locale, string> = { en: "$", nl: "€" };
+
 export const SITE_URL = "https://www.ready-to-ace.com";
 
 /**

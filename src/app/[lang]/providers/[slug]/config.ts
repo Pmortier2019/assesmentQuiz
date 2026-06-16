@@ -41,7 +41,7 @@ export const PROVIDER_PAGES: Record<string, LocalizedProviderPage> = {
       faqs: [
         { q: "What is an SHL test?", a: "SHL is the largest provider of psychometric assessments worldwide. Its Verify range of cognitive ability tests — numerical, verbal and inductive reasoning — is used by thousands of employers during graduate and professional hiring." },
         { q: "Which employers use SHL?", a: "Banks, consulting firms, technology companies and large graduate employers across Europe use SHL tests as part of their selection process. If you've been invited to an online assessment, there's a strong chance it is powered by SHL." },
-        { q: "How do I prepare for an SHL test?", a: "Practise under timed conditions with questions that mirror the SHL Verify format. Focus on reading data and passages quickly and accurately. Ready to Ace offers unlimited SHL-style practice for €4/month." },
+        { q: "How do I prepare for an SHL test?", a: "Practise under timed conditions with questions that mirror the SHL Verify format. Focus on reading data and passages quickly and accurately. Ready to Ace offers unlimited SHL-style practice for $4/month." },
       ],
       relatedSlugs: ["numerical-reasoning", "verbal-reasoning", "logical-reasoning", "situational-judgement"],
     },
@@ -91,7 +91,7 @@ export const PROVIDER_PAGES: Record<string, LocalizedProviderPage> = {
       faqs: [
         { q: "What is a Korn Ferry assessment?", a: "Korn Ferry is a global talent firm whose assessments — including the Talent Q Elements range — measure numerical, verbal and logical reasoning as well as leadership potential. They are common in graduate, professional and executive selection." },
         { q: "What is Talent Q Elements?", a: "Talent Q Elements is Korn Ferry's suite of adaptive aptitude tests. Questions adjust in difficulty based on your answers, so accuracy and pacing both matter." },
-        { q: "How do I prepare for a Korn Ferry test?", a: "Practise numerical, verbal and logical reasoning under timed, adaptive-style conditions, and review leadership scenario questions. Ready to Ace provides unlimited practice for €4/month." },
+        { q: "How do I prepare for a Korn Ferry test?", a: "Practise numerical, verbal and logical reasoning under timed, adaptive-style conditions, and review leadership scenario questions. Ready to Ace provides unlimited practice for $4/month." },
       ],
       relatedSlugs: ["numerical-reasoning", "verbal-reasoning", "logical-reasoning", "leadership-assessment"],
     },
@@ -141,7 +141,7 @@ export const PROVIDER_PAGES: Record<string, LocalizedProviderPage> = {
       faqs: [
         { q: "What is a cut-e test?", a: "cut-e (now part of Aon) is a major European assessment provider. Its 'scales' tests are short and adaptive, measuring numerical, verbal and logical reasoning under tight time limits — speed and accuracy matter equally." },
         { q: "Which employers use cut-e?", a: "Many European employers in aviation, finance, retail and graduate recruitment use cut-e/Aon assessments as an early screening step." },
-        { q: "How do I prepare for a cut-e test?", a: "Because cut-e tests are short and time-pressured, practise working quickly without sacrificing accuracy. Ready to Ace offers unlimited reasoning practice for €4/month." },
+        { q: "How do I prepare for a cut-e test?", a: "Because cut-e tests are short and time-pressured, practise working quickly without sacrificing accuracy. Ready to Ace offers unlimited reasoning practice for $4/month." },
       ],
       relatedSlugs: ["numerical-reasoning", "verbal-reasoning", "logical-reasoning", "situational-judgement", "data-interpretation"],
     },
@@ -191,7 +191,7 @@ export const PROVIDER_PAGES: Record<string, LocalizedProviderPage> = {
       faqs: [
         { q: "What is the CCAT?", a: "The Criteria Cognitive Aptitude Test (CCAT) measures problem-solving, learning ability and critical thinking. It has 50 questions across math/logic, verbal and spatial reasoning, with a strict 15-minute limit — most candidates don't finish, so accuracy and speed both matter." },
         { q: "Which employers use the CCAT?", a: "The CCAT is widely used by U.S. technology, sales and finance employers for early screening, often through Criteria Corp. If you're applying to a fast-growing company, there's a good chance you'll see it." },
-        { q: "What is a good CCAT score?", a: "Scores are reported out of 50 and compared to role-specific benchmarks. Practicing under timed conditions is the most reliable way to raise your score. Ready to Ace offers unlimited reasoning practice for €4/month." },
+        { q: "What is a good CCAT score?", a: "Scores are reported out of 50 and compared to role-specific benchmarks. Practicing under timed conditions is the most reliable way to raise your score. Ready to Ace offers unlimited reasoning practice for $4/month." },
       ],
       relatedSlugs: ["numerical-reasoning", "verbal-reasoning", "logical-reasoning", "critical-reasoning"],
     },
@@ -241,7 +241,7 @@ export const PROVIDER_PAGES: Record<string, LocalizedProviderPage> = {
       faqs: [
         { q: "What is the Wonderlic test?", a: "The Wonderlic is a short cognitive ability test — 50 questions in 12 minutes — measuring how quickly you learn, reason and solve problems. It's used across U.S. industries and is well known from its use in sports recruitment." },
         { q: "How is the Wonderlic scored?", a: "Your score is the number of correct answers out of 50. Because the time limit is tight, very few people answer every question — pacing and accuracy together determine your result." },
-        { q: "How do I prepare for the Wonderlic?", a: "Practice numerical, verbal and logical questions at speed, and get comfortable skipping and returning to hard items. Ready to Ace offers unlimited timed practice for €4/month." },
+        { q: "How do I prepare for the Wonderlic?", a: "Practice numerical, verbal and logical questions at speed, and get comfortable skipping and returning to hard items. Ready to Ace offers unlimited timed practice for $4/month." },
       ],
       relatedSlugs: ["numerical-reasoning", "verbal-reasoning", "logical-reasoning"],
     },
@@ -291,7 +291,7 @@ export const PROVIDER_PAGES: Record<string, LocalizedProviderPage> = {
       faqs: [
         { q: "What is the Predictive Index?", a: "Predictive Index (PI) offers two main assessments: the PI Cognitive Assessment, a 12-minute test of numerical, verbal and abstract reasoning, and the PI Behavioral Assessment, which maps your work style. Both are common in U.S. hiring." },
         { q: "How fast is the PI Cognitive Assessment?", a: "It's 50 questions in 12 minutes — about 14 seconds per question — so quick, accurate reasoning is essential. Practicing under time pressure is the best preparation." },
-        { q: "Can you prepare for the PI Behavioral Assessment?", a: "There are no right or wrong answers, but reflecting on your work style and answering consistently helps. For the cognitive side, Ready to Ace offers unlimited timed practice for €4/month." },
+        { q: "Can you prepare for the PI Behavioral Assessment?", a: "There are no right or wrong answers, but reflecting on your work style and answering consistently helps. For the cognitive side, Ready to Ace offers unlimited timed practice for $4/month." },
       ],
       relatedSlugs: ["numerical-reasoning", "verbal-reasoning", "logical-reasoning", "work-style-assessment"],
     },
@@ -341,7 +341,7 @@ export const PROVIDER_PAGES: Record<string, LocalizedProviderPage> = {
       faqs: [
         { q: "What is a HireVue assessment?", a: "HireVue is a hiring platform combining on-demand (recorded) video interviews with game-based assessments. Candidates answer questions on camera and complete short games that measure cognitive and behavioral traits. It's widely used by large U.S. employers." },
         { q: "How do I prepare for a HireVue interview?", a: "Practice answering common questions out loud using the STAR method, test your camera and lighting, and rehearse staying concise. For the game-based portion, practicing reasoning and situational judgement helps you stay calm and quick." },
-        { q: "Can you practice the HireVue games?", a: "The exact games vary by employer, but they measure the same reasoning and judgement skills you can train. Ready to Ace offers unlimited reasoning and situational judgement practice for €4/month." },
+        { q: "Can you practice the HireVue games?", a: "The exact games vary by employer, but they measure the same reasoning and judgement skills you can train. Ready to Ace offers unlimited reasoning and situational judgement practice for $4/month." },
       ],
       relatedSlugs: ["situational-judgement", "work-style-assessment", "verbal-reasoning"],
     },
@@ -390,7 +390,7 @@ export const PROVIDER_PAGES: Record<string, LocalizedProviderPage> = {
       ],
       faqs: [
         { q: "What is the Caliper Profile?", a: "The Caliper Profile is a personality and cognitive assessment that predicts how well someone fits a role. It combines work-style and motivation questions with abstract reasoning, and is popular in U.S. sales and leadership hiring." },
-        { q: "Can you prepare for the Caliper assessment?", a: "The personality section has no right answers, but understanding the format and answering consistently helps. The reasoning section can be practiced directly. Ready to Ace offers unlimited reasoning practice for €4/month." },
+        { q: "Can you prepare for the Caliper assessment?", a: "The personality section has no right answers, but understanding the format and answering consistently helps. The reasoning section can be practiced directly. Ready to Ace offers unlimited reasoning practice for $4/month." },
         { q: "How long is the Caliper Profile?", a: "It typically takes around 60–90 minutes and mixes multiple-choice personality items with reasoning questions. Going in familiar with the format keeps you calm and focused." },
       ],
       relatedSlugs: ["work-style-assessment", "leadership-assessment", "logical-reasoning"],
@@ -441,7 +441,7 @@ export const PROVIDER_PAGES: Record<string, LocalizedProviderPage> = {
       faqs: [
         { q: "What is Pymetrics?", a: "Pymetrics (now part of Harver) uses around a dozen short, neuroscience-based games to measure cognitive and emotional traits such as attention, risk tolerance and memory. There are no right or wrong answers — it builds a profile of how you think." },
         { q: "Can you prepare for Pymetrics games?", a: "You can't 'pass' them, but knowing the format removes surprise and nerves. Understanding what each game measures and practicing focus and quick decision-making helps you perform naturally." },
-        { q: "Which employers use Pymetrics?", a: "Large U.S. employers in consulting, finance and technology use Pymetrics for fair early-stage screening. Practicing reasoning and situational judgement keeps your thinking sharp. Ready to Ace offers unlimited practice for €4/month." },
+        { q: "Which employers use Pymetrics?", a: "Large U.S. employers in consulting, finance and technology use Pymetrics for fair early-stage screening. Practicing reasoning and situational judgement keeps your thinking sharp. Ready to Ace offers unlimited practice for $4/month." },
       ],
       relatedSlugs: ["situational-judgement", "logical-reasoning", "work-style-assessment"],
     },
@@ -491,7 +491,7 @@ export const PROVIDER_PAGES: Record<string, LocalizedProviderPage> = {
       faqs: [
         { q: "What is a Saville Assessment?", a: "Saville Assessment (part of Willis Towers Watson) provides aptitude and personality tests. Its Swift range combines numerical, verbal and diagrammatic reasoning in one timed sitting, while the Wave questionnaire maps work style and motivation." },
         { q: "What is Saville Swift?", a: "Swift tests bundle several reasoning types into a single short, timed assessment, so quick switching between question types matters. Practicing each type under time pressure is the best preparation." },
-        { q: "How do I prepare for Saville tests?", a: "Practice numerical, verbal and diagrammatic reasoning at speed and review the Wave personality format. Ready to Ace offers unlimited reasoning practice for €4/month." },
+        { q: "How do I prepare for Saville tests?", a: "Practice numerical, verbal and diagrammatic reasoning at speed and review the Wave personality format. Ready to Ace offers unlimited reasoning practice for $4/month." },
       ],
       relatedSlugs: ["numerical-reasoning", "verbal-reasoning", "logical-reasoning", "work-style-assessment"],
     },
@@ -541,7 +541,7 @@ export const PROVIDER_PAGES: Record<string, LocalizedProviderPage> = {
       faqs: [
         { q: "What is an IBM Kenexa test?", a: "IBM Kenexa provides aptitude assessments measuring numerical, verbal and logical reasoning, along with the Prove It! range of skills tests. They are used by large employers in graduate and professional selection." },
         { q: "Which employers use Kenexa?", a: "Large corporates across finance, retail and technology use IBM Kenexa assessments as part of structured hiring, often as an early online screening step." },
-        { q: "How do I prepare for a Kenexa test?", a: "Practice numerical, verbal and logical reasoning under timed conditions to build speed and accuracy. Ready to Ace offers unlimited practice for €4/month." },
+        { q: "How do I prepare for a Kenexa test?", a: "Practice numerical, verbal and logical reasoning under timed conditions to build speed and accuracy. Ready to Ace offers unlimited practice for $4/month." },
       ],
       relatedSlugs: ["numerical-reasoning", "verbal-reasoning", "logical-reasoning"],
     },
