@@ -10,7 +10,7 @@ export async function generateMetadata({
   const loc = isLocale(lang) ? lang : "en";
   const cur = CURRENCY[loc];
   return {
-    title: `Pricing — Unlimited Assessment Practice for ${cur}4/month`,
+    title: `Pricing: Unlimited Assessment Practice for ${cur}4/month`,
     description: `Get unlimited access to all 38 job assessment practice tests for just ${cur}4/month. Cancel anytime. Start with 5 free tests today.`,
     alternates: localeAlternates("/pricing", loc),
     openGraph: {

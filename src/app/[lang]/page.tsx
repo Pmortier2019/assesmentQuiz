@@ -87,7 +87,7 @@ const jsonLd = {
           "name": "What types of assessment tests can I practice?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Ready to Ace offers practice tests for numerical reasoning, logical reasoning, verbal reasoning, situational judgement, critical reasoning, data interpretation, work style, leadership and more — the same types used by top employers and assessment providers like SHL, Korn Ferry and cut-e.",
+            "text": "Ready to Ace offers practice tests for numerical reasoning, logical reasoning, verbal reasoning, situational judgement, critical reasoning, data interpretation, work style, leadership and more, the same types used by top employers and assessment providers like SHL, Korn Ferry and cut-e.",
           },
         },
         {

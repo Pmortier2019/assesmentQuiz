@@ -109,7 +109,7 @@ export function TestCard({ test, isLocked = false, onStart, className, showRecom
           className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
         >
           <Lock size={13} />
-          Unlock — Pro plan
+          Unlock with Pro
         </Link>
       )}
     </div>

@@ -27,10 +27,10 @@ const UI: Record<Locale, {
   ctaButton: string;
 }> = {
   en: {
-    startFree: "Start Free — No Sign-Up Required",
+    startFree: "Start Free, No Sign-Up Required",
     browseAll: "Browse All Tests",
     covers: (name) => `Tests ${name} uses`,
-    freeLine: "Start with 5 free tests — no credit card needed",
+    freeLine: "Start with 5 free tests, no credit card needed",
     freeSub: "Unlimited access from $4/month. Cancel anytime.",
     getStarted: "Get Started Free",
     faq: "Frequently Asked Questions",
@@ -39,10 +39,10 @@ const UI: Record<Locale, {
     ctaButton: "Start Free Today",
   },
   nl: {
-    startFree: "Gratis starten — geen account nodig",
+    startFree: "Gratis starten, geen account nodig",
     browseAll: "Bekijk alle tests",
     covers: (name) => `Tests die ${name} gebruikt`,
-    freeLine: "Begin met 5 gratis tests — geen creditcard nodig",
+    freeLine: "Begin met 5 gratis tests, geen creditcard nodig",
     freeSub: "Onbeperkte toegang vanaf €4/maand. Altijd opzegbaar.",
     getStarted: "Gratis beginnen",
     faq: "Veelgestelde vragen",

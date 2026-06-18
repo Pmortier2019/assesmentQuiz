@@ -55,7 +55,7 @@ export function PaywallCard({
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 items-center">
-          <UpgradeButton label={`Upgrade to Pro — ${cur}4/mo`} />
+          <UpgradeButton label={`Upgrade to Pro (${cur}4/mo)`} />
           {!compact && (
             <Link
               href="/tests"

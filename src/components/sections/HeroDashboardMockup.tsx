@@ -25,7 +25,7 @@ const DEMO: LiveData = {
   streak: 7,
   barHeights: [40, 55, 48, 65, 72, 68, 80],
   scoreImprovement: "+18%",
-  recommendedTitle: "Numerical Reasoning — Level 2",
+  recommendedTitle: "Numerical Reasoning: Level 2",
   masteryPct: 65,
   recommendedDuration: 12,
   freeTestsUsed: 3,

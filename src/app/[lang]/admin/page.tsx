@@ -73,7 +73,7 @@ export default function AdminPage() {
         gs.status === "rejected" && "generation status",
       ].filter(Boolean);
       if (failed.length > 0) {
-        setLoadError(`Couldn't load: ${failed.join(", ")}. The rest is shown below — hit Refresh to retry.`);
+        setLoadError(`Couldn't load: ${failed.join(", ")}. The rest is shown below. Hit Refresh to retry.`);
       }
     } finally {
       setLoading(false);
@@ -137,7 +137,7 @@ export default function AdminPage() {
     setBulkProgress({ done: 0, total: todo.length, current: "" });
     for (let i = 0; i < todo.length; i++) {
       const { type, diff, label } = todo[i];
-      setBulkProgress({ done: i, total: todo.length, current: `${label} — ${diff}` });
+      setBulkProgress({ done: i, total: todo.length, current: `${label} (${diff})` });
       try {
         await generateTestOfType(type, diff, defaultFree);
         if (i < todo.length - 1) await new Promise((r) => setTimeout(r, 3000));

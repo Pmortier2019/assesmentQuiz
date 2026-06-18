@@ -4,12 +4,12 @@ const FEATURES = [
   {
     icon: Layers,
     title: "5 assessment types",
-    description: "Numerical, logical, verbal reasoning, situational judgement, and personality tests — all in one place.",
+    description: "Numerical, logical, verbal reasoning, situational judgement, and personality tests, all in one place.",
   },
   {
     icon: Briefcase,
     title: "Profession-tailored tests",
-    description: "Tests are built around your sector and role — so every question is relevant to the job you want.",
+    description: "Tests are built around your sector and role, so every question is relevant to the job you want.",
   },
   {
     icon: BarChart3,
@@ -19,17 +19,17 @@ const FEATURES = [
   {
     icon: Brain,
     title: "Instant explanations",
-    description: "Every question includes a clear explanation — not just what's right, but why, so it sticks.",
+    description: "Every question includes a clear explanation, not just what's right, but why, so it sticks.",
   },
   {
     icon: Repeat2,
     title: "Daily streaks",
-    description: "Build a consistent practice habit with streak tracking — small steps lead to big improvements.",
+    description: "Build a consistent practice habit with streak tracking, small steps lead to big improvements.",
   },
   {
     icon: Smartphone,
     title: "Mobile-first design",
-    description: "Practice anywhere — on the bus, in a coffee shop, or wherever you have a spare 15 minutes.",
+    description: "Practice anywhere: on the bus, in a coffee shop, or wherever you have a spare 15 minutes.",
   },
 ];
 
@@ -42,7 +42,7 @@ export function FeaturesSection() {
             Built for serious candidates
           </h2>
           <p className="text-[#64748b] text-lg max-w-xl mx-auto">
-            Every feature is designed to maximize your assessment score — not just keep you busy.
+            Every feature is designed to maximize your assessment score, not just keep you busy.
           </p>
         </div>
 

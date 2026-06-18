@@ -55,7 +55,7 @@ function CheckEmailContent() {
               Didn&apos;t receive it? Resend
             </button>
           ) : (
-            <p className="text-sm text-[#16a34a] font-semibold">Email resent — check your inbox.</p>
+            <p className="text-sm text-[#16a34a] font-semibold">Email resent. Check your inbox.</p>
           )}
 
           <p className="mt-8 text-xs text-[#94a3b8]">

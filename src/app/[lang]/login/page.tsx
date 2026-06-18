@@ -109,7 +109,7 @@ function LoginForm() {
               <p className="text-sm text-[#64748b]">
                 {mode === "login"
                   ? "Log in to continue your practice."
-                  : "Start with 5 free tests — no credit card needed."}
+                  : "Start with 5 free tests, no credit card needed."}
               </p>
             </div>
 

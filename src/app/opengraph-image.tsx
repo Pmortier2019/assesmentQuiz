@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 // Site-wide Open Graph / Twitter card image. Static (no request-time APIs),
 // so Next.js generates it once at build time and caches it.
-export const alt = "Ready to Ace — Free Job Assessment Practice Tests";
+export const alt = "Ready to Ace | Free Job Assessment Practice Tests";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
