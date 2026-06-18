@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Free Practice Assessment Tests — Numerical, Logical, Verbal & More",
+  title: "Free Practice Assessment Tests: Numerical, Logical, Verbal & More",
   description:
     "Browse 38 free and pro job assessment practice tests. Numerical reasoning, logical reasoning, verbal reasoning, situational judgement and more. Used by candidates applying to top employers worldwide.",
   alternates: { canonical: "/tests" },

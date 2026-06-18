@@ -105,7 +105,7 @@ function TestsContent() {
     for (let i = 0; i < todo.length; i++) {
       const { type, label, difficulty } = todo[i];
       const diffLabel = difficulty === "EASY" ? t("diff_beginner") : difficulty === "MEDIUM" ? t("diff_intermediate") : t("diff_advanced");
-      setGenerateProgress({ current: i + 1, total: todo.length, label: `${label} — ${diffLabel}` });
+      setGenerateProgress({ current: i + 1, total: todo.length, label: `${label} (${diffLabel})` });
       try {
         await generateTestOfType(type, difficulty, generateAsFree);
       } catch {
@@ -179,7 +179,7 @@ function TestsContent() {
                 {generating && generateProgress && (
                   <div className="flex flex-col items-end gap-1 min-w-[220px]">
                     <p className="text-xs text-muted">
-                      {generateProgress.current}/{generateProgress.total} — {generateProgress.label}
+                      {generateProgress.current}/{generateProgress.total} · {generateProgress.label}
                     </p>
                     <div className="w-full h-1.5 bg-line rounded-full overflow-hidden">
                       <div

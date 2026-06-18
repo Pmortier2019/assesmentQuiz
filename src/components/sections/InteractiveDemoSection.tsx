@@ -58,13 +58,13 @@ export function InteractiveDemoSection() {
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#EAF1FF] border border-[#BFD6FF] mb-4">
             <Sparkles size={13} className="text-[#2D7BFF]" />
-            <span className="text-xs font-semibold text-[#2D7BFF]">Try it yourself — no sign-up</span>
+            <span className="text-xs font-semibold text-[#2D7BFF]">Try it yourself, no sign-up</span>
           </div>
           <h2 className="font-display font-bold text-3xl sm:text-4xl text-[#0D1B2E] mb-3">
             See how it works
           </h2>
           <p className="text-[#64748b] max-w-xl mx-auto">
-            Answer one real-style question. You&apos;ll get instant scoring and an explanation —
+            Answer one real-style question. You&apos;ll get instant scoring and an explanation,
             exactly how every practice test ends.
           </p>
         </div>
@@ -149,7 +149,7 @@ export function InteractiveDemoSection() {
                       <XCircle size={16} className="text-[#ef4444]" />
                     )}
                     <span className={`text-sm font-semibold ${isRight ? "text-[#047857]" : "text-[#b91c1c]"}`}>
-                      {isRight ? "Correct!" : `Not quite — the answer is ${correct.text}.`}
+                      {isRight ? "Correct!" : `Not quite, the answer is ${correct.text}.`}
                     </span>
                   </div>
                   <p className="text-sm text-[#475569] leading-relaxed">{DEMO_QUESTION.explanation}</p>
@@ -187,7 +187,7 @@ export function InteractiveDemoSection() {
               ))}
             </div>
             <p className="text-sm text-[#64748b] max-w-sm">
-              Be the first to review — real reviews from real users, nothing made up.
+              Be the first to review. Real reviews from real users, nothing made up.
             </p>
           </div>
         </div>

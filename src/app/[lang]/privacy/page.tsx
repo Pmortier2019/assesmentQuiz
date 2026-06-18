@@ -28,7 +28,7 @@ export default function PrivacyPage() {
             <li><strong>Accountgegevens:</strong> naam, e-mailadres en versleuteld wachtwoord.</li>
             <li><strong>Profiel:</strong> je doelrol, sector, doelbedrijf en niveau (optioneel).</li>
             <li><strong>Gebruiksgegevens:</strong> testresultaten, scores en voortgang.</li>
-            <li><strong>Betaalgegevens:</strong> abonnementsstatus. Kaartgegevens worden door LemonSqueezy verwerkt — wij slaan ze nooit op.</li>
+            <li><strong>Betaalgegevens:</strong> abonnementsstatus. Kaartgegevens worden door LemonSqueezy verwerkt. Wij slaan ze nooit op.</li>
           </ul>
 
           <H2>2. Waarom we deze gegevens verwerken</H2>
@@ -43,13 +43,13 @@ export default function PrivacyPage() {
           <H2>3. Subverwerkers</H2>
           <p>We delen gegevens met de volgende verwerkers, uitsluitend om de Dienst te leveren:</p>
           <ul className="list-disc pl-5 flex flex-col gap-1">
-            <li><strong>Neon</strong> — databasehosting (EU, Frankfurt)</li>
-            <li><strong>Fly.io</strong> — backend-hosting</li>
-            <li><strong>Vercel</strong> — frontend-hosting</li>
-            <li><strong>LemonSqueezy</strong> — betalingsverwerking</li>
-            <li><strong>Resend</strong> — transactionele e-mails</li>
-            <li><strong>Anthropic</strong> — AI-testgeneratie (geen persoonsgegevens van gebruikers)</li>
-            <li><strong>Sentry</strong> — foutmonitoring</li>
+            <li><strong>Neon</strong>: databasehosting (EU, Frankfurt)</li>
+            <li><strong>Fly.io</strong>: backend-hosting</li>
+            <li><strong>Vercel</strong>: frontend-hosting</li>
+            <li><strong>LemonSqueezy</strong>: betalingsverwerking</li>
+            <li><strong>Resend</strong>: transactionele e-mails</li>
+            <li><strong>Anthropic</strong>: AI-testgeneratie (geen persoonsgegevens van gebruikers)</li>
+            <li><strong>Sentry</strong>: foutmonitoring</li>
           </ul>
 
           <H2>4. Bewaartermijn</H2>
@@ -90,7 +90,7 @@ export default function PrivacyPage() {
             <li><strong>Account data:</strong> name, email address and an encrypted password.</li>
             <li><strong>Profile:</strong> your target role, industry, target company and level (optional).</li>
             <li><strong>Usage data:</strong> test results, scores and progress.</li>
-            <li><strong>Payment data:</strong> subscription status. Card details are handled by LemonSqueezy — we never store them.</li>
+            <li><strong>Payment data:</strong> subscription status. Card details are handled by LemonSqueezy. We never store them.</li>
           </ul>
 
           <H2>2. Why we process this data</H2>
@@ -105,13 +105,13 @@ export default function PrivacyPage() {
           <H2>3. Subprocessors</H2>
           <p>We share data with the following processors, solely to operate the Service:</p>
           <ul className="list-disc pl-5 flex flex-col gap-1">
-            <li><strong>Neon</strong> — database hosting (EU, Frankfurt)</li>
-            <li><strong>Fly.io</strong> — backend hosting</li>
-            <li><strong>Vercel</strong> — frontend hosting</li>
-            <li><strong>LemonSqueezy</strong> — payment processing</li>
-            <li><strong>Resend</strong> — transactional email</li>
-            <li><strong>Anthropic</strong> — AI test generation (no user personal data)</li>
-            <li><strong>Sentry</strong> — error monitoring</li>
+            <li><strong>Neon</strong>: database hosting (EU, Frankfurt)</li>
+            <li><strong>Fly.io</strong>: backend hosting</li>
+            <li><strong>Vercel</strong>: frontend hosting</li>
+            <li><strong>LemonSqueezy</strong>: payment processing</li>
+            <li><strong>Resend</strong>: transactional email</li>
+            <li><strong>Anthropic</strong>: AI test generation (no user personal data)</li>
+            <li><strong>Sentry</strong>: error monitoring</li>
           </ul>
 
           <H2>4. Retention</H2>

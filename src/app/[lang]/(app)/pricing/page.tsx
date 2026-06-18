@@ -19,7 +19,7 @@ const FAQ = [
   },
   {
     q: "Are the tests similar to real company assessments?",
-    a: "Yes — our tests are modelled on assessments used by top employers like McKinsey, Deloitte, Shell, and others.",
+    a: "Yes, our tests are modelled on assessments used by top employers like McKinsey, Deloitte, Shell, and others.",
   },
   {
     q: "How often are new tests added?",
@@ -64,7 +64,7 @@ export default function PricingPage() {
             <PricingCard plan="pro" highlighted />
           </div>
           <div className="flex flex-col items-center gap-3 mt-8">
-            <UpgradeButton label={`Upgrade to Pro — ${cur}4/mo`} size="lg" />
+            <UpgradeButton label={`Upgrade to Pro (${cur}4/mo)`} size="lg" />
             <p className="text-sm text-[#94a3b8]">
               Cancel anytime · No hidden fees · Billed monthly via Lemon Squeezy
             </p>

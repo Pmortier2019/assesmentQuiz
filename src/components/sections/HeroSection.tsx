@@ -41,7 +41,7 @@ export function HeroSection() {
 
             {/* Subtext */}
             <p className="text-lg text-[#475569] leading-relaxed max-w-lg">
-              Practice hundreds of realistic assessment tests built around your profession — and walk into your job application ready to pass.
+              Practice hundreds of realistic assessment tests built around your profession, and walk into your job application ready to pass.
             </p>
 
             {/* CTAs */}
@@ -65,7 +65,7 @@ export function HeroSection() {
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-2 text-sm text-[#64748b]">
               <span className="inline-flex items-center gap-1.5">
                 <CheckCircle2 size={15} className="text-[#10b981]" />
-                5 free tests — no card needed
+                5 free tests, no card needed
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <CheckCircle2 size={15} className="text-[#10b981]" />

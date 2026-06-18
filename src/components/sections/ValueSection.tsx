@@ -4,7 +4,7 @@ const getValues = (currency: string) => [
   {
     icon: Shield,
     title: "5 free tests",
-    description: "Start immediately — no credit card required. Full access to 5 complete assessments.",
+    description: "Start immediately. No credit card required. Full access to 5 complete assessments.",
     color: "text-[#2D7BFF]",
     bg: "bg-[#EAF1FF]",
   },
@@ -18,7 +18,7 @@ const getValues = (currency: string) => [
   {
     icon: Briefcase,
     title: "Profession-specific",
-    description: "Tests are tailored to your sector and career — not generic one-size-fits-all content.",
+    description: "Tests are tailored to your sector and career, not generic one-size-fits-all content.",
     color: "text-[#2563eb]",
     bg: "bg-[#eff6ff]",
   },
@@ -32,7 +32,7 @@ const getValues = (currency: string) => [
   {
     icon: Calendar,
     title: "Daily preparation",
-    description: "A structured daily plan keeps you on track and builds habits — like Duolingo, for professionals.",
+    description: "A structured daily plan keeps you on track and builds habits, like Duolingo, for professionals.",
     color: "text-[#f59e0b]",
     bg: "bg-[#fffbeb]",
   },
@@ -48,7 +48,7 @@ export function ValueSection({ currency = "$" }: { currency?: string }) {
             Everything you need to get hired
           </h2>
           <p className="text-[#64748b] text-lg max-w-xl mx-auto">
-            Built around how professionals actually prepare — consistent, focused, and data-driven.
+            Built around how professionals actually prepare: consistent, focused, and data-driven.
           </p>
         </div>
 
