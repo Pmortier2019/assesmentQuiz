@@ -25,11 +25,11 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "Ready to Ace — Free Job Assessment Practice Tests",
+    default: "Ready to Ace | Free Job Assessment Practice Tests",
     template: "%s | Ready to Ace",
   },
   description:
-    "Practice the real numerical, logical & verbal reasoning tests employers use — and walk into your assessment confident. Hundreds of questions, free to start.",
+    "Practice the real numerical, logical & verbal reasoning tests employers use, and walk into your assessment confident. Hundreds of questions, free to start.",
   keywords: [
     "job assessment practice",
     "numerical reasoning test",
@@ -48,17 +48,17 @@ export const metadata: Metadata = {
   authors: [{ name: "Ready to Ace" }],
   metadataBase: new URL("https://www.ready-to-ace.com"),
   openGraph: {
-    title: "Ready to Ace — Free Job Assessment Practice Tests",
+    title: "Ready to Ace | Free Job Assessment Practice Tests",
     description:
-      "Practice the real numerical, logical & verbal reasoning tests employers use — and walk into your assessment confident. Hundreds of questions, free to start.",
+      "Practice the real numerical, logical & verbal reasoning tests employers use, and walk into your assessment confident. Hundreds of questions, free to start.",
     type: "website",
     url: "https://www.ready-to-ace.com",
     siteName: "Ready to Ace",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ready to Ace — Free Job Assessment Practice Tests",
-    description: "Practice the real numerical, logical & verbal reasoning tests employers use — and walk into your assessment confident. Hundreds of questions, free to start.",
+    title: "Ready to Ace | Free Job Assessment Practice Tests",
+    description: "Practice the real numerical, logical & verbal reasoning tests employers use, and walk into your assessment confident. Hundreds of questions, free to start.",
   },
 };
 

@@ -25,13 +25,13 @@ const TEST_TYPES = [
 ];
 
 const TIPS = [
-  "Start fresh — no coffee yet, simulate exam conditions.",
+  "Start fresh. No coffee yet, simulate exam conditions.",
   "Review yesterday's mistakes before starting today.",
   "Focus on speed today, not just accuracy.",
   "Try explaining your reasoning out loud.",
   "Take a 5-min break every 25 minutes (Pomodoro).",
   "Redo 3 questions you got wrong this week.",
-  "Your brain consolidates learning during sleep — rest well.",
+  "Your brain consolidates learning during sleep, so rest well.",
 ];
 
 function generatePlan(interviewDate: string, targetRole: string, weak: string): DayPlan[] {

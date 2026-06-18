@@ -28,7 +28,7 @@ export const MOCK_PRO_USER: User = {
 export const MOCK_TESTS: Test[] = [
   {
     id: "test_001",
-    title: "Numerical Reasoning — Level 1",
+    title: "Numerical Reasoning: Level 1",
     description: "Practice basic numerical sequences, percentages and data interpretation.",
     type: "numerical_reasoning",
     difficulty: "beginner",
@@ -90,7 +90,7 @@ export const MOCK_TESTS: Test[] = [
   },
   {
     id: "test_002",
-    title: "Logical Reasoning — Patterns",
+    title: "Logical Reasoning: Patterns",
     description: "Identify patterns in shapes, sequences and abstract diagrams.",
     type: "logical_reasoning",
     difficulty: "intermediate",
@@ -129,7 +129,7 @@ export const MOCK_TESTS: Test[] = [
   },
   {
     id: "test_003",
-    title: "Verbal Reasoning — Comprehension",
+    title: "Verbal Reasoning: Comprehension",
     description: "Assess your ability to understand and evaluate written arguments.",
     type: "verbal_reasoning",
     difficulty: "beginner",
@@ -149,14 +149,14 @@ export const MOCK_TESTS: Test[] = [
           { id: "a2", text: "False", isCorrect: false },
           { id: "a3", text: "Cannot say", isCorrect: false },
         ],
-        explanation: "The survey shows 78% reported higher satisfaction — 'significantly' is supported.",
+        explanation: "The survey shows 78% reported higher satisfaction: 'significantly' is supported.",
         points: 10,
       },
     ],
   },
   {
     id: "test_004",
-    title: "Situational Judgement — Leadership",
+    title: "Situational Judgement: Leadership",
     description: "Handle realistic workplace scenarios and choose the most effective response.",
     type: "situational_judgement",
     difficulty: "intermediate",
@@ -204,7 +204,7 @@ export const MOCK_TESTS: Test[] = [
           { id: "a3", text: "Discuss with the team to align on approach", isCorrect: false },
           { id: "a4", text: "Research best practices before committing", isCorrect: false },
         ],
-        explanation: "There is no wrong answer — this reveals your working style.",
+        explanation: "There is no wrong answer. This reveals your working style.",
         points: 0,
       },
     ],
@@ -233,14 +233,14 @@ export const MOCK_TESTS: Test[] = [
           { id: "a4", text: "€19,984", isCorrect: false },
         ],
         explanation:
-          "Stocks: 12,400 × 1.08 = 13,392. Bonds: 7,600 × 0.97 = 7,372. Total: 13,392 + 7,372 = 20,764. Wait — recalculate: 7600×0.97 = 7372, 12400×1.08 = 13392. Total = 20764. Closest is 20,144 if bonds at 0.97 × 7800.",
+          "Stocks: 12,400 × 1.08 = 13,392. Bonds: 7,600 × 0.97 = 7,372. Total: 13,392 + 7,372 = 20,764. Wait, recalculate: 7600×0.97 = 7372, 12400×1.08 = 13392. Total = 20764. Closest is 20,144 if bonds at 0.97 × 7800.",
         points: 20,
       },
     ],
   },
   {
     id: "test_007",
-    title: "Logical Reasoning — Deductive",
+    title: "Logical Reasoning: Deductive",
     description: "AI-generated deductive logic puzzles modelled on McKinsey, BCG and Deloitte assessments.",
     type: "logical_reasoning",
     difficulty: "advanced",
@@ -254,7 +254,7 @@ export const MOCK_TESTS: Test[] = [
   },
   {
     id: "test_008",
-    title: "Verbal Reasoning — Critical Analysis",
+    title: "Verbal Reasoning: Critical Analysis",
     description: "Evaluate arguments, identify assumptions, and assess evidence quality.",
     type: "verbal_reasoning",
     difficulty: "intermediate",
@@ -286,7 +286,7 @@ export const MOCK_RESULTS: TestResult[] = [
     strengths: ["Percentage calculations", "Number sequences"],
     weakPoints: ["Work-rate problems", "Multi-step reasoning"],
     aiFeedback:
-      "Strong performance on direct calculation tasks. Focus on multi-variable word problems — break them into smaller steps and identify the unknown first.",
+      "Strong performance on direct calculation tasks. Focus on multi-variable word problems: break them into smaller steps and identify the unknown first.",
   },
   {
     id: "result_002",
@@ -302,6 +302,6 @@ export const MOCK_RESULTS: TestResult[] = [
     strengths: ["Syllogistic reasoning"],
     weakPoints: ["Transitive logic chains"],
     aiFeedback:
-      "You handle direct logical statements well. Practice chained conditionals — try drawing quick diagrams to map A > B > C relationships.",
+      "You handle direct logical statements well. Practice chained conditionals: try drawing quick diagrams to map A > B > C relationships.",
   },
 ];

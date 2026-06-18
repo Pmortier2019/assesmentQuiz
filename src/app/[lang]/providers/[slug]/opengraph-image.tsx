@@ -76,7 +76,7 @@ export default async function Image({ params }: { params: Promise<{ lang: string
           {title}
         </div>
         <div style={{ fontSize: "30px", color: "rgba(255,255,255,0.75)", marginTop: "28px" }}>
-          Start free — no sign-up required.
+          Start free, no sign-up required.
         </div>
       </div>
     ),

@@ -57,7 +57,7 @@ export default function AdminImportPage() {
       try {
         JSON.parse(value);
       } catch {
-        setParseError("Invalid JSON — check for missing commas or brackets.");
+        setParseError("Invalid JSON. Check for missing commas or brackets.");
       }
     }
   };
@@ -68,7 +68,7 @@ export default function AdminImportPage() {
     try {
       parsed = JSON.parse(raw);
     } catch {
-      setParseError("Invalid JSON — fix the syntax before importing.");
+      setParseError("Invalid JSON. Fix the syntax before importing.");
       return;
     }
 
@@ -141,7 +141,7 @@ export default function AdminImportPage() {
             </span>
           </Link>
           <span className="text-xs font-semibold text-[#64748b] bg-[#f1f5f9] px-3 py-1 rounded-full">
-            Admin — Test Import
+            Admin · Test Import
           </span>
         </div>
       </header>

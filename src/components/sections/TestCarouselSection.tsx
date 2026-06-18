@@ -129,7 +129,7 @@ export function TestCarouselSection() {
             <h2 className="font-display font-bold text-3xl sm:text-4xl text-[#0D1B2E] mb-2">
               Every test type, covered
             </h2>
-            <p className="text-[#64748b]">Hover the cards to explore — then start practicing.</p>
+            <p className="text-[#64748b]">Hover the cards to explore, then start practicing.</p>
           </div>
           <Link
             href="/tests"

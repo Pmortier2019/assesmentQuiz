@@ -77,7 +77,7 @@ export default async function PracticePage({ params }: Props) {
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold text-base shadow-lg hover:opacity-90 transition-opacity"
               >
                 <Zap size={18} className="fill-white" />
-                Start Free — No Sign-Up Required
+                Start Free, No Sign-Up Required
               </Link>
               <Link
                 href="/tests"
@@ -111,7 +111,7 @@ export default async function PracticePage({ params }: Props) {
         <section className="py-12 px-4 bg-[#f8fafc] border-y border-[#e2e8f0]">
           <div className="max-w-xl mx-auto text-center">
             <p className="text-lg font-semibold text-[#0D1B2E] mb-2">
-              Start with 5 free tests — no credit card needed
+              Start with 5 free tests, no credit card needed
             </p>
             <p className="text-sm text-[#64748b] mb-6">
               Unlimited access from {CURRENCY[loc]}4/month. Cancel anytime.
