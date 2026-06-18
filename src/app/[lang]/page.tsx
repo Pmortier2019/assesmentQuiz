@@ -11,6 +11,7 @@ import { HeroSection } from "@/components/sections/HeroSection";
 import { ValueSection } from "@/components/sections/ValueSection";
 import { TestCarouselSection } from "@/components/sections/TestCarouselSection";
 import { InteractiveDemoSection } from "@/components/sections/InteractiveDemoSection";
+import { ProfessionProvider } from "@/components/sections/PersonalizedExperience";
 import { FeaturesSection } from "@/components/sections/FeaturesSection";
 import { PricingPreviewSection } from "@/components/sections/PricingPreviewSection";
 import { FinalCTASection } from "@/components/sections/FinalCTASection";
@@ -122,10 +123,13 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       />
       <Navbar />
       <main className="flex-1">
-        <HeroSection />
-        <ValueSection currency={currency} />
-        <TestCarouselSection />
-        <InteractiveDemoSection />
+        {/* Hero picker and the demo share the chosen profession via this provider. */}
+        <ProfessionProvider>
+          <HeroSection />
+          <ValueSection currency={currency} />
+          <TestCarouselSection />
+          <InteractiveDemoSection />
+        </ProfessionProvider>
         <FeaturesSection />
         <PricingPreviewSection />
         <FinalCTASection currency={currency} />

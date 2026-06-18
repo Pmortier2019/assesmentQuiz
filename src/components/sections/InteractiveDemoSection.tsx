@@ -13,44 +13,20 @@ import {
   Star,
 } from "lucide-react";
 import { LocaleLink as Link } from "@/components/ui/LocaleLink";
+import { useProfession } from "./PersonalizedExperience";
+import { questionForRole, type DemoQuestion } from "@/lib/professionDemo";
 
 // A self-contained product demo: a single real-style assessment question the
-// visitor can actually answer. After answering we reveal the explanation and a
-// small "result preview" — the same instant-scoring flow every real test ends
-// with. These figures are an honest demo of how one question scores, NOT
-// aggregate social-proof numbers.
-
-interface DemoAnswer {
-  id: string;
-  text: string;
-  isCorrect: boolean;
-}
-
-const DEMO_QUESTION = {
-  eyebrow: "Number series",
-  prompt: "Which number comes next in the sequence?",
-  sequence: "2, 6, 12, 20, 30, ?",
-  answers: [
-    { id: "a", text: "36", isCorrect: false },
-    { id: "b", text: "40", isCorrect: false },
-    { id: "c", text: "42", isCorrect: true },
-    { id: "d", text: "48", isCorrect: false },
-  ] satisfies DemoAnswer[],
-  explanation:
-    "The gaps between the numbers grow by 2 each step: +4, +6, +8, +10, then +12. So 30 + 12 = 42.",
-};
+// visitor can actually answer. The question follows the profession picked in the
+// hero, so the demo proves the "tailored to your profession" promise instead of
+// just claiming it. After answering we reveal the explanation and a small
+// "result preview" — an honest demo of how one question scores, NOT aggregate
+// social-proof numbers.
 
 export function InteractiveDemoSection() {
-  const [selected, setSelected] = useState<string | null>(null);
-  const [revealed, setRevealed] = useState(false);
-
-  const correct = DEMO_QUESTION.answers.find((a) => a.isCorrect)!;
-  const isRight = selected === correct.id;
-
-  function reset() {
-    setSelected(null);
-    setRevealed(false);
-  }
+  const { role } = useProfession();
+  const question = questionForRole(role);
+  const onboardingHref = role ? `/onboarding?role=${encodeURIComponent(role)}` : "/onboarding";
 
   return (
     <section className="py-20 bg-white">
@@ -70,18 +46,55 @@ export function InteractiveDemoSection() {
         </div>
 
         <div className="max-w-xl mx-auto">
-          {/* Question card */}
-          <div className="rounded-2xl bg-white border border-[#e2e8f0] shadow-sm p-6 sm:p-8">
-            <p className="text-xs font-semibold text-[#2D7BFF] uppercase tracking-wide mb-2">
-              {DEMO_QUESTION.eyebrow}
-            </p>
-            <p className="text-[#0D1B2E] font-medium mb-1">{DEMO_QUESTION.prompt}</p>
-            <p className="font-display font-extrabold text-2xl text-[#0D1B2E] tracking-wide mb-6">
-              {DEMO_QUESTION.sequence}
-            </p>
+          {/* Keyed by question so picking a new profession resets the demo state. */}
+          <DemoCard key={question.practiceSlug} question={question} onboardingHref={onboardingHref} />
 
-            <div className="grid grid-cols-2 gap-3">
-              {DEMO_QUESTION.answers.map((a) => {
+          {/* Honest "be the first to review" note — kept until real reviews exist */}
+          <div className="flex flex-col items-center gap-3 mt-12 text-center">
+            <div className="w-12 h-12 rounded-2xl bg-[#EAF1FF] flex items-center justify-center">
+              <MessageSquarePlus size={22} className="text-[#2D7BFF]" />
+            </div>
+            <div className="flex gap-0.5">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star key={i} size={18} className="text-[#e2e8f0] fill-[#e2e8f0]" />
+              ))}
+            </div>
+            <p className="text-sm text-[#64748b] max-w-sm">
+              Be the first to review. Real reviews from real users, nothing made up.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function DemoCard({ question, onboardingHref }: { question: DemoQuestion; onboardingHref: string }) {
+  const [selected, setSelected] = useState<string | null>(null);
+  const [revealed, setRevealed] = useState(false);
+
+  const correct = question.answers.find((a) => a.isCorrect)!;
+  const isRight = selected === correct.id;
+
+  function reset() {
+    setSelected(null);
+    setRevealed(false);
+  }
+
+  return (
+    <div className="rounded-2xl bg-white border border-[#e2e8f0] shadow-sm p-6 sm:p-8">
+            <p className="text-xs font-semibold text-[#2D7BFF] uppercase tracking-wide mb-2">
+              {question.eyebrow}
+            </p>
+            <p className="text-[#0D1B2E] font-medium mb-1">{question.prompt}</p>
+            {question.sequence && (
+              <p className="font-display font-extrabold text-2xl text-[#0D1B2E] tracking-wide mb-6">
+                {question.sequence}
+              </p>
+            )}
+
+            <div className={`grid gap-3 ${question.layout === "list" ? "grid-cols-1 mt-5" : "grid-cols-2 mt-6"}`}>
+              {question.answers.map((a) => {
                 const isSelected = selected === a.id;
                 const showCorrect = revealed && a.isCorrect;
                 const showWrong = revealed && isSelected && !a.isCorrect;
@@ -98,11 +111,12 @@ export function InteractiveDemoSection() {
                     type="button"
                     disabled={revealed}
                     onClick={() => setSelected(a.id)}
-                    className={`flex items-center justify-between gap-2 px-4 py-3 rounded-xl border font-semibold transition-colors disabled:cursor-default ${cls}`}
+                    aria-pressed={isSelected}
+                    className={`flex items-center justify-between gap-2 px-4 py-3 rounded-xl border font-semibold text-left transition-colors disabled:cursor-default ${cls}`}
                   >
                     <span>{a.text}</span>
-                    {showCorrect && <CheckCircle2 size={18} className="text-[#10b981]" />}
-                    {showWrong && <XCircle size={18} className="text-[#ef4444]" />}
+                    {showCorrect && <CheckCircle2 size={18} className="text-[#10b981] shrink-0" />}
+                    {showWrong && <XCircle size={18} className="text-[#ef4444] shrink-0" />}
                   </button>
                 );
               })}
@@ -118,7 +132,7 @@ export function InteractiveDemoSection() {
                 Check my answer
               </button>
             ) : (
-              <div className="mt-6 space-y-4 animate-fade-up">
+              <div className="mt-6 space-y-4 animate-fade-up" role="status" aria-live="polite">
                 {/* Result preview — a demo of the instant-scoring screen */}
                 <div className="grid grid-cols-3 gap-3">
                   <div className="flex flex-col items-center gap-1 p-3 rounded-xl bg-[#f8fafc] border border-[#e2e8f0]">
@@ -152,12 +166,12 @@ export function InteractiveDemoSection() {
                       {isRight ? "Correct!" : `Not quite, the answer is ${correct.text}.`}
                     </span>
                   </div>
-                  <p className="text-sm text-[#475569] leading-relaxed">{DEMO_QUESTION.explanation}</p>
+                  <p className="text-sm text-[#475569] leading-relaxed">{question.explanation}</p>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Link
-                    href="/onboarding"
+                    href={onboardingHref}
                     className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
                   >
                     Start your first free test
@@ -175,23 +189,5 @@ export function InteractiveDemoSection() {
               </div>
             )}
           </div>
-
-          {/* Honest "be the first to review" note — kept until real reviews exist */}
-          <div className="flex flex-col items-center gap-3 mt-12 text-center">
-            <div className="w-12 h-12 rounded-2xl bg-[#EAF1FF] flex items-center justify-center">
-              <MessageSquarePlus size={22} className="text-[#2D7BFF]" />
-            </div>
-            <div className="flex gap-0.5">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} size={18} className="text-[#e2e8f0] fill-[#e2e8f0]" />
-              ))}
-            </div>
-            <p className="text-sm text-[#64748b] max-w-sm">
-              Be the first to review. Real reviews from real users, nothing made up.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
   );
 }
