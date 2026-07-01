@@ -1,10 +1,16 @@
-// Batch-render every question video to its own MP4.
+// Batch-render every question video to its own MP4, with metadata sidecars.
 //
 //   node scripts/render-videos.mjs            -> render all
 //   node scripts/render-videos.mjs numerical  -> only ids containing "numerical"
 //
-// Output: out/videos/<composition-id>.mp4, where the id already embeds the
-// practiceSlug (e.g. q-01-numerical-reasoning.mp4).
+// Per video it writes three files, all sharing the composition id (which already
+// embeds the practiceSlug, e.g. q-01-numerical-reasoning):
+//   <id>.mp4   the video
+//   <id>.txt   human-readable copy to paste manually at upload
+//   <id>.json  { title, description, tags[] } for an automation (e.g. Make.com)
+//
+// Output dir defaults to out/videos, or set VIDEO_OUT_DIR to render straight
+// into a Google Drive-synced folder for the auto-post pipeline (Route 1).
 
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -19,13 +25,30 @@ import {
 const root = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.join(root, "..");
 const entryPoint = path.join(projectRoot, "remotion", "index.ts");
-const outDir = path.join(projectRoot, "out", "videos");
+const outDir = process.env.VIDEO_OUT_DIR
+  ? path.resolve(process.env.VIDEO_OUT_DIR)
+  : path.join(projectRoot, "out", "videos");
 const filter = process.argv[2]?.toLowerCase();
 
 const LETTERS = ["A", "B", "C", "D", "E", "F"];
 
-// YouTube "Tags" field keywords: comma-separated, no "#". Helps the video get
-// found via search. Type-specific terms first, then generic assessment terms.
+// Title-cased test type from the slug, e.g. "numerical-reasoning" -> "Numerical
+// Reasoning". Used in both the title and the tags.
+function testTypeLabel(question) {
+  return question.practiceSlug
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
+// YouTube title: the challenge (the hook) first, then the test type for search.
+function titleFor(question) {
+  return `${question.challenge} 🧠 ${testTypeLabel(question)} #shorts`;
+}
+
+// YouTube "Tags" field keywords (no "#"). Type-specific terms first, then
+// generic assessment terms. Returned as an array so JSON gets a real list and
+// the .txt can join it with commas.
 function tagsFor(question) {
   const testType = question.practiceSlug.replace(/-/g, " "); // e.g. "numerical reasoning"
   return [
@@ -43,12 +66,12 @@ function tagsFor(question) {
     "interview preparation",
     "career preparation",
     "ready to ace",
-  ].join(", ");
+  ];
 }
 
-// Ready-to-paste YouTube description for a video. The answer + full "why" live
-// here (not in the video), which is what pulls viewers into the comments while
-// still delivering real value. The practice link carries UTM tags (issue #142).
+// The YouTube description body (no tags — those go in the Tags field). The answer
+// + full "why" live here, not in the video, which is what pulls viewers into the
+// comments while still delivering real value. The link carries UTM (issue #142).
 function descriptionFor(question) {
   const slug = question.practiceSlug;
   const correctIndex = question.answers.findIndex((a) => a.isCorrect);
@@ -70,11 +93,34 @@ function descriptionFor(question) {
     `Practice this test type free → ${url}`,
     "",
     `#${hashtag} #aptitudetest #assessment #psychometric #jobprep`,
-    "",
-    "Tags (paste into the YouTube Tags field):",
-    tagsFor(question),
   );
-  return parts.join("\n") + "\n";
+  return parts.join("\n");
+}
+
+// Human-readable sidecar to paste manually: the description plus a Tags block.
+function txtSidecarFor(question) {
+  return (
+    descriptionFor(question) +
+    "\n\nTags (paste into the YouTube Tags field):\n" +
+    tagsFor(question).join(", ") +
+    "\n"
+  );
+}
+
+// Machine-readable sidecar for the auto-post pipeline (Make.com et al.).
+function jsonSidecarFor(question) {
+  return (
+    JSON.stringify(
+      {
+        title: titleFor(question),
+        description: descriptionFor(question),
+        tags: tagsFor(question),
+        privacyStatus: "public",
+      },
+      null,
+      2,
+    ) + "\n"
+  );
 }
 
 // Same alias the Studio uses, so the bundle resolves the site's "@/..." imports.
@@ -120,18 +166,23 @@ async function main() {
       outputLocation,
     });
 
-    // Emit the ready-to-paste description next to the MP4. The question data
-    // rides along in the composition's defaultProps.
+    // Emit the metadata sidecars next to the MP4. The question data rides along
+    // in the composition's defaultProps.
     const question = composition.defaultProps?.question;
     if (question) {
       writeFileSync(
         path.join(outDir, `${composition.id}.txt`),
-        descriptionFor(question),
+        txtSidecarFor(question),
         "utf8",
       );
-      console.log("done (+ .txt)");
+      writeFileSync(
+        path.join(outDir, `${composition.id}.json`),
+        jsonSidecarFor(question),
+        "utf8",
+      );
+      console.log("done (+ .txt, .json)");
     } else {
-      console.log("done (no question props; skipped .txt)");
+      console.log("done (no question props; skipped sidecars)");
     }
   }
 
