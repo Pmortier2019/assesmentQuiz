@@ -1,0 +1,21 @@
+// Remotion CLI config (Studio + `remotion render`). The programmatic batch
+// render in scripts/render-videos.mjs applies the same webpack alias itself,
+// since bundle() does not read this file.
+import path from "node:path";
+import { Config } from "@remotion/cli/config";
+
+Config.setVideoImageFormat("jpeg");
+Config.setOverwriteOutput(true);
+
+// Let the Remotion bundle resolve the site's "@/..." imports (the question data
+// lives in src/lib/professionDemo.ts and is reused as-is).
+Config.overrideWebpackConfig((current) => ({
+  ...current,
+  resolve: {
+    ...current.resolve,
+    alias: {
+      ...(current.resolve?.alias ?? {}),
+      "@": path.join(process.cwd(), "src"),
+    },
+  },
+}));
