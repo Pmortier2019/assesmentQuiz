@@ -56,7 +56,7 @@ function descriptionFor(question) {
   const letter = LETTERS[correctIndex] ?? "?";
   const hashtag = slug.replace(/-/g, "");
   const url =
-    `readytoace.com/practice/${slug}` +
+    `https://www.ready-to-ace.com/practice/${slug}` +
     `?utm_source=youtube&utm_medium=shorts&utm_campaign=question-shorts`;
 
   const parts = [question.prompt];

@@ -63,7 +63,7 @@ export const LoopScene: React.FC<{ ctaPath: string }> = ({ ctaPath }) => {
               color: colors.surfaceBorder,
             }}
           >
-            readytoace.com{ctaPath}
+            ready-to-ace.com{ctaPath}
           </div>
         </div>
       </SafeArea>

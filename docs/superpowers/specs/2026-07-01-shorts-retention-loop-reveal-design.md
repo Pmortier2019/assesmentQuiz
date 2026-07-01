@@ -124,7 +124,7 @@ Comment your answer 👇
 
 Correct answer: B. <explanation>
 
-Practice this test type free → readytoace.com/practice/<slug>?utm_source=youtube&utm_medium=shorts&utm_campaign=question-shorts
+Practice this test type free → https://www.ready-to-ace.com/practice/<slug>?utm_source=youtube&utm_medium=shorts&utm_campaign=question-shorts
 
 #<type>reasoning #assessment #aptitudetest ...
 ```
