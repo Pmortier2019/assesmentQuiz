@@ -1,7 +1,7 @@
 import React from "react";
-import { interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
-import { colors, fonts } from "../theme";
-import { BrandBackground, Eyebrow, SafeArea } from "../components";
+import { interpolate, useCurrentFrame } from "remotion";
+import { accentGradient, colors, fonts } from "../theme";
+import { BrandBackground, SafeArea } from "../components";
 import { SCENES } from "../timing";
 import type { VideoQuestion } from "../questions";
 
@@ -21,26 +21,50 @@ function phaseFor(frame: number): { phase: Phase; local: number } {
 const LETTERS = ["A", "B", "C", "D", "E", "F"];
 
 /**
- * Continuous quiz block: the prompt and answers settle in, a 5 -> 0 countdown
- * builds tension, then the correct answer is highlighted while the rest dim.
- * Kept as one sequence so nothing re-mounts between phases.
+ * The opening AND main scene. Frame 0 already shows the challenge line, the
+ * prompt and every answer at full opacity: the swipe/stay decision in the
+ * Shorts feed falls inside the first second, so nothing may fade in late.
+ * Motion comes from the underline sweep and, later, the countdown pulse —
+ * polish only, never gating visibility. No brand mark here; branding waits
+ * until the loop scene.
  */
 export const QuizScene: React.FC<{ question: VideoQuestion }> = ({
   question,
 }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
   const { phase, local } = phaseFor(frame);
 
-  const enter = spring({ frame, fps, config: { damping: 16, mass: 0.7 } });
+  const underline = interpolate(frame, [4, 26], [0.25, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
   const isGrid = question.layout === "grid";
 
   return (
     <BrandBackground>
       <SafeArea justify="center">
-        <div style={{ opacity: interpolate(enter, [0, 1], [0, 1]) }}>
-          <Eyebrow>{question.eyebrow}</Eyebrow>
+        <div
+          style={{
+            fontFamily: fonts.display,
+            fontWeight: 800,
+            fontSize: 52,
+            letterSpacing: -0.5,
+            color: colors.accentFrom,
+          }}
+        >
+          {question.challenge}
         </div>
+        <div
+          style={{
+            marginTop: 18,
+            width: 300,
+            height: 10,
+            borderRadius: 999,
+            background: accentGradient,
+            transform: `scaleX(${underline})`,
+            transformOrigin: "center",
+          }}
+        />
 
         <div
           style={{
@@ -51,7 +75,6 @@ export const QuizScene: React.FC<{ question: VideoQuestion }> = ({
             letterSpacing: -1,
             color: colors.white,
             marginTop: 36,
-            transform: `translateY(${interpolate(enter, [0, 1], [24, 0])}px)`,
           }}
         >
           {question.prompt}
@@ -76,7 +99,7 @@ export const QuizScene: React.FC<{ question: VideoQuestion }> = ({
           </div>
         ) : null}
 
-        <Countdown phase={phase} local={local} fps={fps} />
+        <Countdown phase={phase} local={local} />
 
         <div
           style={{
@@ -88,12 +111,7 @@ export const QuizScene: React.FC<{ question: VideoQuestion }> = ({
           }}
         >
           {question.answers.map((answer, i) => (
-            <AnswerCard
-              key={answer.id}
-              letter={LETTERS[i]}
-              text={answer.text}
-              enter={enter}
-            />
+            <AnswerCard key={answer.id} letter={LETTERS[i]} text={answer.text} />
           ))}
         </div>
       </SafeArea>
@@ -101,7 +119,7 @@ export const QuizScene: React.FC<{ question: VideoQuestion }> = ({
   );
 };
 
-const Countdown: React.FC<{ phase: Phase; local: number; fps: number }> = ({
+const Countdown: React.FC<{ phase: Phase; local: number }> = ({
   phase,
   local,
 }) => {
@@ -196,60 +214,54 @@ const Countdown: React.FC<{ phase: Phase; local: number; fps: number }> = ({
   );
 };
 
-// Neutral option tile. The correct answer is intentionally never highlighted —
-// viewers pick a letter and comment it; the answer lives in the description.
-const AnswerCard: React.FC<{
-  letter: string;
-  text: string;
-  enter: number;
-}> = ({ letter, text, enter }) => {
-  const stagger = interpolate(enter, [0, 1], [0, 1]);
-
-  return (
+// Neutral option tile, fully visible from frame 0. The correct answer is
+// intentionally never highlighted — viewers pick a letter and comment it; the
+// answer lives in the description.
+const AnswerCard: React.FC<{ letter: string; text: string }> = ({
+  letter,
+  text,
+}) => (
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      gap: 20,
+      textAlign: "left",
+      padding: "26px 28px",
+      borderRadius: 22,
+      background: colors.surface,
+      border: `3px solid ${colors.surfaceBorder}`,
+      color: colors.navy,
+    }}
+  >
     <div
       style={{
+        flexShrink: 0,
+        width: 56,
+        height: 56,
+        borderRadius: 14,
+        background: "#ffffff",
+        border: `2px solid ${colors.surfaceBorder}`,
         display: "flex",
         alignItems: "center",
-        gap: 20,
-        textAlign: "left",
-        padding: "26px 28px",
-        borderRadius: 22,
-        background: colors.surface,
-        border: `3px solid ${colors.surfaceBorder}`,
-        color: colors.navy,
-        opacity: 0.2 + 0.8 * stagger,
-        transform: `translateY(${(1 - stagger) * 16}px)`,
+        justifyContent: "center",
+        fontFamily: fonts.display,
+        fontWeight: 800,
+        fontSize: 30,
+        color: colors.accentTo,
       }}
     >
-      <div
-        style={{
-          flexShrink: 0,
-          width: 56,
-          height: 56,
-          borderRadius: 14,
-          background: "#ffffff",
-          border: `2px solid ${colors.surfaceBorder}`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontFamily: fonts.display,
-          fontWeight: 800,
-          fontSize: 30,
-          color: colors.accentTo,
-        }}
-      >
-        {letter}
-      </div>
-      <span
-        style={{
-          fontFamily: fonts.display,
-          fontWeight: 600,
-          fontSize: 38,
-          lineHeight: 1.15,
-        }}
-      >
-        {text}
-      </span>
+      {letter}
     </div>
-  );
-};
+    <span
+      style={{
+        fontFamily: fonts.display,
+        fontWeight: 600,
+        fontSize: 38,
+        lineHeight: 1.15,
+      }}
+    >
+      {text}
+    </span>
+  </div>
+);

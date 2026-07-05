@@ -4,22 +4,23 @@
 // the site (src/lib/professionDemo.ts) so the data model stays single-sourced:
 // eyebrow, prompt, optional sequence, answers, explanation, practiceSlug, layout.
 //
-// We layer two video-only fields on top for the two-line hook:
-//   - challenge: the large, imperative opener line. Honest and curiosity-driven,
-//     never a fabricated statistic ("90% fail") — the brand voice is honest only.
-//   - stakes: the small line above it, framing why the question matters. Optional;
-//     when omitted it is derived from the practiceSlug so "one video = a few
-//     lines" stays true. Keep it type-level honest (no invented provider names).
+// We layer two video-only fields on top:
+//   - challenge: the hook line shown above the question on frame 0, and the
+//     start of the YouTube title. Honest and curiosity-driven, never a
+//     fabricated statistic ("90% fail") — the brand voice is honest only.
+//   - voiceover: optional path (under remotion/public) to a narration file,
+//     e.g. "audio/vo/data-interpretation.mp3". Silent videos read as ads in
+//     the Shorts feed, so add one when you can (any TTS with a decent voice).
 //
 // The practiceSlug is where "link in bio" points and stays UTM-ready (issue #142).
 
 import { DEMO_QUESTIONS, type DemoQuestion } from "@/lib/professionDemo";
 
 export interface VideoQuestion extends DemoQuestion {
-  /** Large imperative opener line. Honest curiosity, never a fabricated stat. */
+  /** Hook line above the question on frame 0. Honest curiosity, never a fabricated stat. */
   challenge: string;
-  /** Small stakes line above the challenge. Falls back to a slug-derived line. */
-  stakes?: string;
+  /** Optional narration file under remotion/public, e.g. "audio/vo/<slug>.mp3". */
+  voiceover?: string;
 }
 
 /**
@@ -38,7 +39,7 @@ export const VIDEO_QUESTIONS: VideoQuestion[] = [
   },
   {
     ...DEMO_QUESTIONS.data,
-    challenge: "Quick mental maths test.",
+    challenge: "5 seconds. No calculator.",
   },
   {
     ...DEMO_QUESTIONS.verbal,
@@ -49,17 +50,6 @@ export const VIDEO_QUESTIONS: VideoQuestion[] = [
     challenge: "Spot the flaw in this logic.",
   },
 ];
-
-/**
- * The small stakes line shown above the challenge. Honest and type-level: uses
- * an explicit `stakes` if given, otherwise derives one from the practiceSlug
- * (e.g. "numerical-reasoning" -> "Standard on numerical reasoning tests.").
- */
-export function stakesLine(question: VideoQuestion): string {
-  if (question.stakes) return question.stakes;
-  const testType = question.practiceSlug.replace(/-/g, " ");
-  return `Standard on ${testType} tests.`;
-}
 
 /** Where a video's "link in bio" points. Kept UTM-ready for issue #142. */
 export function ctaPath(question: VideoQuestion): string {

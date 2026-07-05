@@ -82,13 +82,19 @@ function descriptionFor(question) {
     `https://www.ready-to-ace.com/practice/${slug}` +
     `?utm_source=youtube&utm_medium=shorts&utm_campaign=question-shorts`;
 
+  // No em-dash in visible copy (brand voice). Join the option and its
+  // explanation with a period, avoiding a doubled one when the option already
+  // ends in punctuation.
+  const answerText = correct?.text ?? "";
+  const sep = /[.!?]$/.test(answerText) ? " " : ". ";
+
   const parts = [question.prompt];
   if (question.sequence) parts.push(question.sequence);
   parts.push(
     "",
     "Comment your answer 👇",
     "",
-    `Correct answer: ${letter}. ${correct?.text ?? ""} — ${question.explanation}`,
+    `Correct answer: ${letter}. ${answerText}${sep}${question.explanation}`,
     "",
     `Practice this test type free → ${url}`,
     "",
@@ -142,7 +148,12 @@ async function main() {
   await ensureBrowser();
 
   console.log("Bundling Remotion project...");
-  const serveUrl = await bundle({ entryPoint, webpackOverride });
+  const serveUrl = await bundle({
+    entryPoint,
+    webpackOverride,
+    // Same public dir the Studio config uses; holds the generated audio.
+    publicDir: path.join(projectRoot, "remotion", "public"),
+  });
 
   const compositions = await getCompositions(serveUrl);
   const targets = filter

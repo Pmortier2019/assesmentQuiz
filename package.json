@@ -10,7 +10,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "video:studio": "remotion studio remotion/index.ts",
-    "video:render": "node scripts/render-videos.mjs"
+    "video:render": "node scripts/render-videos.mjs",
+    "video:audio": "node scripts/generate-video-audio.mjs"
   },
   "dependencies": {
     "@sentry/nextjs": "^10.58.0",
