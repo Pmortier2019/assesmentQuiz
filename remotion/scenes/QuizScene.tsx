@@ -40,6 +40,12 @@ export const QuizScene: React.FC<{ question: VideoQuestion }> = ({
   });
   const isGrid = question.layout === "grid";
 
+  // Long sequences (e.g. a look-and-say series) overflow the safe band at the
+  // default size, so shrink the box font once the string gets long.
+  const seqLong = (question.sequence?.length ?? 0) > 22;
+  const seqFontSize = seqLong ? 44 : 64;
+  const seqLetterSpacing = seqLong ? 1 : 2;
+
   return (
     <BrandBackground>
       <SafeArea justify="center">
@@ -90,8 +96,8 @@ export const QuizScene: React.FC<{ question: VideoQuestion }> = ({
               border: `2px solid ${colors.surfaceBorder}`,
               fontFamily: fonts.display,
               fontWeight: 800,
-              fontSize: 64,
-              letterSpacing: 2,
+              fontSize: seqFontSize,
+              letterSpacing: seqLetterSpacing,
               color: colors.navy,
             }}
           >
