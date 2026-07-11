@@ -73,7 +73,7 @@ assesmentQuiz/
 │   ├── components/                       ← cards, layout, sections, test, ui
 │   └── lib/
 │       ├── api.ts                        ← Alle backend calls + type mapping
-│       ├── auth.ts · useAuth.ts          ← token-beheer (in memory)
+│       ├── auth.ts · useAuth.ts          ← toclauder (in memory)
 │       ├── queries.ts · queryClient.tsx  ← TanStack Query
 │       ├── i18n.tsx                       ← EN/NL vertalingen
 │       └── types.ts · utils.ts

@@ -2,6 +2,7 @@
 
 import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Menu, X, LogOut, ShieldCheck, Search } from "lucide-react";
 import { useLocaleRouter } from "@/components/ui/LocaleLink";
 import { cn } from "@/lib/utils";
@@ -18,9 +19,11 @@ export function Navbar({ transparent = false }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { loggedIn, isAdmin: userIsAdmin } = useAuth();
   const router = useLocaleRouter();
+  const queryClient = useQueryClient();
   const { t } = useT();
 
   const handleLogout = () => {
+    queryClient.clear();
     logout();
     setMobileOpen(false);
     router.replace("/login");

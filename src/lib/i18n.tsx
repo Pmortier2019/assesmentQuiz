@@ -180,6 +180,7 @@ const translations = {
     tt_next:            "Next",
     tt_finish:          "Finish test",
     tt_submitting:      "Submitting…",
+    tt_submit_failed:   "We couldn't submit your test. Your answers are still saved; please try again.",
     tt_all_answered:    "All questions answered",
     tt_submit:          "Submit test",
 
@@ -396,6 +397,7 @@ const translations = {
     tt_next:            "Volgende",
     tt_finish:          "Test afronden",
     tt_submitting:      "Inleveren…",
+    tt_submit_failed:   "We konden je test niet inleveren. Je antwoorden zijn nog opgeslagen; probeer het opnieuw.",
     tt_all_answered:    "Alle vragen beantwoord",
     tt_submit:          "Test inleveren",
 

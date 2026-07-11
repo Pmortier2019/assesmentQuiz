@@ -28,10 +28,11 @@ export const queryKeys = {
 // Thin wrappers over the existing api.ts functions. Caching, dedup, background
 // revalidation and retries come from the shared QueryClient defaults.
 
-export function useCurrentUser() {
+export function useCurrentUser(enabled = true) {
   return useQuery({
     queryKey: queryKeys.currentUser,
     queryFn: getCurrentUser,
+    enabled,
   });
 }
 

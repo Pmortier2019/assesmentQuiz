@@ -15,6 +15,7 @@ import {
 import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { useProfession } from "./PersonalizedExperience";
 import { questionForRole, type DemoQuestion } from "@/lib/professionDemo";
+import { useT } from "@/lib/i18n";
 
 // A self-contained product demo: a single real-style assessment question the
 // visitor can actually answer. The question follows the profession picked in the
@@ -23,8 +24,41 @@ import { questionForRole, type DemoQuestion } from "@/lib/professionDemo";
 // "result preview" — an honest demo of how one question scores, NOT aggregate
 // social-proof numbers.
 
+const UI = {
+  en: {
+    badge: "Try it yourself, no sign-up",
+    title: "See how it works",
+    subtitle: "Answer one real-style question. You'll get instant scoring and an explanation, exactly how every practice test ends.",
+    review: "Be the first to review. Real reviews from real users, nothing made up.",
+    check: "Check my answer",
+    score: "Score",
+    perQuestion: "Per question",
+    explained: "Explained",
+    correct: "Correct!",
+    notQuite: (answer: string) => `Not quite, the answer is ${answer}.`,
+    start: "Start your first free test",
+    again: "Try again",
+  },
+  nl: {
+    badge: "Probeer het zelf, geen account nodig",
+    title: "Zie hoe het werkt",
+    subtitle: "Beantwoord een realistische vraag. Je krijgt direct je score en uitleg, precies zoals na elke oefentest.",
+    review: "Wees de eerste met een review. Echte reviews van echte gebruikers, niets verzonnen.",
+    check: "Controleer mijn antwoord",
+    score: "Score",
+    perQuestion: "Per vraag",
+    explained: "Uitgelegd",
+    correct: "Goed!",
+    notQuite: (answer: string) => `Net niet, het antwoord is ${answer}.`,
+    start: "Start je eerste gratis test",
+    again: "Opnieuw proberen",
+  },
+};
+
 export function InteractiveDemoSection() {
   const { role } = useProfession();
+  const { locale } = useT();
+  const ui = UI[locale];
   const question = questionForRole(role);
   const onboardingHref = role ? `/onboarding?role=${encodeURIComponent(role)}` : "/onboarding";
 
@@ -34,20 +68,19 @@ export function InteractiveDemoSection() {
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#EAF1FF] border border-[#BFD6FF] mb-4">
             <Sparkles size={13} className="text-[#2D7BFF]" />
-            <span className="text-xs font-semibold text-[#2D7BFF]">Try it yourself, no sign-up</span>
+            <span className="text-xs font-semibold text-[#2D7BFF]">{ui.badge}</span>
           </div>
           <h2 className="font-display font-bold text-3xl sm:text-4xl text-[#0D1B2E] mb-3">
-            See how it works
+            {ui.title}
           </h2>
           <p className="text-[#64748b] max-w-xl mx-auto">
-            Answer one real-style question. You&apos;ll get instant scoring and an explanation,
-            exactly how every practice test ends.
+            {ui.subtitle}
           </p>
         </div>
 
         <div className="max-w-xl mx-auto">
           {/* Keyed by question so picking a new profession resets the demo state. */}
-          <DemoCard key={question.practiceSlug} question={question} onboardingHref={onboardingHref} />
+          <DemoCard key={question.practiceSlug} question={question} onboardingHref={onboardingHref} ui={ui} />
 
           {/* Honest "be the first to review" note — kept until real reviews exist */}
           <div className="flex flex-col items-center gap-3 mt-12 text-center">
@@ -60,7 +93,7 @@ export function InteractiveDemoSection() {
               ))}
             </div>
             <p className="text-sm text-[#64748b] max-w-sm">
-              Be the first to review. Real reviews from real users, nothing made up.
+              {ui.review}
             </p>
           </div>
         </div>
@@ -69,7 +102,7 @@ export function InteractiveDemoSection() {
   );
 }
 
-function DemoCard({ question, onboardingHref }: { question: DemoQuestion; onboardingHref: string }) {
+function DemoCard({ question, onboardingHref, ui }: { question: DemoQuestion; onboardingHref: string; ui: (typeof UI)["en"] }) {
   const [selected, setSelected] = useState<string | null>(null);
   const [revealed, setRevealed] = useState(false);
 
@@ -129,7 +162,7 @@ function DemoCard({ question, onboardingHref }: { question: DemoQuestion; onboar
                 onClick={() => setRevealed(true)}
                 className="mt-6 w-full px-6 py-3 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                Check my answer
+                {ui.check}
               </button>
             ) : (
               <div className="mt-6 space-y-4 animate-fade-up" role="status" aria-live="polite">
@@ -140,17 +173,17 @@ function DemoCard({ question, onboardingHref }: { question: DemoQuestion; onboar
                     <p className={`font-display font-extrabold text-lg ${isRight ? "text-[#10b981]" : "text-[#ef4444]"}`}>
                       {isRight ? "100%" : "0%"}
                     </p>
-                    <p className="text-[11px] text-[#94a3b8]">Score</p>
+                    <p className="text-[11px] text-[#94a3b8]">{ui.score}</p>
                   </div>
                   <div className="flex flex-col items-center gap-1 p-3 rounded-xl bg-[#f8fafc] border border-[#e2e8f0]">
                     <Clock size={16} className="text-[#2D7BFF]" />
                     <p className="font-display font-extrabold text-lg text-[#0D1B2E]">~30s</p>
-                    <p className="text-[11px] text-[#94a3b8]">Per question</p>
+                    <p className="text-[11px] text-[#94a3b8]">{ui.perQuestion}</p>
                   </div>
                   <div className="flex flex-col items-center gap-1 p-3 rounded-xl bg-[#f8fafc] border border-[#e2e8f0]">
                     <CheckCircle2 size={16} className="text-[#10b981]" />
                     <p className="font-display font-extrabold text-lg text-[#0D1B2E]">1/1</p>
-                    <p className="text-[11px] text-[#94a3b8]">Explained</p>
+                    <p className="text-[11px] text-[#94a3b8]">{ui.explained}</p>
                   </div>
                 </div>
 
@@ -163,7 +196,7 @@ function DemoCard({ question, onboardingHref }: { question: DemoQuestion; onboar
                       <XCircle size={16} className="text-[#ef4444]" />
                     )}
                     <span className={`text-sm font-semibold ${isRight ? "text-[#047857]" : "text-[#b91c1c]"}`}>
-                      {isRight ? "Correct!" : `Not quite, the answer is ${correct.text}.`}
+                      {isRight ? ui.correct : ui.notQuite(correct.text)}
                     </span>
                   </div>
                   <p className="text-sm text-[#475569] leading-relaxed">{question.explanation}</p>
@@ -174,7 +207,7 @@ function DemoCard({ question, onboardingHref }: { question: DemoQuestion; onboar
                     href={onboardingHref}
                     className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
                   >
-                    Start your first free test
+                    {ui.start}
                     <ArrowRight size={16} />
                   </Link>
                   <button
@@ -183,7 +216,7 @@ function DemoCard({ question, onboardingHref }: { question: DemoQuestion; onboar
                     className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-[#e2e8f0] text-[#475569] text-sm font-semibold hover:border-[#2D7BFF]/40 hover:text-[#2D7BFF] transition-colors"
                   >
                     <RotateCcw size={15} />
-                    Try again
+                    {ui.again}
                   </button>
                 </div>
               </div>

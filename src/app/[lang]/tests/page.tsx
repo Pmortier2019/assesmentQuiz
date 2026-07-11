@@ -13,6 +13,8 @@ import { FilterBar } from "@/components/test/FilterBar";
 import { generateTestOfType, getGenerationStatus, ALL_GENERATE_TYPES, ALL_DIFFICULTIES } from "@/lib/api";
 import { useTestsInfinite, useCurrentUser, queryKeys } from "@/lib/queries";
 import { isAdmin } from "@/lib/auth";
+import { isTestBlocked } from "@/lib/paywall";
+import { useAuth } from "@/lib/useAuth";
 import { useClientValue } from "@/lib/useClientValue";
 import { FREE_TEST_LIMIT } from "@/lib/constants";
 import { useT } from "@/lib/i18n";
@@ -38,10 +40,9 @@ function TestsContent() {
     () => (searchParams.get("role") as RoleCategory | null) ?? "all");
   const [selectedIndustry, setSelectedIndustry] = useState<IndustryCategory | "all">(
     () => (searchParams.get("industry") as IndustryCategory | null) ?? "all");
+  const { loggedIn } = useAuth();
 
-  // AuthGuard guarantees we're logged in here; user data is shared with the
-  // dashboard's cache, so this is free on second visit.
-  const { data: user } = useCurrentUser();
+  const { data: user } = useCurrentUser(loggedIn);
   const freeTestsUsed = user?.freeTestsUsed ?? null;
   const isPro = user?.subscription === "pro";
 
@@ -128,10 +129,10 @@ function TestsContent() {
 
   return (
     <div className="flex min-h-screen bg-surface-subtle">
-      <Sidebar />
+      {loggedIn ? <Sidebar /> : null}
 
       <div className="flex-1 flex flex-col min-w-0">
-        <div className="lg:hidden">
+        <div className={loggedIn ? "lg:hidden" : ""}>
           <Navbar />
         </div>
 
@@ -280,7 +281,16 @@ function TestsContent() {
                   <TestCard
                     key={test.id}
                     test={test}
-                    isLocked={!test.isFree}
+                    isLocked={
+                      user
+                        ? isTestBlocked({
+                            isAdmin: user.isAdmin ?? false,
+                            isPro,
+                            isFree: test.isFree,
+                            freeTestsUsed: user.freeTestsUsed ?? 0,
+                          })
+                        : !test.isFree
+                    }
                     showRecommendedBadge={test.isRecommended}
                   />
                 ))}
