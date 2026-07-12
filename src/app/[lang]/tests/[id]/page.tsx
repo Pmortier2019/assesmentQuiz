@@ -170,7 +170,6 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
               <QuestionReviewCard
                 key={qr.questionId}
                 qr={qr}
-                index={i}
                 open={openIndex === i}
                 onToggle={() => setOpenIndex(openIndex === i ? null : i)}
               />
@@ -199,9 +198,9 @@ function TestResultsView({ result, test }: { result: TestResult; test: Test }) {
 }
 
 function QuestionReviewCard({
-  qr, index, open, onToggle,
+  qr, open, onToggle,
 }: {
-  qr: QuestionResult; index: number; open: boolean; onToggle: () => void;
+  qr: QuestionResult; open: boolean; onToggle: () => void;
 }) {
   const { t } = useT();
   return (
@@ -284,6 +283,7 @@ export default function TestPage() {
   const [startedAt, setStartedAt] = useState<number | null>(null);
   const [elapsed, setElapsed] = useState(0);
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [result, setResult] = useState<TestResult | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isPro, setIsPro] = useState(false);
@@ -394,18 +394,24 @@ export default function TestPage() {
   }, [test, result, currentIndex, handleSelect]);
 
   const handleSubmit = async () => {
-    if (!test) return;
+    if (!test || submitting) return;
     setSubmitting(true);
-    const payload = Object.entries(answers).map(([questionId, selectedAnswerId]) => ({
-      questionId,
-      selectedAnswerId,
-    }));
-    const timeTaken = startedAt ? Math.floor((Date.now() - startedAt) / 1000) : elapsed;
-    const r = await submitTest(test.id, payload, timeTaken);
-    clearProgress(test.id);
-    haptics.complete();
-    setResult(r);
-    setSubmitting(false);
+    setSubmitError("");
+    try {
+      const payload = Object.entries(answers).map(([questionId, selectedAnswerId]) => ({
+        questionId,
+        selectedAnswerId,
+      }));
+      const timeTaken = startedAt ? Math.floor((Date.now() - startedAt) / 1000) : elapsed;
+      const r = await submitTest(test.id, payload, timeTaken);
+      clearProgress(test.id);
+      haptics.complete();
+      setResult(r);
+    } catch {
+      setSubmitError(t("tt_submit_failed"));
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (loading) {
@@ -605,6 +611,12 @@ export default function TestPage() {
               >
                 {t("tt_submit")}
               </button>
+            </div>
+          )}
+
+          {submitError && (
+            <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 animate-fade-in">
+              {submitError}
             </div>
           )}
         </div>

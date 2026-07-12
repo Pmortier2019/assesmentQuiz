@@ -5,17 +5,20 @@ import { BrandBackground, FooterMark, SafeArea } from "../components";
 import { SCENES } from "../timing";
 
 /**
- * Short loop-back beat. Keeps the comment CTA alive and shows the practice link
- * (the funnel), then fades toward navy so an auto-replay flows back into the
- * hook without reading as a repeat. The explanation deliberately lives off-video
- * (in the pasted description), which is what pulls viewers into the comments.
+ * Short loop-back beat, and the only place branding appears (logo, practice
+ * link): anything that pattern-matches "ad" is kept out of the opening seconds.
+ * Keeps the comment CTA alive, then fades toward navy so an auto-replay flows
+ * back into the quiz without reading as a repeat. The explanation deliberately
+ * lives off-video (in the pasted description), which is what pulls viewers
+ * into the comments.
  */
 export const LoopScene: React.FC<{ ctaPath: string }> = ({ ctaPath }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const pop = spring({ frame, fps, config: { damping: 14, mass: 0.6 } });
 
-  // Fade out over the last third so the end meets the hook's navy start frame.
+  // Fade out over the last third so an auto-replay pops from navy straight
+  // into the fully-visible quiz frame.
   const fade = interpolate(frame, [SCENES.loop - 14, SCENES.loop], [1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",

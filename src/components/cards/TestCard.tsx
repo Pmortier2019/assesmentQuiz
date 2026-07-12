@@ -15,8 +15,8 @@ interface TestCardProps {
   showRecommendedBadge?: boolean;
 }
 
-export function TestCard({ test, isLocked = false, onStart, className, showRecommendedBadge }: TestCardProps) {
-  const locked = isLocked || (!test.isFree);
+export function TestCard({ test, isLocked, onStart, className, showRecommendedBadge }: TestCardProps) {
+  const locked = isLocked ?? !test.isFree;
   const isRecommended = showRecommendedBadge ?? test.isRecommended;
 
   return (
@@ -88,7 +88,7 @@ export function TestCard({ test, isLocked = false, onStart, className, showRecom
           </span>
         </div>
         <span className="text-xs text-subtle">
-          {test.questions.length} vragen
+          {test.questionCount ?? test.questions.length} vragen
         </span>
       </div>
 

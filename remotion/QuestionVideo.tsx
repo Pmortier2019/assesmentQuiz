@@ -4,51 +4,38 @@ import { linearTiming, TransitionSeries } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
 import { colors } from "./theme";
 import { QUIZ_DURATION, SCENES, TRANSITION } from "./timing";
-import { ctaPath, stakesLine, type VideoQuestion } from "./questions";
-import { HookScene } from "./scenes/HookScene";
+import { ctaPath, type VideoQuestion } from "./questions";
+import { Soundtrack } from "./audio";
 import { QuizScene } from "./scenes/QuizScene";
 import { LoopScene } from "./scenes/LoopScene";
 
 /**
  * The one reusable video. Every question renders through this component; only
- * the data differs. Scenes are joined by short cross-fades in a loop shape tuned
- * for completion, replays and comments: hook (stakes + challenge) -> quiz
- * (question / countdown / comment CTA) -> loop-back to the hook. The correct
- * answer is never shown on-screen; it (and the "why") live in the pasted
- * description, which is what drives the comments.
+ * the data differs. The video opens directly on the quiz (question, answers and
+ * challenge line all visible on frame 0 — the question IS the hook), runs the
+ * countdown into the comment CTA, then a short loop-back beat flows into an
+ * auto-replay. The correct answer is never shown on-screen; it (and the "why")
+ * live in the pasted description, which is what drives the comments.
  */
 export const QuestionVideo: React.FC<{ question: VideoQuestion }> = ({
   question,
-}) => {
-  const crossFade = (
-    <TransitionSeries.Transition
-      timing={linearTiming({ durationInFrames: TRANSITION })}
-      presentation={fade()}
-    />
-  );
+}) => (
+  <AbsoluteFill style={{ backgroundColor: colors.navy }}>
+    <Soundtrack voiceover={question.voiceover} />
 
-  return (
-    <AbsoluteFill style={{ backgroundColor: colors.navy }}>
-      <TransitionSeries>
-        <TransitionSeries.Sequence durationInFrames={SCENES.hook}>
-          <HookScene
-            stakes={stakesLine(question)}
-            challenge={question.challenge}
-          />
-        </TransitionSeries.Sequence>
+    <TransitionSeries>
+      <TransitionSeries.Sequence durationInFrames={QUIZ_DURATION}>
+        <QuizScene question={question} />
+      </TransitionSeries.Sequence>
 
-        {crossFade}
+      <TransitionSeries.Transition
+        timing={linearTiming({ durationInFrames: TRANSITION })}
+        presentation={fade()}
+      />
 
-        <TransitionSeries.Sequence durationInFrames={QUIZ_DURATION}>
-          <QuizScene question={question} />
-        </TransitionSeries.Sequence>
-
-        {crossFade}
-
-        <TransitionSeries.Sequence durationInFrames={SCENES.loop}>
-          <LoopScene ctaPath={ctaPath(question)} />
-        </TransitionSeries.Sequence>
-      </TransitionSeries>
-    </AbsoluteFill>
-  );
-};
+      <TransitionSeries.Sequence durationInFrames={SCENES.loop}>
+        <LoopScene ctaPath={ctaPath(question)} />
+      </TransitionSeries.Sequence>
+    </TransitionSeries>
+  </AbsoluteFill>
+);

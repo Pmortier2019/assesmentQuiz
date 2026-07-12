@@ -490,7 +490,13 @@ async function apiFetch<T>(
     const text = await res.text().catch(() => "");
     throw new ApiError(res.status, text || res.statusText);
   }
-  return res.json() as Promise<T>;
+
+  if (res.status === 204) return undefined as T;
+
+  const text = await res.text().catch(() => "");
+  if (!text.trim()) return undefined as T;
+
+  return JSON.parse(text) as T;
 }
 
 // ─── Tests ───────────────────────────────────────────────────────────────────

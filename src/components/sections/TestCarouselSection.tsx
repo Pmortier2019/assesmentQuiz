@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { BarChart3, Brain, MessageSquare, Users, Smile, ArrowRight } from "lucide-react";
 import { LocaleLink as Link } from "@/components/ui/LocaleLink";
+import { useT } from "@/lib/i18n";
 
 const CARDS = [
   {
@@ -121,21 +122,34 @@ function TiltCard({ card, index }: { card: (typeof CARDS)[0]; index: number }) {
 }
 
 export function TestCarouselSection() {
+  const { locale } = useT();
+  const ui = locale === "nl"
+    ? {
+        title: "Elk testtype gedekt",
+        subtitle: "Beweeg over de kaarten om te verkennen en start daarna met oefenen.",
+        browse: "Bekijk alle tests",
+      }
+    : {
+        title: "Every test type, covered",
+        subtitle: "Hover the cards to explore, then start practicing.",
+        browse: "Browse all tests",
+      };
+
   return (
     <section className="py-20 bg-[#f8fafc] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
           <div>
             <h2 className="font-display font-bold text-3xl sm:text-4xl text-[#0D1B2E] mb-2">
-              Every test type, covered
+              {ui.title}
             </h2>
-            <p className="text-[#64748b]">Hover the cards to explore, then start practicing.</p>
+            <p className="text-[#64748b]">{ui.subtitle}</p>
           </div>
           <Link
             href="/tests"
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0D1B2E] text-white text-sm font-semibold hover:opacity-90 transition-opacity whitespace-nowrap"
           >
-            Browse all tests
+            {ui.browse}
             <ArrowRight size={14} />
           </Link>
         </div>
