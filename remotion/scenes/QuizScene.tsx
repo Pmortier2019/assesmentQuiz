@@ -3,7 +3,7 @@ import { interpolate, useCurrentFrame } from "remotion";
 import { accentGradient, colors, fonts } from "../theme";
 import { BrandBackground, SafeArea } from "../components";
 import { SCENES } from "../timing";
-import type { VideoQuestion } from "../questions";
+import { stakesLine, type VideoQuestion } from "../questions";
 
 const PER_TICK = SCENES.countdown / 6; // 5,4,3,2,1,0 across the countdown
 
@@ -49,6 +49,18 @@ export const QuizScene: React.FC<{ question: VideoQuestion }> = ({
   return (
     <BrandBackground>
       <SafeArea justify="center">
+        <div
+          style={{
+            fontFamily: fonts.display,
+            fontWeight: 600,
+            fontSize: 30,
+            letterSpacing: 1,
+            color: colors.surfaceBorder,
+            marginBottom: 14,
+          }}
+        >
+          {stakesLine(question)}
+        </div>
         <div
           style={{
             fontFamily: fonts.display,

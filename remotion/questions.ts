@@ -23,8 +23,11 @@
 import { type DemoQuestion } from "@/lib/professionDemo";
 
 export interface VideoQuestion extends DemoQuestion {
-  /** Hook line above the question on frame 0. Honest curiosity, never a fabricated stat. */
+  /** Large hook line on frame 0. Honest curiosity, never a fabricated stat. */
   challenge: string;
+  /** Small line above the challenge, framing why the question matters. Falls
+   *  back to a slug-derived line when omitted, so "one video = a few lines". */
+  stakes?: string;
   /** Optional narration file under remotion/public, e.g. "audio/vo/<slug>.mp3". */
   voiceover?: string;
 }
@@ -117,6 +120,17 @@ export const VIDEO_QUESTIONS: VideoQuestion[] = [
     layout: "list",
   },
 ];
+
+/**
+ * The small stakes line shown above the challenge. Honest and type-level: uses
+ * an explicit `stakes` if given, otherwise derives one from the practiceSlug
+ * (e.g. "numerical-reasoning" -> "Standard on numerical reasoning tests.").
+ */
+export function stakesLine(question: VideoQuestion): string {
+  if (question.stakes) return question.stakes;
+  const testType = question.practiceSlug.replace(/-/g, " ");
+  return `Standard on ${testType} tests.`;
+}
 
 /** Where a video's "link in bio" points. Kept UTM-ready for issue #142. */
 export function ctaPath(question: VideoQuestion): string {
