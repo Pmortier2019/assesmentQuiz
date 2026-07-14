@@ -20,6 +20,12 @@
 
     <properties>
         <java.version>17</java.version>
+        <!-- Override the Flyway version managed by Spring Boot: the pinned 11.7.2
+             predates PostgreSQL 18 and throws "Unsupported Database: PostgreSQL 18"
+             at startup. Our Neon database runs PG18, so every deploy of a fresh
+             machine crashed here (see #38). 11.20.3 supports PG18. This property
+             drives both flyway-core and flyway-database-postgresql. -->
+        <flyway.version>11.20.3</flyway.version>
     </properties>
 
     <dependencies>
@@ -61,6 +67,14 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
+        </dependency>
+        <!-- Flyway 10+ ships database support in separate modules; the PostgreSQL
+             module carries the version detection that must recognise PG18 (see the
+             flyway.version override above). Declared explicitly so it can't fall
+             back to an older transitive version. -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
         </dependency>
 
         <!-- Spring Security -->
