@@ -19,15 +19,22 @@ primary_region = "ams"
   http_response_timeout = 180000
 
   [[http_service.checks]]
-    grace_period = "90s"
-    interval = "15s"
+    # Start probing early and often so the green machine flips healthy the moment
+    # the app is listening. /api/health is a trivial static 200 (no DB), so a
+    # short grace period is safe: failed probes before boot just retry.
+    grace_period = "20s"
+    interval = "10s"
     method = "GET"
     path = "/api/health"
     timeout = "5s"
 
 [deploy]
   strategy = "bluegreen"
-  wait_timeout = "120s"
+  # Spring Boot cold-start on a shared-CPU 512MB machine regularly needs well
+  # over 90s. The old 120s wait left almost no room for health checks to pass
+  # after the 90s grace period, so green never went healthy and every deploy
+  # rolled back (see #38). 300s gives the app ample time to boot and pass.
+  wait_timeout = "300s"
 
 [[vm]]
   memory = "512mb"
