@@ -4,7 +4,6 @@ import { useState, Suspense } from "react";
 import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { useSearchParams } from "next/navigation";
 import { useLocaleRouter } from "@/components/ui/LocaleLink";
-import { useQueryClient } from "@tanstack/react-query";
 import { Eye, EyeOff, ArrowRight } from "lucide-react";
 import { login, register, resendVerification, ApiError } from "@/lib/api";
 import { LogoMark } from "@/components/ui/Logo";
@@ -79,7 +78,6 @@ const UI = {
 
 function LoginForm() {
   const router = useLocaleRouter();
-  const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const from = searchParams.get("from");
   const { locale } = useT();
@@ -104,7 +102,8 @@ function LoginForm() {
     try {
       if (mode === "login") {
         const user = await login(email, password);
-        queryClient.clear();
+        // login() centrally wipes the React Query cache (see resetUserCache),
+        // so the previous user's data can't bleed into this session.
         if (from && from.startsWith("/") && !from.startsWith("//") && from !== "/login") router.push(from);
         else if (!user.targetRole) router.push("/onboarding");
         else router.push("/dashboard");
