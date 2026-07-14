@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { saveOnboarding } from "@/lib/api";
 import { useAuth } from "@/lib/useAuth";
+import { useT } from "@/lib/i18n";
 import type { RoleCategory, IndustryCategory } from "@/lib/types";
 import { LogoMark } from "@/components/ui/Logo";
 
@@ -58,10 +59,68 @@ const LEVELS = [
 
 const TOTAL_STEPS = 4;
 
+const UI = {
+  en: {
+    steps: ["Role", "Industry", "Company", "Level"],
+    step: (n: number) => `Step ${n} of ${TOTAL_STEPS}`,
+    roleTitle: "What role are you applying for?",
+    roleDesc: "We'll personalise your assessment plan based on what employers actually test.",
+    industryTitle: "Which industry are you targeting?",
+    industryDesc: "Different sectors test different skills. We'll match you to the right preparation.",
+    companyTitle: "Any specific company?",
+    companyDesc: "We'll prioritise tests used by that company and show you what others applying there practised.",
+    companyPlaceholder: "e.g. McKinsey, Deloitte, Google...",
+    popular: "Popular choices:",
+    levelTitle: "Where are you right now?",
+    levelDesc: "We'll set you up at the right difficulty level from day one.",
+    continue: "Continue",
+    back: "Back",
+    skip: "Skip for now",
+    profile: "Your profile",
+    update: "You can update this anytime from your profile",
+    saveError: "We couldn't save your profile. Check your connection and try again.",
+    saving: "Building your plan...",
+    launch: "Launch my preparation",
+    levels: [
+      ["Getting started", "I'm new to formal assessments"],
+      ["Building skills", "I've done some tests and want to improve"],
+      ["Peak performance", "I regularly prepare and want to excel"],
+    ],
+  },
+  nl: {
+    steps: ["Rol", "Branche", "Bedrijf", "Niveau"],
+    step: (n: number) => `Stap ${n} van ${TOTAL_STEPS}`,
+    roleTitle: "Voor welke rol solliciteer je?",
+    roleDesc: "We personaliseren je assessmentplan op basis van wat werkgevers echt testen.",
+    industryTitle: "Op welke branche richt je je?",
+    industryDesc: "Verschillende sectoren testen verschillende vaardigheden. We koppelen je aan de juiste voorbereiding.",
+    companyTitle: "Een specifiek bedrijf?",
+    companyDesc: "Dan geven we prioriteit aan tests die dat bedrijf gebruikt en wat andere kandidaten daarvoor oefenen.",
+    companyPlaceholder: "bijv. McKinsey, Deloitte, Google...",
+    popular: "Populaire keuzes:",
+    levelTitle: "Waar sta je nu?",
+    levelDesc: "We starten meteen op het juiste moeilijkheidsniveau.",
+    continue: "Doorgaan",
+    back: "Terug",
+    skip: "Voor nu overslaan",
+    profile: "Jouw profiel",
+    update: "Je kunt dit later altijd aanpassen in je profiel",
+    saveError: "We konden je profiel niet opslaan. Controleer je verbinding en probeer opnieuw.",
+    saving: "Je plan wordt gemaakt...",
+    launch: "Start mijn voorbereiding",
+    levels: [
+      ["Net begonnen", "Ik ben nieuw met formele assessments"],
+      ["Vaardigheden opbouwen", "Ik heb al tests gedaan en wil verbeteren"],
+      ["Topprestatie", "Ik bereid me regelmatig voor en wil uitblinken"],
+    ],
+  },
+};
+
 // ─── Progress stepper ────────────────────────────────────────────────────────
 
 function Stepper({ current }: { current: number }) {
-  const labels = ["Role", "Industry", "Company", "Level"];
+  const { locale } = useT();
+  const labels = UI[locale].steps;
   return (
     <div className="flex items-center gap-0">
       {labels.map((label, i) => (
@@ -98,6 +157,8 @@ function Stepper({ current }: { current: number }) {
 export default function OnboardingPage() {
   const router = useLocaleRouter();
   const { status } = useAuth();
+  const { locale } = useT();
+  const ui = UI[locale];
   const [step, setStep] = useState(0);
 
   useEffect(() => {
@@ -153,13 +214,13 @@ export default function OnboardingPage() {
             <div className="animate-fade-up">
               <div className="text-center mb-8">
                 <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#2D7BFF] uppercase tracking-widest bg-[#EAF1FF] px-3 py-1.5 rounded-full mb-4">
-                  <Briefcase size={12} /> Step 1 of {TOTAL_STEPS}
+                  <Briefcase size={12} /> {ui.step(1)}
                 </div>
                 <h1 className="font-display font-bold text-3xl text-[#0D1B2E] mb-3">
-                  What role are you applying for?
+                  {ui.roleTitle}
                 </h1>
                 <p className="text-[#64748b]">
-                  We&apos;ll personalise your assessment plan based on what employers actually test.
+                  {ui.roleDesc}
                 </p>
               </div>
 
@@ -193,10 +254,10 @@ export default function OnboardingPage() {
                 disabled={!role}
                 className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
               >
-                Continue <ArrowRight size={16} />
+                {ui.continue} <ArrowRight size={16} />
               </button>
               <p className="text-center text-xs text-[#94a3b8] mt-3">
-                You can update this anytime from your profile
+                {ui.update}
               </p>
             </div>
           )}
@@ -206,13 +267,13 @@ export default function OnboardingPage() {
             <div className="animate-fade-up">
               <div className="text-center mb-8">
                 <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#2D7BFF] uppercase tracking-widest bg-[#EAF1FF] px-3 py-1.5 rounded-full mb-4">
-                  <Target size={12} /> Step 2 of {TOTAL_STEPS}
+                  <Target size={12} /> {ui.step(2)}
                 </div>
                 <h1 className="font-display font-bold text-3xl text-[#0D1B2E] mb-3">
-                  Which industry are you targeting?
+                  {ui.industryTitle}
                 </h1>
                 <p className="text-[#64748b]">
-                  Different sectors test different skills. We&apos;ll match you to the right preparation.
+                  {ui.industryDesc}
                 </p>
               </div>
 
@@ -244,14 +305,14 @@ export default function OnboardingPage() {
                   onClick={() => setStep(0)}
                   className="flex items-center gap-2 px-5 py-3.5 rounded-xl border border-[#e2e8f0] text-[#475569] font-semibold hover:bg-[#f8fafc] transition-colors"
                 >
-                  <ArrowLeft size={16} /> Back
+                  <ArrowLeft size={16} /> {ui.back}
                 </button>
                 <button
                   onClick={() => setStep(2)}
                   disabled={!industry}
                   className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
                 >
-                  Continue <ArrowRight size={16} />
+                  {ui.continue} <ArrowRight size={16} />
                 </button>
               </div>
             </div>
@@ -262,13 +323,13 @@ export default function OnboardingPage() {
             <div className="animate-fade-up">
               <div className="text-center mb-8">
                 <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#2D7BFF] uppercase tracking-widest bg-[#EAF1FF] px-3 py-1.5 rounded-full mb-4">
-                  <Building2 size={12} /> Step 3 of {TOTAL_STEPS}
+                  <Building2 size={12} /> {ui.step(3)}
                 </div>
                 <h1 className="font-display font-bold text-3xl text-[#0D1B2E] mb-3">
-                  Any specific company?
+                  {ui.companyTitle}
                 </h1>
                 <p className="text-[#64748b]">
-                  We&apos;ll prioritise tests used by that company and show you what others applying there practised.
+                  {ui.companyDesc}
                 </p>
               </div>
 
@@ -278,7 +339,7 @@ export default function OnboardingPage() {
                   type="text"
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
-                  placeholder="e.g. McKinsey, Deloitte, Google..."
+                  placeholder={ui.companyPlaceholder}
                   className="w-full pl-10 pr-4 py-3.5 rounded-xl border-2 border-[#e2e8f0] bg-white text-[#0D1B2E] text-sm outline-none focus:border-[#2D7BFF] focus:ring-2 focus:ring-[#2D7BFF]/10 transition-all placeholder:text-[#94a3b8]"
                 />
                 {company && (
@@ -293,7 +354,7 @@ export default function OnboardingPage() {
 
               {/* Popular companies */}
               <div className="mb-6">
-                <p className="text-xs text-[#94a3b8] font-medium mb-2">Popular choices:</p>
+                <p className="text-xs text-[#94a3b8] font-medium mb-2">{ui.popular}</p>
                 <div className="flex flex-wrap gap-2">
                   {["McKinsey", "Deloitte", "KPMG", "Goldman Sachs", "Google", "Amazon", "BCG", "Accenture"].map((c) => (
                     <button
@@ -316,13 +377,13 @@ export default function OnboardingPage() {
                   onClick={() => setStep(1)}
                   className="flex items-center gap-2 px-5 py-3.5 rounded-xl border border-[#e2e8f0] text-[#475569] font-semibold hover:bg-[#f8fafc] transition-colors"
                 >
-                  <ArrowLeft size={16} /> Back
+                  <ArrowLeft size={16} /> {ui.back}
                 </button>
                 <button
                   onClick={() => setStep(3)}
                   className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold hover:opacity-90 transition-opacity"
                 >
-                  {company.trim() ? "Continue" : "Skip for now"}
+                  {company.trim() ? ui.continue : ui.skip}
                   <ArrowRight size={16} />
                 </button>
               </div>
@@ -334,13 +395,13 @@ export default function OnboardingPage() {
             <div className="animate-fade-up">
               <div className="text-center mb-8">
                 <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#2D7BFF] uppercase tracking-widest bg-[#EAF1FF] px-3 py-1.5 rounded-full mb-4">
-                  <Zap size={12} /> Step 4 of {TOTAL_STEPS}
+                  <Zap size={12} /> {ui.step(4)}
                 </div>
                 <h1 className="font-display font-bold text-3xl text-[#0D1B2E] mb-3">
-                  Where are you right now?
+                  {ui.levelTitle}
                 </h1>
                 <p className="text-[#64748b]">
-                  We&apos;ll set you up at the right difficulty level from day one.
+                  {ui.levelDesc}
                 </p>
               </div>
 
@@ -357,8 +418,8 @@ export default function OnboardingPage() {
                   >
                     <l.icon size={24} className="text-[#2D7BFF] flex-shrink-0" />
                     <div className="flex-1">
-                      <p className="font-semibold text-[#0D1B2E]">{l.label}</p>
-                      <p className="text-sm text-[#64748b] mt-0.5">{l.description}</p>
+                      <p className="font-semibold text-[#0D1B2E]">{ui.levels[LEVELS.indexOf(l)][0]}</p>
+                      <p className="text-sm text-[#64748b] mt-0.5">{ui.levels[LEVELS.indexOf(l)][1]}</p>
                     </div>
                     {level === l.value && (
                       <div className="w-5 h-5 rounded-full bg-[#2D7BFF] flex items-center justify-center flex-shrink-0">
@@ -372,7 +433,7 @@ export default function OnboardingPage() {
               {/* Summary */}
               {(role || industry || company) && (
                 <div className="mb-5 p-4 rounded-xl bg-[#f8fafc] border border-[#e2e8f0]">
-                  <p className="text-xs font-semibold text-[#94a3b8] uppercase tracking-widest mb-2">Your profile</p>
+                  <p className="text-xs font-semibold text-[#94a3b8] uppercase tracking-widest mb-2">{ui.profile}</p>
                   <div className="flex flex-wrap gap-2">
                     {role && (() => {
                       const RoleIcon = ROLES.find(r => r.value === role)?.icon;
@@ -402,7 +463,7 @@ export default function OnboardingPage() {
               {saveError && (
                 <div className="mb-4 rounded-lg bg-[#fff1f2] border border-[#fecdd3] px-3 py-2.5">
                   <p className="text-xs text-[#e11d48] leading-relaxed">
-                    We couldn&apos;t save your profile. Check your connection and try again.
+                    {ui.saveError}
                   </p>
                 </div>
               )}
@@ -412,14 +473,14 @@ export default function OnboardingPage() {
                   onClick={() => setStep(2)}
                   className="flex items-center gap-2 px-5 py-3.5 rounded-xl border border-[#e2e8f0] text-[#475569] font-semibold hover:bg-[#f8fafc] transition-colors"
                 >
-                  <ArrowLeft size={16} /> Back
+                  <ArrowLeft size={16} /> {ui.back}
                 </button>
                 <button
                   onClick={handleFinish}
                   disabled={!level || saving}
                   className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
                 >
-                  {saving ? "Building your plan..." : "Launch my preparation"}
+                  {saving ? ui.saving : ui.launch}
                   {!saving && <ArrowRight size={16} />}
                 </button>
               </div>

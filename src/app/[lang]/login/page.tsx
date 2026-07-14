@@ -7,13 +7,81 @@ import { useLocaleRouter } from "@/components/ui/LocaleLink";
 import { Eye, EyeOff, ArrowRight } from "lucide-react";
 import { login, register, resendVerification, ApiError } from "@/lib/api";
 import { LogoMark } from "@/components/ui/Logo";
+import { useT } from "@/lib/i18n";
 
 type Mode = "login" | "register";
+
+const UI = {
+  en: {
+    login: "Log in",
+    signup: "Sign up",
+    welcome: "Welcome back",
+    create: "Create your account",
+    loginSub: "Log in to continue your practice.",
+    createSub: "Start with 5 free tests, no credit card needed.",
+    fullName: "Full name",
+    email: "Email",
+    password: "Password",
+    forgot: "Forgot password?",
+    wait: "Please wait...",
+    createAccount: "Create account",
+    terms: "By creating an account, you agree to our",
+    termsLink: "Terms of Service",
+    and: "and",
+    privacy: "Privacy Policy",
+    noAccount: "Don't have an account? ",
+    hasAccount: "Already have an account? ",
+    signupFree: "Sign up free",
+    serviceDown: "Service temporarily unavailable. Please try again in 30 seconds.",
+    verify: "Please verify your email before logging in.",
+    invalid: "Invalid email or password.",
+    duplicate: "This email address is already in use.",
+    details: "Please check your details and try again.",
+    generic: "Something went wrong. Please try again.",
+    network: "Could not connect to the server. Check your internet connection.",
+    retry: "Try again",
+    resent: "Verification email resent. Check your inbox.",
+    resend: "Resend email",
+  },
+  nl: {
+    login: "Inloggen",
+    signup: "Registreren",
+    welcome: "Welkom terug",
+    create: "Maak je account aan",
+    loginSub: "Log in om verder te oefenen.",
+    createSub: "Start met 5 gratis tests, geen creditcard nodig.",
+    fullName: "Volledige naam",
+    email: "E-mail",
+    password: "Wachtwoord",
+    forgot: "Wachtwoord vergeten?",
+    wait: "Even geduld...",
+    createAccount: "Account aanmaken",
+    terms: "Door een account aan te maken ga je akkoord met onze",
+    termsLink: "Algemene voorwaarden",
+    and: "en",
+    privacy: "Privacyverklaring",
+    noAccount: "Nog geen account? ",
+    hasAccount: "Heb je al een account? ",
+    signupFree: "Gratis registreren",
+    serviceDown: "Service tijdelijk niet bereikbaar. Probeer het over 30 seconden opnieuw.",
+    verify: "Verifieer je e-mail voordat je inlogt.",
+    invalid: "Ongeldig e-mailadres of wachtwoord.",
+    duplicate: "Dit e-mailadres is al in gebruik.",
+    details: "Controleer je gegevens en probeer het opnieuw.",
+    generic: "Er is iets misgegaan. Probeer het opnieuw.",
+    network: "Kan geen verbinding maken met de server. Controleer je internetverbinding.",
+    retry: "Opnieuw proberen",
+    resent: "Verificatiemail opnieuw verstuurd. Controleer je inbox.",
+    resend: "Mail opnieuw sturen",
+  },
+};
 
 function LoginForm() {
   const router = useLocaleRouter();
   const searchParams = useSearchParams();
   const from = searchParams.get("from");
+  const { locale } = useT();
+  const ui = UI[locale];
   const [mode, setMode] = useState<Mode>("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -34,7 +102,9 @@ function LoginForm() {
     try {
       if (mode === "login") {
         const user = await login(email, password);
-        if (from && from !== "/login") router.push(from);
+        // login() centrally wipes the React Query cache (see resetUserCache),
+        // so the previous user's data can't bleed into this session.
+        if (from && from.startsWith("/") && !from.startsWith("//") && from !== "/login") router.push(from);
         else if (!user.targetRole) router.push("/onboarding");
         else router.push("/dashboard");
       } else {
@@ -45,22 +115,22 @@ function LoginForm() {
       if (err instanceof ApiError) {
         if (err.status === 0 || err.status === 502 || err.status === 503) {
           setIsServiceDown(true);
-          setError("Service temporarily unavailable. Please try again in 30 seconds.");
+          setError(ui.serviceDown);
         } else if (err.status === 403) {
           setIsUnverified(true);
           setResendEmail(email);
-          setError("Please verify your email before logging in.");
+          setError(ui.verify);
         } else if (err.status === 401) {
-          setError("Invalid email or password.");
+          setError(ui.invalid);
         } else if (err.status === 409) {
-          setError("This email address is already in use.");
+          setError(ui.duplicate);
         } else if (err.status === 400) {
-          setError("Please check your details and try again.");
+          setError(ui.details);
         } else {
-          setError("Something went wrong. Please try again.");
+          setError(ui.generic);
         }
       } else {
-        setError("Could not connect to the server. Check your internet connection.");
+        setError(ui.network);
       }
     } finally {
       setLoading(false);
@@ -97,26 +167,26 @@ function LoginForm() {
                       : "text-[#64748b] hover:text-[#475569]"
                   }`}
                 >
-                  {m === "login" ? "Log in" : "Sign up"}
+                  {m === "login" ? ui.login : ui.signup}
                 </button>
               ))}
             </div>
 
             <div className="mb-6">
               <h1 className="font-display font-bold text-2xl text-[#0D1B2E] mb-1">
-                {mode === "login" ? "Welcome back" : "Create your account"}
+                {mode === "login" ? ui.welcome : ui.create}
               </h1>
               <p className="text-sm text-[#64748b]">
                 {mode === "login"
-                  ? "Log in to continue your practice."
-                  : "Start with 5 free tests, no credit card needed."}
+                  ? ui.loginSub
+                  : ui.createSub}
               </p>
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               {mode === "register" && (
                 <div>
-                  <label className="block text-xs font-semibold text-[#475569] mb-1.5">Full name</label>
+                  <label className="block text-xs font-semibold text-[#475569] mb-1.5">{ui.fullName}</label>
                   <input
                     type="text"
                     value={name}
@@ -129,7 +199,7 @@ function LoginForm() {
               )}
 
               <div>
-                <label className="block text-xs font-semibold text-[#475569] mb-1.5">Email</label>
+                <label className="block text-xs font-semibold text-[#475569] mb-1.5">{ui.email}</label>
                 <input
                   type="email"
                   value={email}
@@ -142,10 +212,10 @@ function LoginForm() {
 
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs font-semibold text-[#475569]">Password</label>
+                  <label className="text-xs font-semibold text-[#475569]">{ui.password}</label>
                   {mode === "login" && (
                     <Link href="/forgot-password" className="text-xs text-[#2D7BFF] hover:underline">
-                      Forgot password?
+                      {ui.forgot}
                     </Link>
                   )}
                 </div>
@@ -177,7 +247,7 @@ function LoginForm() {
                       onClick={() => handleSubmit()}
                       className="flex-shrink-0 text-xs font-semibold text-[#2D7BFF] hover:underline whitespace-nowrap"
                     >
-                      Try again
+                      {ui.retry}
                     </button>
                   )}
                   {isUnverified && (
@@ -185,12 +255,12 @@ function LoginForm() {
                       type="button"
                       onClick={async () => {
                         await resendVerification(resendEmail);
-                        setError("Verification email resent. Check your inbox.");
+                        setError(ui.resent);
                         setIsUnverified(false);
                       }}
                       className="flex-shrink-0 text-xs font-semibold text-[#2D7BFF] hover:underline whitespace-nowrap"
                     >
-                      Resend email
+                      {ui.resend}
                     </button>
                   )}
                 </div>
@@ -201,28 +271,28 @@ function LoginForm() {
                 disabled={loading}
                 className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold text-sm shadow-lg hover:opacity-90 disabled:opacity-60 transition-opacity mt-2"
               >
-                {loading ? "Please wait..." : mode === "login" ? "Log in" : "Create account"}
+                {loading ? ui.wait : mode === "login" ? ui.login : ui.createAccount}
                 {!loading && <ArrowRight size={15} />}
               </button>
             </form>
 
             {mode === "register" && (
               <p className="text-xs text-[#94a3b8] text-center mt-4 leading-relaxed">
-                By creating an account, you agree to our{" "}
-                <span className="text-[#2D7BFF] cursor-pointer hover:underline">Terms of Service</span>{" "}
-                and{" "}
-                <span className="text-[#2D7BFF] cursor-pointer hover:underline">Privacy Policy</span>.
+                {ui.terms}{" "}
+                <span className="text-[#2D7BFF] cursor-pointer hover:underline">{ui.termsLink}</span>{" "}
+                {ui.and}{" "}
+                <span className="text-[#2D7BFF] cursor-pointer hover:underline">{ui.privacy}</span>.
               </p>
             )}
           </div>
 
           <p className="text-center text-sm text-[#64748b] mt-4">
-            {mode === "login" ? "Don't have an account? " : "Already have an account? "}
+            {mode === "login" ? ui.noAccount : ui.hasAccount}
             <button
               onClick={() => setMode(mode === "login" ? "register" : "login")}
               className="text-[#2D7BFF] font-semibold hover:underline"
             >
-              {mode === "login" ? "Sign up free" : "Log in"}
+              {mode === "login" ? ui.signupFree : ui.login}
             </button>
           </p>
         </div>

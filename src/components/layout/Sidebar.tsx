@@ -3,7 +3,7 @@
 import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { usePathname } from "next/navigation";
 import { useLocaleRouter } from "@/components/ui/LocaleLink";
-import { LayoutDashboard, BookOpen, Trophy, TrendingUp, CreditCard, ChevronRight, BarChart2, LogOut, Calendar, ShieldCheck, Settings } from "lucide-react";
+import { LayoutDashboard, BookOpen, Trophy, TrendingUp, CreditCard, ChevronRight, BarChart2, LogOut, Calendar, ShieldCheck, Settings, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StreakBadge } from "@/components/ui/StreakBadge";
 import { useT } from "@/lib/i18n";
@@ -28,11 +28,14 @@ export function Sidebar({ streak: streakProp, userName: userNameProp, isAdmin: i
   const userName = userNameProp ?? user?.name ?? "";
   const streak = streakProp ?? user?.streak ?? 0;
   const isAdmin = isAdminProp ?? user?.isAdmin ?? authIsAdmin;
+  const isPro = user?.subscription === "pro";
   const pathname = usePathname();
   const router = useLocaleRouter();
   const { t } = useT();
 
   const handleLogout = () => {
+    // logout() clears the auth token, which centrally wipes the React Query
+    // cache (see clearAuth), so no per-account data lingers.
     logout();
     router.replace("/login");
   };
@@ -103,6 +106,11 @@ export function Sidebar({ streak: streakProp, userName: userNameProp, isAdmin: i
               <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded-full">
                 <ShieldCheck size={9} />
                 ADMIN
+              </span>
+            ) : isPro ? (
+              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#1D63E6] bg-[#EAF1FF] border border-[#BFD6FF] px-1.5 py-0.5 rounded-full">
+                <Sparkles size={9} />
+                {t("dash_pro_plan")}
               </span>
             ) : (
               <p className="text-xs text-subtle">{t("dash_free_plan")}</p>

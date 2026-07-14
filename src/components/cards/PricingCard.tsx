@@ -14,51 +14,99 @@ interface PricingCardProps {
 }
 
 const PLANS = {
-  free: {
-    name: "Free",
-    price: "0",
-    period: "forever",
-    description: "Perfect to get started and experience the platform.",
-    features: [
-      "5 free practice tests",
-      "Basic results & score",
-      "Limited feedback",
-      "All assessment types",
-      "English language",
-    ],
-    unavailable: [
-      "Unlimited tests",
-      "New tests added weekly",
-      "Detailed feedback",
-      "Progress tracking",
-      "Daily preparation plan",
-    ],
-    cta: "Start your first free test",
-    href: "/onboarding",
+  en: {
+    free: {
+      name: "Free",
+      price: "0",
+      period: "forever",
+      description: "Perfect to get started and experience the platform.",
+      features: [
+        "5 free practice tests",
+        "Basic results and score",
+        "Limited feedback",
+        "All assessment types",
+        "English and Dutch",
+      ],
+      unavailable: [
+        "Unlimited tests",
+        "New tests added weekly",
+        "Detailed feedback",
+        "Progress tracking",
+        "Daily preparation plan",
+      ],
+      cta: "Start your first free test",
+      href: "/onboarding",
+      badge: "Most popular",
+    },
+    pro: {
+      name: "Pro",
+      price: "4",
+      period: "per month",
+      description: "Everything you need to ace your assessment and get the job.",
+      features: [
+        "Unlimited practice tests",
+        "Fresh new tests added weekly",
+        "Detailed feedback per question",
+        "Progress tracking and analytics",
+        "Daily preparation plan",
+        "All assessment types",
+        "Priority support",
+      ],
+      unavailable: [],
+      cta: "Upgrade to Pro",
+      href: "/pricing",
+      badge: "Most popular",
+    },
   },
-  pro: {
-    name: "Pro",
-    price: "4",
-    period: "per month",
-    description: "Everything you need to ace your assessment and get the job.",
-    features: [
-      "Unlimited practice tests",
-      "Fresh new tests added weekly",
-      "Detailed feedback per question",
-      "Progress tracking & analytics",
-      "Daily preparation plan",
-      "All assessment types",
-      "Priority support",
-    ],
-    unavailable: [],
-    cta: "Upgrade to Pro",
-    href: "/pricing",
+  nl: {
+    free: {
+      name: "Gratis",
+      price: "0",
+      period: "altijd",
+      description: "Ideaal om te starten en het platform te proberen.",
+      features: [
+        "5 gratis oefentests",
+        "Basisscore en resultaat",
+        "Beperkte feedback",
+        "Alle assessmenttypen",
+        "Nederlands en Engels",
+      ],
+      unavailable: [
+        "Onbeperkt tests maken",
+        "Wekelijks nieuwe tests",
+        "Gedetailleerde feedback",
+        "Voortgang bijhouden",
+        "Dagelijks voorbereidingsplan",
+      ],
+      cta: "Start je eerste gratis test",
+      href: "/onboarding",
+      badge: "Meest gekozen",
+    },
+    pro: {
+      name: "Pro",
+      price: "4",
+      period: "per maand",
+      description: "Alles om je assessment te halen en de baan te krijgen.",
+      features: [
+        "Onbeperkt oefentests maken",
+        "Wekelijks nieuwe tests",
+        "Gedetailleerde feedback per vraag",
+        "Voortgang en analyses",
+        "Dagelijks voorbereidingsplan",
+        "Alle assessmenttypen",
+        "Prioriteitssupport",
+      ],
+      unavailable: [],
+      cta: "Upgraden naar Pro",
+      href: "/pricing",
+      badge: "Meest gekozen",
+    },
   },
 };
 
 export function PricingCard({ plan, highlighted = false, className }: PricingCardProps) {
   const { locale } = useT();
-  const data = PLANS[plan];
+  const data = PLANS[locale][plan];
 
   return (
     <div
@@ -75,7 +123,7 @@ export function PricingCard({ plan, highlighted = false, className }: PricingCar
         <div className="absolute top-5 right-5">
           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white text-xs font-bold">
             <Sparkles size={10} />
-            Most popular
+            {data.badge}
           </span>
         </div>
       )}

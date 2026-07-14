@@ -21,6 +21,8 @@ export function Navbar({ transparent = false }: NavbarProps) {
   const { t } = useT();
 
   const handleLogout = () => {
+    // logout() clears the auth token, which centrally wipes the React Query
+    // cache (see clearAuth), so no per-account data lingers.
     logout();
     setMobileOpen(false);
     router.replace("/login");

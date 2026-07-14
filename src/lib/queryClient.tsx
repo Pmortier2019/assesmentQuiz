@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { registerCacheReset } from "./auth";
 
 function makeQueryClient(): QueryClient {
   return new QueryClient({
@@ -27,6 +28,13 @@ export function QueryProvider({ children }: { children: ReactNode }) {
   // module-level singleton) keeps it stable across re-renders without sharing
   // a cache between requests during SSR.
   const [queryClient] = useState(makeQueryClient);
+
+  // Let the auth layer wipe cached per-user data on sign-in/sign-out without
+  // depending on React Query. Registered before the user can trigger a
+  // logout/login, so no per-account data leaks across sessions on a shared device.
+  useEffect(() => {
+    registerCacheReset(() => queryClient.clear());
+  }, [queryClient]);
 
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>

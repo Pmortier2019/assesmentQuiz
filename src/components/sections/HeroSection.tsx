@@ -1,8 +1,52 @@
+"use client";
+
 import { LocaleLink as Link } from "@/components/ui/LocaleLink";
-import { ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Sparkles, CheckCircle2, ChevronDown } from "lucide-react";
 import { HeroDashboardMockup } from "./HeroDashboardMockup";
+import { useProfession } from "./PersonalizedExperience";
+import { ROLE_OPTIONS, ROLE_META, TYPE_LABEL, questionForRole } from "@/lib/professionDemo";
+import { useT } from "@/lib/i18n";
+import type { RoleCategory } from "@/lib/types";
+
+const UI = {
+  en: {
+    preparingAs: "I'm preparing as",
+    profession: "your profession",
+    ace: "Ace your",
+    assessment: "assessment.",
+    job: "Get the job.",
+    defaultSub: "Practice hundreds of realistic assessment tests built around your profession, and walk into your job application ready to pass.",
+    roleSub: (type: string, phrase: string) => `Practice realistic ${type} tests, the type ${phrase} lean on most, and walk into your application ready to pass.`,
+    start: "Start your first free test",
+    browseTypes: "View test types",
+    browseType: (type: string) => `Browse ${type} tests`,
+    signals: ["5 free tests, no card needed", "Instant scoring and explanations", "Modelled on SHL, Korn Ferry and cut-e"],
+  },
+  nl: {
+    preparingAs: "Ik bereid me voor als",
+    profession: "jouw beroep",
+    ace: "Haal je",
+    assessment: "assessment.",
+    job: "Krijg de baan.",
+    defaultSub: "Oefen met realistische assessmenttests rond jouw beroep en ga voorbereid je sollicitatie in.",
+    roleSub: (type: string) => `Oefen realistische ${type}-tests, afgestemd op je beroep, en ga klaar om te slagen je sollicitatie in.`,
+    start: "Start je eerste gratis test",
+    browseTypes: "Bekijk testtypen",
+    browseType: (type: string) => `Bekijk ${type}-tests`,
+    signals: ["5 gratis tests, geen kaart nodig", "Directe score en uitleg", "Gebaseerd op SHL, Korn Ferry en cut-e"],
+  },
+};
 
 export function HeroSection() {
+  const { role, setRole } = useProfession();
+  const { locale } = useT();
+  const ui = UI[locale];
+  const meta = role ? ROLE_META[role] : null;
+  const demo = questionForRole(role);
+
+  // Carry the chosen role into onboarding so step 1 can pre-select it.
+  const onboardingHref = role ? `/onboarding?role=${encodeURIComponent(role)}` : "/onboarding";
+
   return (
     <section className="relative overflow-hidden bg-white pt-16 pb-24 lg:pt-24 lg:pb-32">
       {/* Animated gradient mesh background */}
@@ -25,39 +69,58 @@ export function HeroSection() {
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left */}
           <div className="flex flex-col gap-6 animate-fade-up">
-            {/* Eyebrow */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#EAF1FF] border border-[#BFD6FF] w-fit">
-              <Sparkles size={13} className="text-[#2D7BFF]" />
-              <span className="text-xs font-semibold text-[#2D7BFF]">Practice tests tailored to your profession</span>
+            {/* Eyebrow — profession picker that personalises the hero and demo */}
+            <div className="inline-flex items-center gap-1.5 pl-3 pr-2.5 py-1.5 rounded-full bg-[#EAF1FF] border border-[#BFD6FF] w-fit">
+              <Sparkles size={13} className="text-[#2D7BFF] shrink-0" />
+              <label htmlFor="hero-role" className="text-xs font-semibold text-[#2D7BFF]">
+                {ui.preparingAs}
+              </label>
+              <div className="relative inline-flex items-center">
+                <select
+                  id="hero-role"
+                  value={role ?? ""}
+                  onChange={(e) => setRole(e.target.value ? (e.target.value as RoleCategory) : null)}
+                  className="appearance-none bg-transparent pr-4 text-xs font-bold text-[#1D63E6] outline-none cursor-pointer"
+                >
+                  <option value="">{ui.profession}</option>
+                  {ROLE_OPTIONS.map((r) => (
+                    <option key={r} value={r}>{r}</option>
+                  ))}
+                </select>
+                <ChevronDown size={12} className="text-[#2D7BFF] absolute right-0 pointer-events-none" />
+              </div>
             </div>
 
             {/* Headline */}
             <h1 className="font-display font-extrabold text-[2.75rem] sm:text-[3.5rem] lg:text-[4rem] text-[#0D1B2E] leading-[1.05] tracking-tight">
-              Ace your{" "}
+              {ui.ace}{" "}
+              {meta ? `${meta.headlineNoun} ` : null}
               <span className="gradient-text">assessment.</span>
               <br />
-              Get the job.
+              {ui.job}
             </h1>
 
             {/* Subtext */}
             <p className="text-lg text-[#475569] leading-relaxed max-w-lg">
-              Practice hundreds of realistic assessment tests built around your profession, and walk into your job application ready to pass.
+              {meta
+                ? ui.roleSub(TYPE_LABEL[meta.type], meta.phrase)
+                : ui.defaultSub}
             </p>
 
             {/* CTAs */}
             <div className="flex flex-wrap gap-3 pt-2">
               <Link
-                href="/onboarding"
+                href={onboardingHref}
                 className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-[#2D7BFF] to-[#1D63E6] text-white font-semibold shadow-lg hover:opacity-90 transition-opacity text-sm"
               >
-                Start your first free test
+                {ui.start}
                 <ArrowRight size={16} />
               </Link>
               <Link
-                href="/tests"
+                href={meta ? `/practice/${demo.practiceSlug}` : "/tests"}
                 className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl border border-[#e2e8f0] text-[#475569] font-semibold hover:border-[#2D7BFF]/40 hover:text-[#2D7BFF] transition-colors text-sm"
               >
-                View test types
+                {meta ? ui.browseType(TYPE_LABEL[meta.type]) : ui.browseTypes}
               </Link>
             </div>
 
@@ -65,15 +128,15 @@ export function HeroSection() {
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-2 text-sm text-[#64748b]">
               <span className="inline-flex items-center gap-1.5">
                 <CheckCircle2 size={15} className="text-[#10b981]" />
-                5 free tests, no card needed
+                {ui.signals[0]}
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <CheckCircle2 size={15} className="text-[#10b981]" />
-                Instant scoring & explanations
+                {ui.signals[1]}
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <CheckCircle2 size={15} className="text-[#10b981]" />
-                Modelled on SHL, Korn Ferry &amp; cut-e
+                {ui.signals[2]}
               </span>
             </div>
           </div>

@@ -8,22 +8,30 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "video:studio": "remotion studio remotion/index.ts",
+    "video:render": "node scripts/render-videos.mjs",
+    "video:audio": "node scripts/generate-video-audio.mjs"
   },
   "dependencies": {
-    "@sentry/nextjs": "^10.58.0",
-    "@tanstack/react-query": "^5.101.0",
+    "@sentry/nextjs": "^10.65.0",
+    "@tanstack/react-query": "^5.101.2",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.18.0",
-    "next": "16.2.9",
+    "lucide-react": "^1.24.0",
+    "next": "16.2.10",
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
+    "@remotion/bundler": "^4.0.489",
+    "@remotion/cli": "^4.0.489",
+    "@remotion/google-fonts": "^4.0.489",
+    "@remotion/renderer": "^4.0.481",
+    "@remotion/transitions": "^4.0.489",
     "@tailwindcss/postcss": "^4",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
@@ -32,13 +40,14 @@
     "@types/node": "^25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@vitejs/plugin-react": "^6.0.2",
+    "@vitejs/plugin-react": "^6.0.3",
     "eslint": "^9",
-    "eslint-config-next": "16.2.9",
+    "eslint-config-next": "16.2.10",
     "jsdom": "^29.1.1",
+    "remotion": "^4.0.481",
     "tailwindcss": "^4",
     "typescript": "^6",
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.10"
   },
   "overrides": {
     "postcss": "^8.5.10"
