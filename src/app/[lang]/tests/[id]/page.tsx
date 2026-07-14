@@ -407,8 +407,16 @@ export default function TestPage() {
       clearProgress(test.id);
       haptics.complete();
       setResult(r);
-    } catch {
-      setSubmitError(t("tt_submit_failed"));
+    } catch (err) {
+      // A 403 means the backend re-checked the paywall at submit time (e.g. the
+      // free limit was reached meanwhile in another tab) — retrying can't
+      // succeed, so show the paywall instead of a retryable error. Answers stay
+      // in sessionStorage either way. Mirrors the load-time 403 handling.
+      if (err instanceof ApiError && err.status === 403) {
+        setAccessDenied(true);
+      } else {
+        setSubmitError(t("tt_submit_failed"));
+      }
     } finally {
       setSubmitting(false);
     }
