@@ -167,7 +167,8 @@ export default function DashboardPage() {
 
   const tests = testsPage?.data ?? [];
   const dailyChallenge = tests[0];
-  const isAtLimit = user.freeTestsUsed >= FREE_TESTS_LIMIT;
+  const isPro = user.subscription === "pro";
+  const isAtLimit = !isPro && user.freeTestsUsed >= FREE_TESTS_LIMIT;
 
   // Popular for role — tests whose targetRoles include user's role
   const popularForRole = user.targetRole
@@ -545,37 +546,43 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Pro locked tests */}
+          {/* Pro tests — locked upsell for free users, accessible for Pro/admins */}
           <div className="animate-fade-up delay-600">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <h2 className="font-display font-semibold text-lg text-default">{t("dash_pro_tests")}</h2>
-                <Lock size={14} className="text-subtle" />
+                {!isPro && <Lock size={14} className="text-subtle" />}
               </div>
-              <Link href="/pricing" className="text-xs text-primary font-semibold hover:underline">{t("nav_upgrade")}</Link>
+              {!isPro && (
+                <Link href="/pricing" className="text-xs text-primary font-semibold hover:underline">{t("nav_upgrade")}</Link>
+              )}
             </div>
             <div className="grid sm:grid-cols-3 gap-4">
-              {lockedTests.map((test) => (
-                <div key={test.id} className="card p-4 flex flex-col gap-3 opacity-60 cursor-not-allowed">
-                  <div className="flex items-center justify-between">
-                    <div className="w-9 h-9 rounded-lg bg-surface-muted flex items-center justify-center flex-shrink-0">
-                      <AssessmentTypeIcon type={test.type} size={18} />
+              {lockedTests.map((test) =>
+                isPro ? (
+                  <RecommendedTestCard key={test.id} test={test} badge={t("pro")} />
+                ) : (
+                  <div key={test.id} className="card p-4 flex flex-col gap-3 opacity-60 cursor-not-allowed">
+                    <div className="flex items-center justify-between">
+                      <div className="w-9 h-9 rounded-lg bg-surface-muted flex items-center justify-center flex-shrink-0">
+                        <AssessmentTypeIcon type={test.type} size={18} />
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        {test.isGeneratedByAI && (
+                          <span className="text-xs font-semibold text-primary bg-primary-soft px-2 py-0.5 rounded-full flex items-center gap-1">
+                            <Sparkles size={9} /> {t("dash_badge_new")}
+                          </span>
+                        )}
+                        <Lock size={12} className="text-subtle" />
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1.5">
-                      {test.isGeneratedByAI && (
-                        <span className="text-xs font-semibold text-primary bg-primary-soft px-2 py-0.5 rounded-full flex items-center gap-1">
-                          <Sparkles size={9} /> {t("dash_badge_new")}
-                        </span>
-                      )}
-                      <Lock size={12} className="text-subtle" />
+                    <div>
+                      <p className="font-semibold text-default text-sm leading-snug">{test.title}</p>
+                      <p className="text-xs text-subtle mt-1">{test.estimatedTime} {t("minutes")}</p>
                     </div>
                   </div>
-                  <div>
-                    <p className="font-semibold text-default text-sm leading-snug">{test.title}</p>
-                    <p className="text-xs text-subtle mt-1">{test.estimatedTime} {t("minutes")}</p>
-                  </div>
-                </div>
-              ))}
+                )
+              )}
             </div>
           </div>
 
