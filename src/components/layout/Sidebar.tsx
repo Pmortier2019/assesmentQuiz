@@ -2,7 +2,6 @@
 
 import { LocaleLink as Link } from "@/components/ui/LocaleLink";
 import { usePathname } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
 import { useLocaleRouter } from "@/components/ui/LocaleLink";
 import { LayoutDashboard, BookOpen, Trophy, TrendingUp, CreditCard, ChevronRight, BarChart2, LogOut, Calendar, ShieldCheck, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -31,11 +30,11 @@ export function Sidebar({ streak: streakProp, userName: userNameProp, isAdmin: i
   const isAdmin = isAdminProp ?? user?.isAdmin ?? authIsAdmin;
   const pathname = usePathname();
   const router = useLocaleRouter();
-  const queryClient = useQueryClient();
   const { t } = useT();
 
   const handleLogout = () => {
-    queryClient.clear();
+    // logout() clears the auth token, which centrally wipes the React Query
+    // cache (see clearAuth), so no per-account data lingers.
     logout();
     router.replace("/login");
   };

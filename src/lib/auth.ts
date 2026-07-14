@@ -16,6 +16,24 @@ function emit() {
   for (const l of listeners) l();
 }
 
+// A hook that wipes cached per-user data (the React Query cache) when the
+// signed-in identity changes. Registered by the QueryClient provider so this
+// module stays free of a React Query dependency. Invoked on logout / session
+// end and on explicit sign-in, so one account's cached data (dashboard,
+// results, streak, career targets…) can never leak into the next session on a
+// shared device.
+let cacheReset: (() => void) | null = null;
+
+/** Register the per-user cache wipe. Called once by the QueryClient provider. */
+export function registerCacheReset(fn: () => void) {
+  cacheReset = fn;
+}
+
+/** Wipe cached per-user data. A safe no-op until the provider registers. */
+export function resetUserCache() {
+  cacheReset?.();
+}
+
 /** Subscribe to auth changes (token/status). Returns an unsubscribe fn. */
 export function subscribe(cb: () => void): () => void {
   listeners.add(cb);
@@ -46,6 +64,10 @@ export function saveAuth(token: string) {
 export function clearAuth() {
   accessToken = null;
   status = "unauthenticated";
+  // Session ended — drop any cached per-user data before the UI reacts. Covers
+  // every logout path centrally (the logout button, a 401, a failed refresh,
+  // account deletion), not just the explicit sign-out buttons.
+  resetUserCache();
   emit();
 }
 

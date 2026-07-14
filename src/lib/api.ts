@@ -16,7 +16,7 @@ import type {
   PreparationPath,
 } from "./types";
 
-import { getToken, getUserIdFromToken, saveAuth, clearAuth, markUnauthenticated } from "./auth";
+import { getToken, getUserIdFromToken, saveAuth, clearAuth, markUnauthenticated, resetUserCache } from "./auth";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
 
@@ -850,6 +850,8 @@ export async function login(email: string, password: string): Promise<User> {
     method: "POST",
     body: JSON.stringify({ email, password }),
   });
+  // New identity — wipe any prior user's cached data before the session flips.
+  resetUserCache();
   saveAuth(res.token);
   return mapUser(res.user);
 }
@@ -866,6 +868,8 @@ export async function verifyEmail(token: string): Promise<User> {
     method: "POST",
     body: JSON.stringify({ token }),
   });
+  // New identity — wipe any prior user's cached data before the session flips.
+  resetUserCache();
   saveAuth(res.token);
   return mapUser(res.user);
 }
@@ -882,6 +886,8 @@ export async function adminBootstrap(email: string, password: string): Promise<U
     method: "POST",
     body: JSON.stringify({ email, password }),
   });
+  // New identity — wipe any prior user's cached data before the session flips.
+  resetUserCache();
   saveAuth(res.token);
   return mapUser(res.user);
 }
